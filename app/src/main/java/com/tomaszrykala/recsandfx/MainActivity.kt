@@ -30,9 +30,18 @@ import com.tomaszrykala.recsandfx.ui.theme.RecsAndFxTheme
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.runtime.LaunchedEffect
@@ -42,11 +51,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
+import com.tomaszrykala.recsandfx.data.Effect
+import com.tomaszrykala.recsandfx.data.oboeEffects
 
 class MainActivity : ComponentActivity() {
 
@@ -59,14 +69,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-val mockEffects = listOf(
-    Effect("Delay", Icons.Default.Favorite),
-    Effect("Reverb", Icons.Default.Check),
-    Effect("Dynamics", Icons.Default.Refresh)
-)
-
-data class Effect(val name: String, val icon: ImageVector)
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUnitApi::class)
@@ -85,50 +87,39 @@ fun RafApp() {
                 .fillMaxSize()
                 .padding(paddingLarge),
             snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(R.string.app_name)) })
-            },
+            topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
         ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(padding)
+            if (selectedEffect != "") {
+                ShowSnackBar(
+                    snackbarHostState = snackbarHostState,
+                    launchKey = selectedEffect
+                )
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = padding,
+                verticalArrangement = Arrangement.spacedBy(paddingMedium),
             ) {
-                Greeting(name = "tomasz", modifier = Modifier.padding(bottom = paddingMedium))
-
-                if (selectedEffect != "") {
-                    ShowSnackBar(
-                        snackbarHostState = snackbarHostState,
-                        launchKey = selectedEffect
-                    )
-                }
-
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = padding,
-                    verticalArrangement = Arrangement.spacedBy(paddingMedium),
-                ) {
-                    items(mockEffects) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    color = if (selectedEffect == it.name) Color.DarkGray else Color.Green,
-                                    shape = RoundedCornerShape(size = 4.dp)
-                                )
-                                .clickable {
-                                    selectedEffect = if (selectedEffect == "") it.name else ""
-                                }
-                                .padding(all = paddingMedium),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
+                items(oboeEffects) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = if (selectedEffect == it.name) Color.DarkGray else Color.Green,
+                                shape = RoundedCornerShape(size = 4.dp)
+                            )
+                            .clickable { selectedEffect = it.name }
+                            .padding(all = paddingMedium)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = it.icon, contentDescription = "",
                                 modifier = Modifier.background(Color.Yellow)
                             )
                             Text(
-                                text = it.name, modifier = Modifier.padding(start = paddingMedium),
+                                text = it.name,
+                                modifier = Modifier.padding(start = paddingMedium),
                                 style = TextStyle(
                                     fontSize = TextUnit(
                                         value = 24.0F,
@@ -137,6 +128,10 @@ fun RafApp() {
                                 )
                             )
                         }
+                        Text(
+                            text = it.info,
+                            modifier = Modifier.padding(top = paddingMedium)
+                        )
                     }
                 }
             }
@@ -152,14 +147,6 @@ private fun ShowSnackBar(snackbarHostState: SnackbarHostState, launchKey: String
             duration = SnackbarDuration.Short,
         )
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 
 @Preview(showBackground = true)
