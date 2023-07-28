@@ -17,7 +17,7 @@
 package com.tomaszrykala.recsandfx.data
 
 import android.util.Log
-import com.tomaszrykala.recsandfx.data.datatype.Effect
+import com.tomaszrykala.recsandfx.data.datatype.NativeEffect
 import com.tomaszrykala.recsandfx.data.datatype.EffectDescription
 
 object NativeInterface {
@@ -32,7 +32,7 @@ object NativeInterface {
 
     // Functions/Members called by UI code
     // Adds effect at end of effect list
-    fun addEffect(effect: Effect) {
+    fun addEffect(effect: NativeEffect) {
         Log.d("INTERFACE", String.format("Effect %s added", effect.name))
         addDefaultEffectNative(
             convertEffectToId(
@@ -48,7 +48,7 @@ object NativeInterface {
     }
 
     // Signals params were updated at index
-    fun updateParamsAt(effect: Effect, index: Int) {
+    fun updateParamsAt(effect: NativeEffect, index: Int) {
         Log.d(
             "INTERFACE",
             String.format(
@@ -108,5 +108,5 @@ object NativeInterface {
     private external fun enablePassthroughNative(enable: Boolean)
 
     // These are utility functions
-    private fun convertEffectToId(effect: Effect): Int = effectDescriptionMap[effect.name]?.id ?: -1
+    private fun convertEffectToId(effect: NativeEffect): Int = effectDescriptionMap[effect.name]?.id ?: -1
 }

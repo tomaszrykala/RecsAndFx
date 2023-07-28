@@ -16,7 +16,7 @@
 
 package com.tomaszrykala.recsandfx.data.datatype
 
-data class Effect(val effectDescription: EffectDescription) {
+data class NativeEffect(val effectDescription: EffectDescription) {
     val name = effectDescription.name
     val paramValues = with(effectDescription.paramValues) {
         FloatArray(size) { this[it].defaultValue }
