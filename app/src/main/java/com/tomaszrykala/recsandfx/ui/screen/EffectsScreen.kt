@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -32,11 +30,7 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import com.tomaszrykala.recsandfx.data.NativeInterface
-import com.tomaszrykala.recsandfx.ShowSnackBar
-import com.tomaszrykala.recsandfx.data.Effect
-import com.tomaszrykala.recsandfx.data.Param
-import com.tomaszrykala.recsandfx.data.toParam
+import com.tomaszrykala.recsandfx.ShowSnackbar
 import com.tomaszrykala.recsandfx.oboeRealFx
 import com.tomaszrykala.recsandfx.paddingMedium
 
@@ -51,10 +45,7 @@ fun EffectsScreen(
     var selectedEffect by rememberSaveable { mutableStateOf("") }
 
     if (selectedEffect != "") {
-        ShowSnackBar(
-            snackbarHostState = snackbarHostState,
-            launchKey = selectedEffect
-        )
+        ShowSnackbar(snackbarHostState, "You've selected $selectedEffect.")
     }
 
     LazyColumn(

@@ -91,12 +91,9 @@ sealed class Screen(val route: String) {
 }
 
 @Composable
-fun ShowSnackBar(snackbarHostState: SnackbarHostState, launchKey: String) {
-    LaunchedEffect(launchKey) {
-        snackbarHostState.showSnackbar(
-            message = "You've selected $launchKey.",
-            duration = SnackbarDuration.Short,
-        )
+fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
+    LaunchedEffect(message) {
+        snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
     }
 }
 
