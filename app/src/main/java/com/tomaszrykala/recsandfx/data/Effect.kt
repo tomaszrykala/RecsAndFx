@@ -16,11 +16,27 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.tomaszrykala.recsandfx.data.datatype.ParamDescription
 
 data class Effect(
     val name: String,
     val icon: ImageVector,
-    val info: String = "This is a $name effect."
+    val info: String = "This is a $name effect.",
+    val params: List<Param> = emptyList(),
+)
+
+data class Param(
+    val name: String,
+    val minValue: Float,
+    val maxValue: Float,
+    val defaultValue: Float
+)
+
+fun ParamDescription.toParam() = Param(
+    name = paramName,
+    minValue = minValue,
+    maxValue = maxValue,
+    defaultValue = defaultValue
 )
 
 // DEBUG

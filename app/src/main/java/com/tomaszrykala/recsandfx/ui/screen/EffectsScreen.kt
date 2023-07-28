@@ -35,6 +35,9 @@ import androidx.compose.ui.unit.dp
 import com.tomaszrykala.recsandfx.data.NativeInterface
 import com.tomaszrykala.recsandfx.ShowSnackBar
 import com.tomaszrykala.recsandfx.data.Effect
+import com.tomaszrykala.recsandfx.data.Param
+import com.tomaszrykala.recsandfx.data.toParam
+import com.tomaszrykala.recsandfx.oboeRealFx
 import com.tomaszrykala.recsandfx.paddingMedium
 
 @Composable
@@ -59,7 +62,6 @@ fun EffectsScreen(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
-        val oboeRealFx = NativeInterface.effectDescriptionMap.map { Effect(it.key, Icons.Default.Add) }
         items(oboeRealFx) {
             Column(
                 modifier = Modifier

@@ -17,8 +17,8 @@
 package com.tomaszrykala.recsandfx.data
 
 import android.util.Log
-import com.tomaszrykala.recsandfx.data.datatype.NativeEffect
 import com.tomaszrykala.recsandfx.data.datatype.EffectDescription
+import com.tomaszrykala.recsandfx.data.datatype.NativeEffect
 
 object NativeInterface {
     // Used to load the 'native-lib' library on application startup.
@@ -108,5 +108,6 @@ object NativeInterface {
     private external fun enablePassthroughNative(enable: Boolean)
 
     // These are utility functions
-    private fun convertEffectToId(effect: NativeEffect): Int = effectDescriptionMap[effect.name]?.id ?: -1
+    private fun convertEffectToId(effect: NativeEffect): Int =
+        effectDescriptionMap[effect.name]?.id ?: -1
 }

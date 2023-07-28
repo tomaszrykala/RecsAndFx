@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
@@ -22,6 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.tomaszrykala.recsandfx.data.Effect
+import com.tomaszrykala.recsandfx.data.NativeInterface
+import com.tomaszrykala.recsandfx.data.toParam
 import com.tomaszrykala.recsandfx.ui.screen.EffectDetailScreen
 import com.tomaszrykala.recsandfx.ui.screen.EffectsScreen
 import com.tomaszrykala.recsandfx.ui.theme.RecsAndFxTheme
@@ -41,6 +46,7 @@ class MainActivity : ComponentActivity() {
                         .padding(paddingLarge),
                     snackbarHost = { SnackbarHost(snackbarHostState) },
                     topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
+                    // floatingActionButton = { FloatingActionButton(onClick = { }) {} }
                 ) { contentPadding ->
                     RafApp(
                         contentPadding,
@@ -92,4 +98,10 @@ fun ShowSnackBar(snackbarHostState: SnackbarHostState, launchKey: String) {
             duration = SnackbarDuration.Short,
         )
     }
+}
+
+val oboeRealFx: List<Effect> = NativeInterface.effectDescriptionMap.map {
+    Effect(
+        it.key, Icons.Default.Add, params = it.value.paramValues.map { pd -> pd.toParam() }
+    )
 }
