@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -30,8 +32,9 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.tomaszrykala.recsandfx.data.NativeInterface
 import com.tomaszrykala.recsandfx.ShowSnackBar
-import com.tomaszrykala.recsandfx.data.oboeEffects
+import com.tomaszrykala.recsandfx.data.EffectDomain
 import com.tomaszrykala.recsandfx.paddingMedium
 
 @Composable
@@ -56,7 +59,8 @@ fun EffectsScreen(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
-        items(oboeEffects) {
+        val oboeRealFx = NativeInterface.effectDescriptionMap.map { EffectDomain(it.key, Icons.Default.Add) }
+        items(oboeRealFx) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

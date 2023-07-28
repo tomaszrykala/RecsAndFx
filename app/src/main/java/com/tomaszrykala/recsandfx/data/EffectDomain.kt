@@ -17,7 +17,7 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.ui.graphics.vector.ImageVector
 
-data class Effect(
+data class EffectDomain(
     val name: String,
     val icon: ImageVector,
     val info: String = "This is a $name effect."
@@ -25,22 +25,22 @@ data class Effect(
 
 // DEBUG
 val oboeEffects = listOf(
-    Effect("Comb Filter", Icons.Default.Add),
-    Effect("Delay Line", Icons.Default.AccountBox),
-    Effect("Doubling", Icons.Default.Build),
-    Effect("Drive Control", Icons.Default.Email),
-    Effect("Echo", Icons.Default.Favorite),
-    Effect("Effects", Icons.Default.Info),
-    Effect("Flanger", Icons.Default.Home),
-    Effect("Single Function", Icons.Default.List),
-    Effect("Slapback", Icons.Default.MoreVert),
-    Effect("Tremolo", Icons.Default.Person),
-    Effect("Vibrato", Icons.Default.Send),
-    Effect("White Chorus", Icons.Default.ThumbUp),
+    EffectDomain("Comb Filter", Icons.Default.Add),
+    EffectDomain("Delay Line", Icons.Default.AccountBox),
+    EffectDomain("Doubling", Icons.Default.Build),
+    EffectDomain("Drive Control", Icons.Default.Email),
+    EffectDomain("Echo", Icons.Default.Favorite),
+    EffectDomain("Effects", Icons.Default.Info),
+    EffectDomain("Flanger", Icons.Default.Home),
+    EffectDomain("Single Function", Icons.Default.List),
+    EffectDomain("Slapback", Icons.Default.MoreVert),
+    EffectDomain("Tremolo", Icons.Default.Person),
+    EffectDomain("Vibrato", Icons.Default.Send),
+    EffectDomain("White Chorus", Icons.Default.ThumbUp),
 )
 
 val juceEffects = listOf(
-    Effect("Delay", Icons.Default.Favorite),
-    Effect("Reverb", Icons.Default.Check),
-    Effect("Dynamics", Icons.Default.Refresh),
+    EffectDomain("Delay", Icons.Default.Favorite),
+    EffectDomain("Reverb", Icons.Default.Check),
+    EffectDomain("Dynamics", Icons.Default.Refresh),
 )
