@@ -20,6 +20,7 @@
 #include <functional>
 #include <utility>
 #include <vector>
+#include <cassert>
 
 #include "DuplexEngine.h"
 #include "effects/Effects.h"

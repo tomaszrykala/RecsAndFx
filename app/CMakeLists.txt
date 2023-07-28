@@ -22,9 +22,9 @@ add_library( # Sets the name of the library.
         # Sets the library as a shared library.
         SHARED
         # Provides a relative path to your source file(s).
-        src/main/cpp/oboe/native-lib.cpp
-        src/main/cpp/oboe/DuplexEngine.cpp
-        src/main/cpp/oboe/SoundRecording.cpp
+        src/main/cpp/native-lib.cpp
+        src/main/cpp/DuplexEngine.cpp
+        src/main/cpp/SoundRecording.cpp
         )
 
 # Compile with warnings for safety
@@ -52,8 +52,6 @@ find_library( # Sets the name of the path variable.
 ### INCLUDE OBOE LIBRARY ###
 
 # Set the path to the Oboe library directory
-#set (OBOE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..) # /oboe?
-#set (OBOE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/oboe) # /oboe?
 set (OBOE_DIR /Users/trykala/dev/android/git/opensource/oboe)
 
 # Add the Oboe library as a subproject. Since Oboe is an out-of-tree source library we must also

@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef ANDROID_FXLAB_VIBRATROEFFECT_H
-#define ANDROID_FXLAB_VIBRATROEFFECT_H
 
-#include "DelayLineEffect.h"
-template <class iter_type>
-class VibratoEffect : public DelayLineEffect<iter_type> {
-public:
-    VibratoEffect(float depth_ms, float frequency):
-        DelayLineEffect<iter_type>(0, 1, 0, 1, depth_ms * SAMPLE_RATE / 1000,
-                SineWave {frequency, 1, SAMPLE_RATE}) { }
-};
-#endif //ANDROID_FXLAB_VIBRATROEFFECT_H
+#ifndef ANDROID_FXLAB_EFFECTS_H
+#define ANDROID_FXLAB_EFFECTS_H
+
+
+// The Sample Rate for effects
+static int SAMPLE_RATE = 48000;
+
+// This header should include the various effect descriptions
+#include "descrip/EffectDescription.h"
+#include "descrip/TremoloDescription.h"
+#include "descrip/EchoDescription.h"
+
+constexpr std::tuple<
+        Effect::TremoloDescription,
+        Effect::EchoDescription
+> EffectsTuple{};
+
+constexpr size_t numEffects = std::tuple_size<decltype(EffectsTuple)>::value;
+
+
+#endif //ANDROID_FXLAB_EFFECTS_H
