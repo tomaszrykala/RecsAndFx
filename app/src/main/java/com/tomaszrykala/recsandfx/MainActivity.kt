@@ -24,49 +24,54 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.data.Effect
 import com.tomaszrykala.recsandfx.data.NativeInterface
 import com.tomaszrykala.recsandfx.data.toParam
 import com.tomaszrykala.recsandfx.ui.screen.EffectDetailScreen
 import com.tomaszrykala.recsandfx.ui.screen.EffectsScreen
+import com.tomaszrykala.recsandfx.ui.screen.RequestPermissionsScreen
+import com.tomaszrykala.recsandfx.ui.screen.Screen
+import com.tomaszrykala.recsandfx.ui.screen.getPermissionsList
 import com.tomaszrykala.recsandfx.ui.theme.RecsAndFxTheme
 
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            RecsAndFxTheme {
-                val snackbarHostState = remember { SnackbarHostState() }
+        setContent { RecsAndFxTheme { RafApp() } }
+    }
+}
 
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingLarge),
-                    snackbarHost = { SnackbarHost(snackbarHostState) },
-                    topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
-                    // floatingActionButton = { FloatingActionButton(onClick = { }) {} }
-                ) { contentPadding ->
-                    RafApp(
-                        contentPadding,
-                        snackbarHostState,
-                    )
-                }
-            }
+@Composable
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
+private fun RafApp() {
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingLarge),
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.app_name)) }) },
+        // floatingActionButton = { FloatingActionButton(onClick = { }) {} }
+
+    ) { contentPadding ->
+        val permissionsState = rememberMultiplePermissionsState(getPermissionsList())
+        if (permissionsState.allPermissionsGranted) {
+            ShowRafApp(snackbarHostState, contentPadding)
+        } else {
+            RequestPermissionsScreen(contentPadding, permissionsState)
         }
     }
 }
 
-val paddingLarge = 16.dp
-val paddingMedium = 8.dp
-
 @Composable
-fun RafApp(
-    contentPadding: PaddingValues,
-    snackbarHostState: SnackbarHostState
+private fun ShowRafApp(
+    snackbarHostState: SnackbarHostState,
+    contentPadding: PaddingValues
 ) {
-
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.EffectsScreen.route) {
         composable(Screen.EffectsScreen.route) {
@@ -85,10 +90,8 @@ fun RafApp(
     }
 }
 
-sealed class Screen(val route: String) {
-    object EffectsScreen : Screen("list")
-    object EffectDetailScreen : Screen("detail/{effect}")
-}
+val paddingLarge = 16.dp
+val paddingMedium = 8.dp
 
 @Composable
 fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {

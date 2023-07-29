@@ -28,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
@@ -39,7 +38,6 @@ import com.tomaszrykala.recsandfx.oboeRealFx
 import com.tomaszrykala.recsandfx.paddingLarge
 import com.tomaszrykala.recsandfx.paddingMedium
 
-@OptIn(ExperimentalUnitApi::class)
 @Preview(showBackground = true)
 @Composable
 fun EffectDetailScreen(
