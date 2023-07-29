@@ -1,12 +1,15 @@
 package com.tomaszrykala.recsandfx.ui.screen
 
+import android.os.Environment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -35,8 +38,9 @@ import com.tomaszrykala.recsandfx.ShowSnackbar
 import com.tomaszrykala.recsandfx.data.NativeInterface
 import com.tomaszrykala.recsandfx.data.juceEffects
 import com.tomaszrykala.recsandfx.oboeRealFx
-import com.tomaszrykala.recsandfx.paddingLarge
-import com.tomaszrykala.recsandfx.paddingMedium
+import com.tomaszrykala.recsandfx.ui.theme.paddingLarge
+import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
+import java.io.File
 
 @Preview(showBackground = true)
 @Composable
@@ -91,20 +95,23 @@ fun EffectDetailScreen(
                 Text(text = param.maxValue.toString())
             }
         }
+        Spacer(modifier = Modifier.height(64.dp))
         IconButton(
             onClick = {
                 if (isRecording) {
-//                    stopAudioRecorder() // CRASH
+                    stopAudioRecorder()
                     isRecording = false
                 } else {
-//                    startAudioRecorder() // CRASH
+                    startAudioRecorder()
                     hasRecordingStarted = true
                     isRecording = true
                 }
             },
             modifier = Modifier
-                .padding(top = 64.dp) // replace with a Spacer
-                .background(color = Color.Yellow, shape = RoundedCornerShape(paddingLarge))
+                .background(
+                    color = if (isRecording) Color.Red else Color.Yellow,
+                    shape = RoundedCornerShape(paddingLarge)
+                )
                 .padding(paddingLarge)
         ) {
             Icon(imageVector = Icons.Default.AddCircle, contentDescription = "")
@@ -118,4 +125,14 @@ private fun startAudioRecorder() {
 
 private fun stopAudioRecorder() {
     NativeInterface.stopAudioRecorder()
+    NativeInterface.writeFile(getAudioRecordingFilePath())
+}
+
+fun getAudioRecordingFilePath(): String {
+    val time = System.currentTimeMillis()
+    val newFile = File(
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
+        "RecsAndFx_recording_$time.wav"
+    )
+    return newFile.path
 }

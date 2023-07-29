@@ -15,7 +15,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.tomaszrykala.recsandfx.paddingMedium
+import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

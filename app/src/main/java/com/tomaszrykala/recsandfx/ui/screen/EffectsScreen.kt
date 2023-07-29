@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.tomaszrykala.recsandfx.ShowSnackbar
 import com.tomaszrykala.recsandfx.oboeRealFx
-import com.tomaszrykala.recsandfx.paddingMedium
+import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
 
 @Composable
 @Preview(showBackground = true)
