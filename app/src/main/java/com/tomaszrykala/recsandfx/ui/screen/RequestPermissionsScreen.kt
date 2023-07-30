@@ -17,6 +17,7 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
 
+// TODO CSQ Not all permissions have to be requested at launch. Can be delayed to the FxDetail screen.
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequestPermissionsScreen(

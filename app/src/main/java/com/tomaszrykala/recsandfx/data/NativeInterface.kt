@@ -20,7 +20,7 @@ import android.util.Log
 import com.tomaszrykala.recsandfx.data.datatype.EffectDescription
 import com.tomaszrykala.recsandfx.data.datatype.NativeEffect
 
-object NativeInterface {
+internal object NativeInterface {
     // Used to load the 'native-lib' library on application startup.
     val effectDescriptionMap: Map<String, EffectDescription>
 

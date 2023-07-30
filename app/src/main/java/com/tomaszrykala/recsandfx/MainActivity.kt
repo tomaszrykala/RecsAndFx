@@ -39,10 +39,10 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.data.Effect
 import com.tomaszrykala.recsandfx.data.NativeInterface
 import com.tomaszrykala.recsandfx.data.toParam
-import com.tomaszrykala.recsandfx.ui.screen.EffectDetailScreen
 import com.tomaszrykala.recsandfx.ui.screen.EffectsScreen
 import com.tomaszrykala.recsandfx.ui.screen.RequestPermissionsScreen
 import com.tomaszrykala.recsandfx.ui.screen.Screen
+import com.tomaszrykala.recsandfx.ui.screen.effect_detail.EffectDetailScreen
 import com.tomaszrykala.recsandfx.ui.screen.getPermissionsList
 import com.tomaszrykala.recsandfx.ui.theme.RecsAndFxTheme
 import com.tomaszrykala.recsandfx.ui.theme.paddingLarge
@@ -147,9 +147,9 @@ private fun ShowRafApp(
         }
         composable(Screen.EffectDetailScreen.route) {
             EffectDetailScreen(
-                snackbarHostState,
-                contentPadding,
-                it.arguments?.getString("effect") ?: "EMPTY"
+                snackbarHostState = snackbarHostState,
+                contentPadding = contentPadding,
+                effectName = it.arguments?.getString("effect") ?: "EMPTY"
             )
         }
     }
