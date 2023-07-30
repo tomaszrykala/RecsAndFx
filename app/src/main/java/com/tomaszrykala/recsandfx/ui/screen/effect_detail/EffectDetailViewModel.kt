@@ -19,38 +19,24 @@ class EffectDetailViewModel(
     private val recordingsPlayer: RecordingsPlayer = RecordingsPlayerImpl(),
 ) : ViewModel() {
 
-    private lateinit var effectName: String
+    // effectName should really be a field?
 
     fun getEffect(effectName: String): Effect {
-        return (oboeRealFx.find { it.name == effectName } ?: juceEffects[0]).also {
-            this.effectName = it.name
-        } // TODO CSQ debug
+        return (oboeRealFx.find { it.name == effectName } ?: juceEffects[0]) // TODO CSQ debug
     }
 
     fun startAudioRecorder() {
         nativeInterface.startAudioRecorder()
     }
 
-    fun stopAudioRecorder() {
+    fun stopAudioRecorder(effectName: String) {
         nativeInterface.stopAudioRecorder()
         nativeInterface.writeFile(fileStorage.getRecordingFilePath(effectName))
     }
 
-    fun getFiles(): List<String> {
-        // val filePath = fileStorage.getAllRecordingsFilePath(effectName)
+    fun getFiles(effectName: String): List<String> = fileStorage.getAllRecordings(effectName)
 
-        // /sdcard/Music/RecsAndFx_recording_Echo_1690732892215.wav
-        // /sdcard/Music/RecsAndFx_recording_Tremolo_1690732117397.wav
-        return listOf( // TODO CSQ DEBUG
-            "RecsAndFx_recording_Echo_1690732892215.wav",
-            "RecsAndFx_recording_Tremolo_1690732117397.wav"
-        )
-    }
-
-    fun onSelectedRecording(
-        context: Context,
-        selectedRecording: String
-    ) {
+    fun onSelectedRecording(context: Context, selectedRecording: String) {
         // https://developer.android.com/guide/topics/media/platform/mediaplayer
         // https://proandroiddev.com/learn-with-code-jetpack-compose-playing-media-part-3-3792bdfbe1ea
         if (selectedRecording.isEmpty()) {
@@ -61,4 +47,6 @@ class EffectDetailViewModel(
             recordingsPlayer.play(context, uri)
         }
     }
+
+    fun onRecordingStop() = recordingsPlayer.stop()
 }

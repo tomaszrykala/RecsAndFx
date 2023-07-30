@@ -64,19 +64,30 @@ fun EffectDetailScreen(
         Title(effect)
         Controls(effect)
         Spacer(modifier = Modifier.height(paddingXXLarge))
-        RecordButton(viewModel, snackbarHostState)
+        RecordButton(viewModel, effectName, snackbarHostState)
         Spacer(modifier = Modifier.height(paddingXXLarge))
-        Recordings(contentPadding, viewModel, snackbarHostState)
+
+        val recordings = viewModel.getFiles(effectName)
+        if (recordings.isEmpty()) {
+            BigText("Record yourself to discover the effect!")
+        } else {
+            Recordings(contentPadding, viewModel, snackbarHostState, recordings)
+        }
     }
 }
 
 @Composable
 private fun Title(effect: Effect) {
+    BigText(effect.name)
+}
+
+@Composable
+private fun BigText(text: String) {
     Text(
         modifier = Modifier
             .padding(bottom = paddingMedium)
             .fillMaxWidth(),
-        text = effect.name,
+        text = text,
         style = TextStyle(
             fontSize = TextUnit(
                 value = 24.0F,
@@ -110,6 +121,7 @@ private fun Controls(effect: Effect) {
 @Composable
 private fun RecordButton(
     viewModel: EffectDetailViewModel,
+    effectName: String,
     snackbarHostState: SnackbarHostState
 ) {
     var isRecording by rememberSaveable { mutableStateOf(false) }
@@ -119,11 +131,12 @@ private fun RecordButton(
         ShowSnackbar(snackbarHostState, "You're recording!")
     } else if (hasRecordingStarted) {
         ShowSnackbar(snackbarHostState, "You've stopped recording!")
-    }
+    } // TODO after the recording the list doesn't update
+
     IconButton(
         onClick = {
             if (isRecording) {
-                viewModel.stopAudioRecorder()
+                viewModel.stopAudioRecorder(effectName)
                 isRecording = false
             } else {
                 viewModel.startAudioRecorder()
@@ -146,30 +159,27 @@ private fun RecordButton(
 private fun Recordings(
     contentPadding: PaddingValues,
     viewModel: EffectDetailViewModel,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    recordings: List<String>
 ) {
+    val context = LocalContext.current
     var selectedRecording by remember { mutableStateOf("") }
-
     if (selectedRecording != "") {
         ShowSnackbar(snackbarHostState, "Playing $selectedRecording.")
     }
-    val context = LocalContext.current
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
-        items(viewModel.getFiles()) { recording ->
+        items(recordings) { recording ->
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(if (selectedRecording == recording) Color.Yellow else Color.Transparent)
                     .clickable {
                         selectedRecording = if (selectedRecording == recording) "" else recording
-                        viewModel.onSelectedRecording(
-                            context,
-                            selectedRecording
-                        )
+                        viewModel.onSelectedRecording(context, selectedRecording)
                     }
                     .padding(paddingMedium),
                 text = recording,
