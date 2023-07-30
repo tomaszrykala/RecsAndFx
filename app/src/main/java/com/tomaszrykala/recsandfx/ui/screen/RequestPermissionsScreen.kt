@@ -73,11 +73,11 @@ private fun getTextToShowGivenPermissions(
 
 fun getPermissionsList(): List<String> = mutableListOf(
     Manifest.permission.RECORD_AUDIO,
-    Manifest.permission.WRITE_EXTERNAL_STORAGE,
 ).apply {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         add(Manifest.permission.READ_MEDIA_AUDIO)
     } else {
         add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 }

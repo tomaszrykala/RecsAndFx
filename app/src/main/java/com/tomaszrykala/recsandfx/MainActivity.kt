@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
             == PackageManager.PERMISSION_GRANTED
         ) {
             NativeInterface.createAudioEngine()
-            // NativeInterface.enable(true) // isAudioEnabled (repeat on lifecycle?)
+            NativeInterface.enable(true) // isAudioEnabled (repeat on lifecycle?)
         }
     }
 }
