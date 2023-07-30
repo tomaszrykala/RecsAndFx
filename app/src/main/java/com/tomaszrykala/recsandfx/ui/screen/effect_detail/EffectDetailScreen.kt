@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -52,11 +53,6 @@ fun EffectDetailScreen(
     effectName: String = juceEffects[0].name,
 ) {
     val effect = viewModel.getEffect(effectName) // TODO CSQ Flow
-    var selectedRecording by remember { mutableStateOf("") }
-
-    if (selectedRecording != "") {
-        ShowSnackbar(snackbarHostState, "Playing $selectedRecording.")
-    }
 
     Column(
         modifier = Modifier
@@ -70,32 +66,43 @@ fun EffectDetailScreen(
         Spacer(modifier = Modifier.height(paddingXXLarge))
         RecordButton(viewModel, snackbarHostState)
         Spacer(modifier = Modifier.height(paddingXXLarge))
+        Recordings(contentPadding, viewModel, snackbarHostState)
+    }
+}
 
-        val files = viewModel.getFiles()
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = contentPadding,
-            verticalArrangement = Arrangement.spacedBy(paddingMedium),
+@Composable
+private fun Title(effect: Effect) {
+    Text(
+        modifier = Modifier
+            .padding(bottom = paddingMedium)
+            .fillMaxWidth(),
+        text = effect.name,
+        style = TextStyle(
+            fontSize = TextUnit(
+                value = 24.0F,
+                type = TextUnitType.Sp,
+            ),
+            fontWeight = FontWeight.Bold
+        )
+    )
+}
+
+@Composable
+private fun Controls(effect: Effect) {
+    effect.params.forEach { param ->
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            items(files) { recording ->
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally)
-                        .background(if (selectedRecording == recording) Color.Yellow else Color.Transparent)
-                        .clickable {
-                            selectedRecording =
-                                if (selectedRecording == recording) "" else recording
-                            viewModel.onSelectedRecording(selectedRecording)
-                        }
-                        .padding(paddingMedium),
-                    text = recording,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-
-            }
+            Text(text = param.name)
+            Text(
+                text = param.defaultValue.toString(),
+                style = TextStyle(fontWeight = FontWeight.Bold)
+            )
+            Text(text = param.minValue.toString())
+            // TODO CSQ Add Slider
+            Text(text = param.maxValue.toString())
         }
     }
 }
@@ -136,38 +143,38 @@ private fun RecordButton(
 }
 
 @Composable
-private fun Controls(effect: Effect) {
-    effect.params.forEach { param ->
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = param.name)
+private fun Recordings(
+    contentPadding: PaddingValues,
+    viewModel: EffectDetailViewModel,
+    snackbarHostState: SnackbarHostState
+) {
+    var selectedRecording by remember { mutableStateOf("") }
+
+    if (selectedRecording != "") {
+        ShowSnackbar(snackbarHostState, "Playing $selectedRecording.")
+    }
+    val context = LocalContext.current
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(paddingMedium),
+    ) {
+        items(viewModel.getFiles()) { recording ->
             Text(
-                text = param.defaultValue.toString(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(if (selectedRecording == recording) Color.Yellow else Color.Transparent)
+                    .clickable {
+                        selectedRecording = if (selectedRecording == recording) "" else recording
+                        viewModel.onSelectedRecording(
+                            context,
+                            selectedRecording
+                        )
+                    }
+                    .padding(paddingMedium),
+                text = recording,
                 style = TextStyle(fontWeight = FontWeight.Bold)
             )
-            Text(text = param.minValue.toString())
-            // TODO CSQ Add Slider
-            Text(text = param.maxValue.toString())
         }
     }
-}
-
-@Composable
-private fun Title(effect: Effect) {
-    Text(
-        modifier = Modifier
-            .padding(bottom = paddingMedium)
-            .fillMaxWidth(),
-        text = effect.name,
-        style = TextStyle(
-            fontSize = TextUnit(
-                value = 24.0F,
-                type = TextUnitType.Sp,
-            ),
-            fontWeight = FontWeight.Bold
-        )
-    )
 }
