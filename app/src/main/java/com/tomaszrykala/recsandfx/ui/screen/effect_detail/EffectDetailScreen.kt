@@ -1,6 +1,7 @@
 package com.tomaszrykala.recsandfx.ui.screen.effect_detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
@@ -33,13 +35,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tomaszrykala.recsandfx.ShowSnackbar
 import com.tomaszrykala.recsandfx.data.Effect
 import com.tomaszrykala.recsandfx.data.juceEffects
 import com.tomaszrykala.recsandfx.ui.theme.paddingLarge
 import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
+import com.tomaszrykala.recsandfx.ui.theme.paddingXXLarge
 
 @Preview(showBackground = true)
 @Composable
@@ -50,6 +52,11 @@ fun EffectDetailScreen(
     effectName: String = juceEffects[0].name,
 ) {
     val effect = viewModel.getEffect(effectName) // TODO CSQ Flow
+    var selectedRecording by remember { mutableStateOf("") }
+
+    if (selectedRecording != "") {
+        ShowSnackbar(snackbarHostState, "Playing $selectedRecording.")
+    }
 
     Column(
         modifier = Modifier
@@ -60,15 +67,35 @@ fun EffectDetailScreen(
     ) {
         Title(effect)
         Controls(effect)
-        Spacer(modifier = Modifier.height(64.dp))
+        Spacer(modifier = Modifier.height(paddingXXLarge))
         RecordButton(viewModel, snackbarHostState)
-        Spacer(modifier = Modifier.height(64.dp))
+        Spacer(modifier = Modifier.height(paddingXXLarge))
+
+        val files = viewModel.getFiles()
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(paddingMedium),
         ) {
+            items(files) { recording ->
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally)
+                        .background(if (selectedRecording == recording) Color.Yellow else Color.Transparent)
+                        .clickable {
+                            selectedRecording =
+                                if (selectedRecording == recording) "" else recording
+                            viewModel.onSelectedRecording(selectedRecording)
+                        }
+                        .padding(paddingMedium),
+                    text = recording,
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
 
+            }
         }
     }
 }

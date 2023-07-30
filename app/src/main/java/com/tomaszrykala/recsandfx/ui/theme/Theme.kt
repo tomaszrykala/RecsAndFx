@@ -38,6 +38,8 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+val paddingXXLarge = 64.dp
+val paddingXLarge = 32.dp
 val paddingLarge = 16.dp
 val paddingMedium = 8.dp
 
