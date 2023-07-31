@@ -1,7 +1,7 @@
-package com.tomaszrykala.recsandfx.core_data
+package com.tomaszrykala.recsandfx.coredata
 
 import android.util.Log
-import com.tomaszrykala.recsandfx.core_data.NativeInterface.TAG
+import com.tomaszrykala.recsandfx.coredata.NativeInterface.TAG
 
 interface NativeInterfaceWrapper {
     fun startAudioRecorder()

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tomaszrykala.recsandfx.core_data.datatype
+package com.tomaszrykala.recsandfx.coredata.datatype
 
 data class EffectDescription(
     val name: String,

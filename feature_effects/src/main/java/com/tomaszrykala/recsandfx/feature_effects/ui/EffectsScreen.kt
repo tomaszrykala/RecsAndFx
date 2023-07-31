@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tomaszrykala.recsandfx.core_data.allEffects
+import com.tomaszrykala.recsandfx.coredata.allEffects
 import com.tomaszrykala.recsandfx.feature_effects.R
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text

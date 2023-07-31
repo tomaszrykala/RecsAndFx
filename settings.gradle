@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "RecsAndFx"
 include ':app'
 include ':feature_effects'
-include ':core_data'
+include ':coredata'

@@ -1,4 +1,4 @@
-package com.tomaszrykala.recsandfx.core_data
+package com.tomaszrykala.recsandfx.coredata
 
 import org.junit.Test
 

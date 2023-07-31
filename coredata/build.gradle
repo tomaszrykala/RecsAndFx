@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.tomaszrykala.recsandfx.core_data'
+    namespace 'com.tomaszrykala.recsandfx.coredata'
     compileSdk 34
 
     defaultConfig {
