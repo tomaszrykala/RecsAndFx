@@ -48,6 +48,7 @@ android {
 
 dependencies {
     implementation(project(":feature:effects_list"))
+    implementation(project(":feature:media_player"))
     implementation(project(":feature:permissions"))
 
     implementation(project(':core:cpp'))

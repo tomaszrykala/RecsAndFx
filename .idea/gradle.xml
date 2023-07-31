@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/core/storage" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/effects_list" />
+            <option value="$PROJECT_DIR$/feature/media_player" />
             <option value="$PROJECT_DIR$/feature/permissions" />
           </set>
         </option>

@@ -10,8 +10,8 @@ import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapperImpl
 import com.tomaszrykala.recsandfx.core.domain.effect.allEffects
 import com.tomaszrykala.recsandfx.core.storage.FileStorage
 import com.tomaszrykala.recsandfx.core.storage.FileStorageImpl
-import com.tomaszrykala.recsandfx.player.RecordingsPlayer
-import com.tomaszrykala.recsandfx.player.RecordingsPlayerImpl
+import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayer
+import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayerImpl
 
 class EffectDetailViewModel(
     private val nativeInterface: NativeInterfaceWrapper = NativeInterfaceWrapperImpl(),
