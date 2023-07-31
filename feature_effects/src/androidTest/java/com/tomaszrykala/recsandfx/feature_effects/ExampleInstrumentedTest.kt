@@ -1,4 +1,4 @@
-package com.tomaszrykala.feature_effects
+package com.tomaszrykala.recsandfx.feature_effects
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

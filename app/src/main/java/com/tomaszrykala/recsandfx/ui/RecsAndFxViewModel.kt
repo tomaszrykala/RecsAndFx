@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
-import com.tomaszrykala.recsandfx.data.NativeInterfaceWrapper
-import com.tomaszrykala.recsandfx.data.NativeInterfaceWrapperImpl
+import com.tomaszrykala.recsandfx.core_data.NativeInterfaceWrapper
+import com.tomaszrykala.recsandfx.core_data.NativeInterfaceWrapperImpl
 
 class RecsAndFxViewModel(
     private val nativeInterface: NativeInterfaceWrapper = NativeInterfaceWrapperImpl()
@@ -25,5 +25,9 @@ class RecsAndFxViewModel(
             nativeInterface.createAudioEngine()
             nativeInterface.enable(true)
         }
+    }
+
+    fun enableAudio(audioEnabled: Boolean) {
+        nativeInterface.enable(audioEnabled)
     }
 }

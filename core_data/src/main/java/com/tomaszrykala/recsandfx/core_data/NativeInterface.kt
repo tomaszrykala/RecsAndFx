@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.tomaszrykala.recsandfx.data
+package com.tomaszrykala.recsandfx.core_data
 
 import android.util.Log
-import com.tomaszrykala.recsandfx.TAG
-import com.tomaszrykala.recsandfx.data.datatype.EffectDescription
-import com.tomaszrykala.recsandfx.data.datatype.NativeEffect
+import com.tomaszrykala.recsandfx.core_data.datatype.EffectDescription
+import com.tomaszrykala.recsandfx.core_data.datatype.NativeEffect
 
 internal object NativeInterface {
     // Used to load the 'native-lib' library on application startup.
@@ -91,4 +90,6 @@ internal object NativeInterface {
     // These are utility functions
     private fun convertEffectToId(effect: NativeEffect): Int =
         effectDescriptionMap[effect.name]?.id ?: -1
+
+    const val TAG = "NativeInterface"
 }

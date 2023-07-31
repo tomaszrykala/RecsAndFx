@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tomaszrykala.recsandfx.data.datatype
+package com.tomaszrykala.recsandfx.core_data.datatype
 
 data class NativeEffect(val effectDescription: EffectDescription) {
     val name = effectDescription.name

@@ -4,12 +4,12 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.TAG
-import com.tomaszrykala.recsandfx.data.Effect
-import com.tomaszrykala.recsandfx.data.FileStorage
-import com.tomaszrykala.recsandfx.data.FileStorageImpl
-import com.tomaszrykala.recsandfx.data.NativeInterfaceWrapper
-import com.tomaszrykala.recsandfx.data.NativeInterfaceWrapperImpl
-import com.tomaszrykala.recsandfx.data.allEffects
+import com.tomaszrykala.recsandfx.core_data.Effect
+import com.tomaszrykala.recsandfx.core_data.FileStorage
+import com.tomaszrykala.recsandfx.core_data.FileStorageImpl
+import com.tomaszrykala.recsandfx.core_data.NativeInterfaceWrapper
+import com.tomaszrykala.recsandfx.core_data.NativeInterfaceWrapperImpl
+import com.tomaszrykala.recsandfx.core_data.allEffects
 import com.tomaszrykala.recsandfx.player.RecordingsPlayer
 import com.tomaszrykala.recsandfx.player.RecordingsPlayerImpl
 

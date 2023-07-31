@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -34,8 +35,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.TAG
-import com.tomaszrykala.recsandfx.data.NativeInterface
-import com.tomaszrykala.feature_effects.ui.EffectsScreen
+import com.tomaszrykala.recsandfx.feature_effects.ui.EffectsScreen
 import com.tomaszrykala.recsandfx.ui.screen.RequestPermissionsScreen
 import com.tomaszrykala.recsandfx.ui.screen.Screen
 import com.tomaszrykala.recsandfx.ui.screen.effect_detail.EffectDetailScreen
@@ -45,30 +45,32 @@ import com.tomaszrykala.recsandfx.ui.theme.paddingLarge
 
 class MainActivity : ComponentActivity() {
 
-    private val recsAndFxViewModel: RecsAndFxViewModel by viewModels()
+    private val viewModel: RecsAndFxViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { RecsAndFxTheme { RafApp() } }
+        setContent { RecsAndFxTheme { RafApp(viewModel) } }
     }
 
     override fun onPause() = super.onPause().also {
-        recsAndFxViewModel.onPause()
+        viewModel.onPause()
     }
 
     override fun onResume() = super.onResume().also {
-        recsAndFxViewModel.onResume(this)
+        viewModel.onResume(this)
     }
 }
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
-private fun RafApp() {
+private fun RafApp(
+    viewModel: RecsAndFxViewModel = viewModel()
+) {
     val snackbarHostState = remember { SnackbarHostState() }
     var isAudioEnabled by rememberSaveable { mutableStateOf(false) }
     var hasAudioBeenEnabled by rememberSaveable { mutableStateOf(false) }
 
-    HandleIsAudioEnabledState(isAudioEnabled, snackbarHostState, hasAudioBeenEnabled)
+    HandleIsAudioEnabledState(isAudioEnabled, hasAudioBeenEnabled, snackbarHostState, viewModel)
 
     Scaffold(
         modifier = Modifier
@@ -110,8 +112,9 @@ private fun RafApp() {
 @Composable
 private fun HandleIsAudioEnabledState(
     isAudioEnabled: Boolean,
+    hasAudioBeenEnabled: Boolean,
     snackbarHostState: SnackbarHostState,
-    hasAudioBeenEnabled: Boolean
+    viewModel: RecsAndFxViewModel
 ) {
     if (isAudioEnabled) {
         ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_enabled_audio_pass_through))
@@ -119,7 +122,7 @@ private fun HandleIsAudioEnabledState(
         ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_disabled_audio_pass_through))
     }
     Log.d(TAG, "isAudioEnabled: $isAudioEnabled")
-    NativeInterface.enable(isAudioEnabled)
+    viewModel.enableAudio(isAudioEnabled)
 }
 
 @Composable

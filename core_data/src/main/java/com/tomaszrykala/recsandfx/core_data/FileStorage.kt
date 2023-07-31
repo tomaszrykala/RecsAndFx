@@ -1,12 +1,11 @@
-package com.tomaszrykala.recsandfx.data
+package com.tomaszrykala.recsandfx.core_data
 
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
-import com.tomaszrykala.recsandfx.TAG
 import java.io.File
 
-
+// TODO separate module
 interface FileStorage {
     fun getRecordingFilePath(effectName: String): String
     fun getAllRecordings(effectName: String): List<String>
@@ -47,5 +46,6 @@ class FileStorageImpl : FileStorage {
     private companion object {
         const val FILE_PREFIX = "RecsAndFx_recording_"
         const val FILE_EXTENSION = ".wav"
+        const val TAG = "FileStorage"
     }
 }

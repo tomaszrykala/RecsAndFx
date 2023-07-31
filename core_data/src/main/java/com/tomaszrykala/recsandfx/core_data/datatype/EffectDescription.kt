@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package com.tomaszrykala.recsandfx.data.datatype
+package com.tomaszrykala.recsandfx.core_data.datatype
 
-data class ParamDescription(
-    val paramName: String,
-    val minValue: Float,
-    val maxValue: Float,
-    val defaultValue: Float
-)
+data class EffectDescription(
+    val name: String,
+    val category: String,
+    val id: Int,
+    val paramValues: Array<ParamDescription>
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as EffectDescription
+        if (id != other.id) return false
+        return true
+    }
+
+    override fun hashCode(): Int = id
+}

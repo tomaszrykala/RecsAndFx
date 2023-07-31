@@ -1,4 +1,4 @@
-package com.tomaszrykala.feature_effects
+package com.tomaszrykala.recsandfx.core_data
 
 import org.junit.Test
 

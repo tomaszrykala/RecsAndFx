@@ -42,9 +42,9 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tomaszrykala.recsandfx.R
+import com.tomaszrykala.recsandfx.core_data.Effect
+import com.tomaszrykala.recsandfx.core_data.juceEffects
 import com.tomaszrykala.recsandfx.ui.ShowSnackbar
-import com.tomaszrykala.recsandfx.data.Effect
-import com.tomaszrykala.recsandfx.data.juceEffects
 import com.tomaszrykala.recsandfx.ui.theme.paddingLarge
 import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
 import com.tomaszrykala.recsandfx.ui.theme.paddingXXLarge

@@ -44,15 +44,10 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-    externalNativeBuild {
-        cmake {
-            path "./CMakeLists.txt"
-            version "3.22.1"
-        }
-    }
 }
 
 dependencies {
+    implementation(project(":core_data"))
     implementation(project(":feature_effects"))
 
     implementation 'androidx.core:core-ktx:1.10.1'
