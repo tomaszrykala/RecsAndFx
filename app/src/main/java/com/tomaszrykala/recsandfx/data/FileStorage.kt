@@ -3,6 +3,7 @@ package com.tomaszrykala.recsandfx.data
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import com.tomaszrykala.recsandfx.TAG
 import java.io.File
 
 interface FileStorage {
@@ -21,9 +22,9 @@ class FileStorageImpl : FileStorage {
 
     override fun getAllRecordings(effectName: String): List<String> {
         val file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-        Log.d("CSQ", "getFiles $file.")
+        Log.d(TAG, "getFiles $file.")
         val files = file.listFiles { _, name -> name.contains(effectName) }
-        Log.d("CSQ", "getFiles isDirectory $files.")
+        Log.d(TAG, "getFiles isDirectory $files.")
         return files?.map { it.name }?.toList() ?: emptyList() // why not File or absolutePath?
     }
 

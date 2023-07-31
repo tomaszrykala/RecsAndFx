@@ -24,11 +24,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.ShowSnackbar
 import com.tomaszrykala.recsandfx.oboeRealFx
 import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
@@ -43,7 +45,9 @@ fun EffectsScreen(
     var selectedEffect by rememberSaveable { mutableStateOf("") }
 
     if (selectedEffect != "") {
-        ShowSnackbar(snackbarHostState, "You've selected $selectedEffect.")
+        ShowSnackbar(
+            snackbarHostState, stringResource(R.string.you_ve_selected_effect, selectedEffect)
+        )
     }
 
     LazyColumn(

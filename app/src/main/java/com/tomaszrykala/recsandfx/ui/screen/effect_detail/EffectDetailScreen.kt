@@ -31,12 +31,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.ShowSnackbar
 import com.tomaszrykala.recsandfx.data.Effect
 import com.tomaszrykala.recsandfx.data.juceEffects
@@ -128,9 +130,9 @@ private fun RecordButton(
     var hasRecordingStarted by rememberSaveable { mutableStateOf(false) }
 
     if (isRecording) {
-        ShowSnackbar(snackbarHostState, "You're recording!")
+        ShowSnackbar(snackbarHostState, stringResource(R.string.you_re_recording))
     } else if (hasRecordingStarted) {
-        ShowSnackbar(snackbarHostState, "You've stopped recording!")
+        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_stopped_recording))
     } // TODO after the recording the list doesn't update
 
     IconButton(
@@ -165,7 +167,10 @@ private fun Recordings(
     val context = LocalContext.current
     var selectedRecording by remember { mutableStateOf("") }
     if (selectedRecording != "") {
-        ShowSnackbar(snackbarHostState, "Playing $selectedRecording.")
+        ShowSnackbar(
+            snackbarHostState,
+            stringResource(R.string.playing_recording, selectedRecording)
+        )
     }
     LazyColumn(
         modifier = Modifier.fillMaxSize(),

@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
+import com.tomaszrykala.recsandfx.TAG
 
 interface RecordingsPlayer {
     fun play(context: Context, uri: Uri)
@@ -22,11 +23,11 @@ class RecordingsPlayerImpl : RecordingsPlayer {
         mediaPlayer = MediaPlayer().apply {
             setDataSource(context, uri)
             setOnPreparedListener {
-                Log.d("CSQ", "MediaPlayer prepared.")
+                Log.d(TAG, "MediaPlayer prepared.")
                 it?.start()
             }
             setOnCompletionListener {
-                Log.d("CSQ", "MediaPlayer completed.")
+                Log.d(TAG, "MediaPlayer completed.")
                 stop()
             }
             prepareAsync()
@@ -37,7 +38,7 @@ class RecordingsPlayerImpl : RecordingsPlayer {
         mediaPlayer?.let {
             it.stop()
             it.release()
-            Log.d("CSQ", "MediaPlayer released.")
+            Log.d(TAG, "MediaPlayer released.")
         }
         mediaPlayer = null
     }

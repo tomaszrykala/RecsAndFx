@@ -124,11 +124,11 @@ private fun HandleIsAudioEnabledState(
     hasAudioBeenEnabled: Boolean
 ) {
     if (isAudioEnabled) {
-        ShowSnackbar(snackbarHostState, "You've enabled audio pass-through.")
+        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_enabled_audio_pass_through))
     } else if (hasAudioBeenEnabled) {
-        ShowSnackbar(snackbarHostState, "You've disabled audio pass-through.")
+        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_disabled_audio_pass_through))
     }
-    Log.d("CSQ", "isAudioEnabled: $isAudioEnabled")
+    Log.d(TAG, "isAudioEnabled: $isAudioEnabled")
     NativeInterface.enable(isAudioEnabled)
 }
 
