@@ -46,4 +46,12 @@ class EffectDetailViewModel(
     }
 
     fun onRecordingStop() = recordingsPlayer.stop()
+
+    fun deleteRecording(selectedRecording: String) {
+        if (fileStorage.deleteRecording(selectedRecording)) {
+            Log.d(TAG, "Deleted Recording: $selectedRecording.")
+        } else {
+            Log.d(TAG, "Failed to delete Recording: $selectedRecording.")
+        }
+    }
 }

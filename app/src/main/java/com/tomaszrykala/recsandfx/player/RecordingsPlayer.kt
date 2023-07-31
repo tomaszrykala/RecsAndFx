@@ -16,18 +16,14 @@ class RecordingsPlayerImpl : RecordingsPlayer {
     private var mediaPlayer: MediaPlayer? = null
 
     override fun play(context: Context, uri: Uri) {
-        // sync
-        // MediaPlayer.create(context, uri).start()
-
-        // async
         mediaPlayer = MediaPlayer().apply {
             setDataSource(context, uri)
             setOnPreparedListener {
-                Log.d(TAG, "MediaPlayer prepared.")
+                Log.d(TAG, "$TAG_MP prepared.")
                 it?.start()
             }
             setOnCompletionListener {
-                Log.d(TAG, "MediaPlayer completed.")
+                Log.d(TAG, "$TAG_MP completed.")
                 stop()
             }
             prepareAsync()
@@ -38,8 +34,12 @@ class RecordingsPlayerImpl : RecordingsPlayer {
         mediaPlayer?.let {
             it.stop()
             it.release()
-            Log.d(TAG, "MediaPlayer released.")
+            Log.d(TAG, "$TAG_MP released.")
         }
         mediaPlayer = null
+    }
+
+    companion object {
+        private const val TAG_MP = "MediaPlayer"
     }
 }

@@ -6,10 +6,12 @@ import android.util.Log
 import com.tomaszrykala.recsandfx.TAG
 import java.io.File
 
+
 interface FileStorage {
     fun getRecordingFilePath(effectName: String): String
     fun getAllRecordings(effectName: String): List<String>
     fun getRecordingUri(selectedRecording: String): Uri
+    fun deleteRecording(recording: String): Boolean
 }
 
 class FileStorageImpl : FileStorage {
@@ -21,23 +23,26 @@ class FileStorageImpl : FileStorage {
     }
 
     override fun getAllRecordings(effectName: String): List<String> {
-        val file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-        Log.d(TAG, "getFiles $file.")
-        val files = file.listFiles { _, name -> name.contains(effectName) }
+        val files = storageDirectory().listFiles { _, name -> name.contains(effectName) }
         Log.d(TAG, "getFiles isDirectory $files.")
         return files?.map { it.name }?.toList() ?: emptyList() // why not File or absolutePath?
     }
 
     override fun getRecordingUri(selectedRecording: String): Uri {
         val recordingFile = getRecordingFile(selectedRecording)
-        // val toURI: URI = recordingFile.toURI()
         return Uri.fromFile(recordingFile)
     }
 
-    private fun getRecordingFile(fileName: String) = File(
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
-        fileName
-    )
+    override fun deleteRecording(recording: String): Boolean {
+        val recordingFile = getRecordingFile(recording)
+        return recordingFile.delete() // This will not work as we need scoped storage.
+    }
+
+    private fun getRecordingFile(fileName: String) = File(storageDirectory(), fileName)
+
+    // TODO Replace with MediaStore.Audio, to enable deleting.
+    private fun storageDirectory(): File =
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
 
     private companion object {
         const val FILE_PREFIX = "RecsAndFx_recording_"

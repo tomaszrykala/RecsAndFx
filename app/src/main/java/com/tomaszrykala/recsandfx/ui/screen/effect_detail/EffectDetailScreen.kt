@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
@@ -166,30 +168,55 @@ private fun Recordings(
 ) {
     val context = LocalContext.current
     var selectedRecording by remember { mutableStateOf("") }
+    var deletedRecording by remember { mutableStateOf("") }
+
     if (selectedRecording != "") {
         ShowSnackbar(
-            snackbarHostState,
-            stringResource(R.string.playing_recording, selectedRecording)
+            snackbarHostState, stringResource(R.string.playing_recording, selectedRecording)
         )
     }
+    if (deletedRecording != "") {
+        ShowSnackbar(
+            snackbarHostState, stringResource(R.string.deleted_recording, deletedRecording)
+        )
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(paddingMedium),
+//        verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
         items(recordings) { recording ->
-            Text(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(if (selectedRecording == recording) Color.Yellow else Color.Transparent)
-                    .clickable {
-                        selectedRecording = if (selectedRecording == recording) "" else recording
-                        viewModel.onSelectedRecording(context, selectedRecording)
-                    }
+                    .background(if (selectedRecording == recording) Color.Yellow else Color.White)
                     .padding(paddingMedium),
-                text = recording,
-                style = TextStyle(fontWeight = FontWeight.Bold)
-            )
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier
+                        .clickable {
+                            selectedRecording =
+                                if (selectedRecording == recording) "" else recording
+                            viewModel.onSelectedRecording(context, selectedRecording)
+                        },
+                    text = recording,
+                    style = TextStyle(fontWeight = FontWeight.Bold),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                
+                // Delete not working yet
+//                IconButton(
+//                    onClick = {
+//                        deletedRecording = recording
+//                        viewModel.deleteRecording(recording)
+//                    }) {
+//                    Icon(imageVector = Icons.Default.Delete, contentDescription = "")
+//                }
+            }
         }
     }
 }
