@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.tomaszrykala.recsandfx.core.datatype.EffectDescription
 import com.tomaszrykala.recsandfx.core.datatype.NativeEffect
 import com.tomaszrykala.recsandfx.core.datatype.ParamDescription
+import com.tomaszrykala.recsandfx.core.native.NativeInterface
 
 data class Effect(
     val name: String,

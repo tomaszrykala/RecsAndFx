@@ -7,8 +7,8 @@ import com.tomaszrykala.recsandfx.TAG
 import com.tomaszrykala.recsandfx.core.Effect
 import com.tomaszrykala.recsandfx.core.FileStorage
 import com.tomaszrykala.recsandfx.core.FileStorageImpl
-import com.tomaszrykala.recsandfx.core.NativeInterfaceWrapper
-import com.tomaszrykala.recsandfx.core.NativeInterfaceWrapperImpl
+import com.tomaszrykala.recsandfx.core.native.NativeInterfaceWrapper
+import com.tomaszrykala.recsandfx.core.native.NativeInterfaceWrapperImpl
 import com.tomaszrykala.recsandfx.core.allEffects
 import com.tomaszrykala.recsandfx.player.RecordingsPlayer
 import com.tomaszrykala.recsandfx.player.RecordingsPlayerImpl

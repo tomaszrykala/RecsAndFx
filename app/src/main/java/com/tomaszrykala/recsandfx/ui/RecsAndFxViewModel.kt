@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
-import com.tomaszrykala.recsandfx.core.NativeInterfaceWrapper
-import com.tomaszrykala.recsandfx.core.NativeInterfaceWrapperImpl
+import com.tomaszrykala.recsandfx.core.native.NativeInterfaceWrapper
+import com.tomaszrykala.recsandfx.core.native.NativeInterfaceWrapperImpl
 
 class RecsAndFxViewModel(
     private val nativeInterface: NativeInterfaceWrapper = NativeInterfaceWrapperImpl()

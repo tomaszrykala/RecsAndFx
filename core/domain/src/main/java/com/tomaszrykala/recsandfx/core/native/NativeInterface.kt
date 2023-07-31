@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tomaszrykala.recsandfx.core
+package com.tomaszrykala.recsandfx.core.native
 
 import android.util.Log
 import com.tomaszrykala.recsandfx.core.datatype.EffectDescription
@@ -27,7 +27,7 @@ internal object NativeInterface {
     init {
         System.loadLibrary("native-lib")
         effectDescriptionMap = getEffects().associateBy { it.name }
-        Log.d("MAP", effectDescriptionMap.toString())
+        Log.d(TAG, effectDescriptionMap.toString())
     }
 
     // Functions/Members called by UI code
@@ -52,12 +52,12 @@ internal object NativeInterface {
 
     // Rotates existing effect from index to another
     fun rotateEffectAt(from: Int, to: Int) {
-        Log.d("INTERFACE", String.format("Effect was rotated from %d to %d", from, to))
+        Log.d(TAG, String.format("Effect was rotated from %d to %d", from, to))
         rotateEffectNative(from, to)
     }
 
     fun enable(enable: Boolean) {
-        Log.d("INTERFACE", "Enabling effects: $enable")
+        Log.d(TAG, "Enabling effects: $enable")
         enablePassthroughNative(enable)
     }
 
@@ -91,5 +91,6 @@ internal object NativeInterface {
     private fun convertEffectToId(effect: NativeEffect): Int =
         effectDescriptionMap[effect.name]?.id ?: -1
 
-    const val TAG = "NativeInterface"
 }
+
+internal const val TAG = "NativeInterface"

@@ -16,3 +16,4 @@ rootProject.name = "RecsAndFx"
 include ':app'
 include ':feature_effects'
 include ':core:cpp'
+include ':core:domain'
