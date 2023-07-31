@@ -17,6 +17,7 @@
 package com.tomaszrykala.recsandfx.data
 
 import android.util.Log
+import com.tomaszrykala.recsandfx.TAG
 import com.tomaszrykala.recsandfx.data.datatype.EffectDescription
 import com.tomaszrykala.recsandfx.data.datatype.NativeEffect
 
@@ -33,38 +34,21 @@ internal object NativeInterface {
     // Functions/Members called by UI code
     // Adds effect at end of effect list
     fun addEffect(effect: NativeEffect) {
-        Log.d("INTERFACE", String.format("Effect %s added", effect.name))
-        addDefaultEffectNative(
-            convertEffectToId(
-                effect
-            )
-        )
-    }
-
-    // Enables effect at index
-    fun enableEffectAt(turnOn: Boolean, index: Int) {
-        Log.d("INTERFACE", String.format("Effect %b at index %d", turnOn, index))
-        enableEffectNative(index, turnOn)
-    }
-
-    // Signals params were updated at index
-    fun updateParamsAt(effect: NativeEffect, index: Int) {
-        Log.d(
-            "INTERFACE",
-            String.format(
-                "Params were updated at index %d to %f",
-                index,
-                effect.paramValues[0]
-            )
-        )
         val nativeId = convertEffectToId(effect)
-        modifyEffectNative(nativeId, index, effect.paramValues)
+        Log.d(TAG, "addEffect $nativeId.")
+        addDefaultEffectNative(nativeId)
     }
 
     // Removes effect at index
     fun removeEffectAt(index: Int) {
-        Log.d("INTERFACE", String.format("Effect was removed at index %d", index))
         removeEffectNative(index)
+    }
+
+    // Signals params were updated at index
+    fun updateParamsAt(effect: NativeEffect, index: Int) {
+        val nativeId = convertEffectToId(effect)
+        Log.d(TAG, "updateParamsAt $nativeId.")
+        modifyEffectNative(nativeId, index, effect.paramValues)
     }
 
     // Rotates existing effect from index to another

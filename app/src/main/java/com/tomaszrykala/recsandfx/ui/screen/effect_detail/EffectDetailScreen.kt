@@ -57,7 +57,7 @@ fun EffectDetailScreen(
     contentPadding: PaddingValues = PaddingValues(),
     effectName: String = juceEffects[0].name,
 ) {
-    val effect = viewModel.getEffect(effectName) // TODO CSQ Flow
+    val effect: Effect = viewModel.getEffect(effectName) ?: return // TODO CSQ Flow
 
     Column(
         modifier = Modifier
@@ -69,10 +69,10 @@ fun EffectDetailScreen(
         Title(effect)
         Controls(effect, viewModel)
         Spacer(modifier = Modifier.height(paddingXXLarge))
-        RecordButton(viewModel, effectName, snackbarHostState)
+        RecordButton(viewModel, snackbarHostState)
         Spacer(modifier = Modifier.height(paddingXXLarge))
 
-        val recordings = viewModel.getFiles(effectName)
+        val recordings = viewModel.getFiles()
         if (recordings.isEmpty()) {
             BigText("Record yourself to discover the effect!")
         } else {
@@ -123,7 +123,7 @@ private fun Controls(
             Slider(
                 value = sliderPosition,
                 onValueChange = { value -> sliderPosition = value },
-                onValueChangeFinished = { viewModel.onParamChange(effect, sliderPosition, index) },
+                onValueChangeFinished = { viewModel.onParamChange(sliderPosition, index) },
                 valueRange = object : ClosedFloatingPointRange<Float> {
                     override fun lessThanOrEquals(a: Float, b: Float): Boolean = a <= b
                     override val endInclusive: Float = param.maxValue
@@ -141,7 +141,6 @@ private fun Controls(
 @Composable
 private fun RecordButton(
     viewModel: EffectDetailViewModel,
-    effectName: String,
     snackbarHostState: SnackbarHostState
 ) {
     var isRecording by rememberSaveable { mutableStateOf(false) }
@@ -156,7 +155,7 @@ private fun RecordButton(
     IconButton(
         onClick = {
             if (isRecording) {
-                viewModel.stopAudioRecorder(effectName)
+                viewModel.stopAudioRecorder()
                 isRecording = false
             } else {
                 viewModel.startAudioRecorder()
@@ -184,23 +183,22 @@ private fun Recordings(
 ) {
     val context = LocalContext.current
     var selectedRecording by remember { mutableStateOf("") }
-    var deletedRecording by remember { mutableStateOf("") }
 
     if (selectedRecording != "") {
         ShowSnackbar(
             snackbarHostState, stringResource(R.string.playing_recording, selectedRecording)
         )
     }
-    if (deletedRecording != "") {
-        ShowSnackbar(
-            snackbarHostState, stringResource(R.string.deleted_recording, deletedRecording)
-        )
-    }
+//    var deletedRecording by remember { mutableStateOf("") }
+//    if (deletedRecording != "") {
+//        ShowSnackbar(
+//            snackbarHostState, stringResource(R.string.deleted_recording, deletedRecording)
+//        )
+//    }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = contentPadding,
-//        verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
         items(recordings) { recording ->
             Row(

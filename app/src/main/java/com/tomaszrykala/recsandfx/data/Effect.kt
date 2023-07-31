@@ -81,7 +81,7 @@ val juceEffects = listOf(
     Effect("Dynamics", icon = Icons.Default.Refresh),
 )
 
-val oboeRealFx: List<Effect> = NativeInterface.effectDescriptionMap.map {
+val allEffects: List<Effect> = NativeInterface.effectDescriptionMap.map {
     Effect(
         name = it.key,
         category = it.value.category,

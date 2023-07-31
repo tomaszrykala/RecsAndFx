@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.ui.ShowSnackbar
-import com.tomaszrykala.recsandfx.data.oboeRealFx
+import com.tomaszrykala.recsandfx.data.allEffects
 import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
 
 @Composable
@@ -55,7 +55,7 @@ fun EffectsScreen(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
-        items(oboeRealFx) {
+        items(allEffects) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

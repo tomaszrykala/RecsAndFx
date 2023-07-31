@@ -9,8 +9,7 @@ import com.tomaszrykala.recsandfx.data.FileStorage
 import com.tomaszrykala.recsandfx.data.FileStorageImpl
 import com.tomaszrykala.recsandfx.data.NativeInterfaceWrapper
 import com.tomaszrykala.recsandfx.data.NativeInterfaceWrapperImpl
-import com.tomaszrykala.recsandfx.data.juceEffects
-import com.tomaszrykala.recsandfx.data.oboeRealFx
+import com.tomaszrykala.recsandfx.data.allEffects
 import com.tomaszrykala.recsandfx.player.RecordingsPlayer
 import com.tomaszrykala.recsandfx.player.RecordingsPlayerImpl
 
@@ -20,20 +19,25 @@ class EffectDetailViewModel(
     private val recordingsPlayer: RecordingsPlayer = RecordingsPlayerImpl(),
 ) : ViewModel() {
 
-    fun getEffect(effectName: String): Effect {
-        return (oboeRealFx.find { it.name == effectName } ?: juceEffects[0]) // TODO CSQ debug
+    private lateinit var effect: Effect
+
+    fun getEffect(effectName: String): Effect? {
+        return allEffects.find { it.name == effectName }?.also {
+            nativeInterface.addEffect(it)
+            effect = it
+        }
     }
 
     fun startAudioRecorder() {
         nativeInterface.startAudioRecorder()
     }
 
-    fun stopAudioRecorder(effectName: String) {
+    fun stopAudioRecorder() {
         nativeInterface.stopAudioRecorder()
-        nativeInterface.writeFile(fileStorage.getRecordingFilePath(effectName))
+        nativeInterface.writeFile(fileStorage.getRecordingFilePath(effect.name))
     }
 
-    fun getFiles(effectName: String): List<String> = fileStorage.getAllRecordings(effectName)
+    fun getFiles(): List<String> = fileStorage.getAllRecordings(effect.name)
 
     fun onSelectedRecording(context: Context, selectedRecording: String) {
         if (selectedRecording.isEmpty()) {
@@ -55,7 +59,7 @@ class EffectDetailViewModel(
         }
     }
 
-    fun onParamChange(effect: Effect, value: Float, index: Int) {
+    fun onParamChange(value: Float, index: Int) {
         nativeInterface.updateParamsAt(effect, value, index)
     }
 }
