@@ -1,4 +1,4 @@
-package com.tomaszrykala.recsandfx.ui.screen
+package com.tomaszrykala.recsandfx.ui.screen.effects
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import com.tomaszrykala.recsandfx.R
-import com.tomaszrykala.recsandfx.ShowSnackbar
-import com.tomaszrykala.recsandfx.oboeRealFx
+import com.tomaszrykala.recsandfx.ui.ShowSnackbar
+import com.tomaszrykala.recsandfx.data.oboeRealFx
 import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
 
 @Composable

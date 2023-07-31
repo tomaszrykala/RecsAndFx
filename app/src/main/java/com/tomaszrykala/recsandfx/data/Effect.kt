@@ -60,3 +60,9 @@ val juceEffects = listOf(
     Effect("Reverb", Icons.Default.Check),
     Effect("Dynamics", Icons.Default.Refresh),
 )
+
+val oboeRealFx: List<Effect> = NativeInterface.effectDescriptionMap.map {
+    Effect(
+        it.key, Icons.Default.Add, params = it.value.paramValues.map { pd -> pd.toParam() }
+    )
+}

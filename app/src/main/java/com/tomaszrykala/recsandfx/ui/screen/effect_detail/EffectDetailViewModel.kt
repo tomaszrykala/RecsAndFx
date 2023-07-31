@@ -10,7 +10,7 @@ import com.tomaszrykala.recsandfx.data.FileStorageImpl
 import com.tomaszrykala.recsandfx.data.NativeInterfaceWrapper
 import com.tomaszrykala.recsandfx.data.NativeInterfaceWrapperImpl
 import com.tomaszrykala.recsandfx.data.juceEffects
-import com.tomaszrykala.recsandfx.oboeRealFx
+import com.tomaszrykala.recsandfx.data.oboeRealFx
 import com.tomaszrykala.recsandfx.player.RecordingsPlayer
 import com.tomaszrykala.recsandfx.player.RecordingsPlayerImpl
 
@@ -19,8 +19,6 @@ class EffectDetailViewModel(
     private val fileStorage: FileStorage = FileStorageImpl(),
     private val recordingsPlayer: RecordingsPlayer = RecordingsPlayerImpl(),
 ) : ViewModel() {
-
-    // effectName should really be a field?
 
     fun getEffect(effectName: String): Effect {
         return (oboeRealFx.find { it.name == effectName } ?: juceEffects[0]) // TODO CSQ debug
