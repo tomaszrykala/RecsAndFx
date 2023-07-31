@@ -50,8 +50,8 @@ Java_com_tomaszrykala_recsandfx_coredata_NativeInterface_destroyAudioEngine(
 
 JNIEXPORT jobjectArray JNICALL
 Java_com_tomaszrykala_recsandfx_coredata_NativeInterface_getEffects(JNIEnv *env, jobject) {
-    jclass jcl = env->FindClass("com/tomaszrykala/recsandfx/coredata/datatype/EffectDescription");
-    jclass jparamcl = env->FindClass("com/tomaszrykala/recsandfx/coredata/datatype/ParamDescription");
+    jclass jcl = env->FindClass("com/tomaszrykala/recsandfx/cpp/datatype/EffectDescription");
+    jclass jparamcl = env->FindClass("com/tomaszrykala/recsandfx/cpp/datatype/ParamDescription");
     assert (jcl != nullptr && jparamcl != nullptr);
 
     auto jparamMethodId = env->GetMethodID(jparamcl, "<init>", "(Ljava/lang/String;FFF)V");

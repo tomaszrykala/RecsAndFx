@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.tomaszrykala.recsandfx.coredata
+package com.tomaszrykala.recsandfx.core
 
 import android.util.Log
-import com.tomaszrykala.recsandfx.coredata.datatype.EffectDescription
-import com.tomaszrykala.recsandfx.coredata.datatype.NativeEffect
+import com.tomaszrykala.recsandfx.core.datatype.EffectDescription
+import com.tomaszrykala.recsandfx.core.datatype.NativeEffect
 
 internal object NativeInterface {
     // Used to load the 'native-lib' library on application startup.

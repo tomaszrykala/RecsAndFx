@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.tomaszrykala.recsandfx.coredata.datatype
+package com.tomaszrykala.recsandfx.core.datatype
 
-data class ParamDescription(
-    val paramName: String,
-    val minValue: Float,
-    val maxValue: Float,
-    val defaultValue: Float
-)
+data class NativeEffect(val effectDescription: EffectDescription) {
+    val name = effectDescription.name
+    val paramValues = with(effectDescription.paramValues) {
+        FloatArray(size) { this[it].defaultValue }
+    }
+}

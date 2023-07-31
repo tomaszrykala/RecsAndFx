@@ -1,4 +1,4 @@
-package com.tomaszrykala.recsandfx.coredata
+package com.tomaszrykala.recsandfx.core
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -16,9 +16,9 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.tomaszrykala.recsandfx.coredata.datatype.EffectDescription
-import com.tomaszrykala.recsandfx.coredata.datatype.NativeEffect
-import com.tomaszrykala.recsandfx.coredata.datatype.ParamDescription
+import com.tomaszrykala.recsandfx.core.datatype.EffectDescription
+import com.tomaszrykala.recsandfx.core.datatype.NativeEffect
+import com.tomaszrykala.recsandfx.core.datatype.ParamDescription
 
 data class Effect(
     val name: String,
