@@ -2,7 +2,6 @@
     <string name="app_name">RecsAndFx</string>
     <string name="you_ve_enabled_audio_pass_through">You\'ve enabled audio pass-through.</string>
     <string name="you_ve_disabled_audio_pass_through">You\'ve disabled audio pass-through.</string>
-    <string name="you_ve_selected_effect">You\'ve selected %s.</string>
     <string name="playing_recording">Playing %s.</string>
     <string name="deleted_recording">Deleted %s.</string>
     <string name="you_re_recording">You\'re recording!</string>

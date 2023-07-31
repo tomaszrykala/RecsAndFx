@@ -35,7 +35,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.TAG
 import com.tomaszrykala.recsandfx.data.NativeInterface
-import com.tomaszrykala.recsandfx.ui.screen.effects.EffectsScreen
+import com.tomaszrykala.feature_effects.ui.EffectsScreen
 import com.tomaszrykala.recsandfx.ui.screen.RequestPermissionsScreen
 import com.tomaszrykala.recsandfx.ui.screen.Screen
 import com.tomaszrykala.recsandfx.ui.screen.effect_detail.EffectDetailScreen
