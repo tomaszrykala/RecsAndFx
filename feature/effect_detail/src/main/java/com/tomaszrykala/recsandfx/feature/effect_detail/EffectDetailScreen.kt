@@ -1,4 +1,4 @@
-package com.tomaszrykala.recsandfx.ui.screen.effect_detail
+package com.tomaszrykala.recsandfx.feature.effect_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,9 +20,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,17 +39,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.effect.juceEffects
-import com.tomaszrykala.recsandfx.ui.ShowSnackbar
-import com.tomaszrykala.recsandfx.ui.theme.paddingLarge
-import com.tomaszrykala.recsandfx.ui.theme.paddingMedium
-import com.tomaszrykala.recsandfx.ui.theme.paddingXXLarge
 
 @Preview(showBackground = true)
 @Composable
@@ -86,6 +84,7 @@ private fun Title(effect: Effect) {
     BigText(effect.name)
 }
 
+@OptIn(ExperimentalUnitApi::class)
 @Composable
 private fun BigText(text: String) {
     Text(
@@ -234,3 +233,14 @@ private fun Recordings(
         }
     }
 }
+
+@Composable
+fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
+    LaunchedEffect(message) {
+        snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
+    }
+}
+
+val paddingXXLarge = 64.dp
+val paddingLarge = 16.dp
+val paddingMedium = 8.dp

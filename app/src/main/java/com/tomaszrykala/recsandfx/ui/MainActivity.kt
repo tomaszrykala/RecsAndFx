@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,9 +40,8 @@ import com.tomaszrykala.recsandfx.feature.effects_list.EffectsScreen
 import com.tomaszrykala.recsandfx.feature.permissions.RequestPermissionsScreen
 import com.tomaszrykala.recsandfx.feature.permissions.getPermissionsList
 import com.tomaszrykala.recsandfx.ui.screen.Screen
-import com.tomaszrykala.recsandfx.ui.screen.effect_detail.EffectDetailScreen
+import com.tomaszrykala.recsandfx.feature.effect_detail.EffectDetailScreen
 import com.tomaszrykala.recsandfx.ui.theme.RecsAndFxTheme
-import com.tomaszrykala.recsandfx.ui.theme.paddingLarge
 
 class MainActivity : ComponentActivity() {
 
@@ -156,3 +156,5 @@ fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
         snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
     }
 }
+
+val paddingLarge = 16.dp

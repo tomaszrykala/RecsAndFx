@@ -13,7 +13,9 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "RecsAndFx"
+
 include ':app'
+include ':feature:effect_detail'
 include ':feature:effects_list'
 include ':feature:media_player'
 include ':feature:permissions'

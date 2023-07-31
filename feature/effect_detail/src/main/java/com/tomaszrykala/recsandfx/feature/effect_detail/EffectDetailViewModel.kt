@@ -1,9 +1,8 @@
-package com.tomaszrykala.recsandfx.ui.screen.effect_detail
+package com.tomaszrykala.recsandfx.feature.effect_detail
 
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.tomaszrykala.recsandfx.TAG
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapperImpl
@@ -61,5 +60,9 @@ class EffectDetailViewModel(
 
     fun onParamChange(value: Float, index: Int) {
         nativeInterface.updateParamsAt(effect, value, index)
+    }
+
+    companion object {
+        private const val TAG = "EffectDetailViewModel"
     }
 }
