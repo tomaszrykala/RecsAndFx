@@ -1,11 +1,15 @@
 package com.tomaszrykala.recsandfx.data
 
+import android.util.Log
+import com.tomaszrykala.recsandfx.TAG
+
 interface NativeInterfaceWrapper {
     fun startAudioRecorder()
     fun stopAudioRecorder()
     fun createAudioEngine()
     fun enable(enable: Boolean)
     fun destroyAudioEngine()
+    fun updateParamsAt(effect: Effect, value: Float, index: Int)
     fun writeFile(pathFile: String)
 }
 
@@ -29,6 +33,13 @@ class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
 
     override fun destroyAudioEngine() {
         NativeInterface.destroyAudioEngine()
+    }
+
+    override fun updateParamsAt(effect: Effect, value: Float, index: Int) {
+        val nativeEffect = effect.toNativeEffect().apply { paramValues[index] = value }
+        // Log.d(TAG, "nativeEffect update $nativeEffect.")
+        Log.d(TAG, "nativeEffect update ${nativeEffect.paramValues[index]}.")
+        NativeInterface.updateParamsAt(nativeEffect, 0) // index?
     }
 
     override fun writeFile(pathFile: String) {

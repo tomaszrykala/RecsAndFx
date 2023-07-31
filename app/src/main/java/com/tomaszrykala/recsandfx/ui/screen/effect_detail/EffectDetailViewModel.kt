@@ -54,4 +54,8 @@ class EffectDetailViewModel(
             Log.d(TAG, "Failed to delete Recording: $selectedRecording.")
         }
     }
+
+    fun onParamChange(effect: Effect, value: Float, index: Int) {
+        nativeInterface.updateParamsAt(effect, value, index)
+    }
 }

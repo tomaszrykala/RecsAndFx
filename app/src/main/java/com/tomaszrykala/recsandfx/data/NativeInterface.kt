@@ -57,11 +57,8 @@ internal object NativeInterface {
                 effect.paramValues[0]
             )
         )
-        modifyEffectNative(
-            convertEffectToId(
-                effect
-            ), index, effect.paramValues
-        )
+        val nativeId = convertEffectToId(effect)
+        modifyEffectNative(nativeId, index, effect.paramValues)
     }
 
     // Removes effect at index

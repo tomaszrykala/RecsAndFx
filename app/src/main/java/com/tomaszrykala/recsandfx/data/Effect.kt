@@ -16,10 +16,14 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.tomaszrykala.recsandfx.data.datatype.EffectDescription
+import com.tomaszrykala.recsandfx.data.datatype.NativeEffect
 import com.tomaszrykala.recsandfx.data.datatype.ParamDescription
 
 data class Effect(
     val name: String,
+    val category: String = "",
+    val id: Int = 0,
     val icon: ImageVector,
     val info: String = "This is a $name effect.",
     val params: List<Param> = emptyList(),
@@ -39,30 +43,50 @@ fun ParamDescription.toParam() = Param(
     defaultValue = defaultValue
 )
 
+fun Param.toParamDescription() = ParamDescription(
+    paramName = name,
+    minValue = minValue,
+    maxValue = maxValue,
+    defaultValue = defaultValue
+)
+
+fun Effect.toNativeEffect() = NativeEffect(
+    EffectDescription(
+        name = name,
+        category = category,
+        id = id,
+        paramValues = params.map { it.toParamDescription() }.toTypedArray()
+    )
+)
+
 // DEBUG
 val oboeEffects = listOf(
-    Effect("Comb Filter", Icons.Default.Add),
-    Effect("Delay Line", Icons.Default.AccountBox),
-    Effect("Doubling", Icons.Default.Build),
-    Effect("Drive Control", Icons.Default.Email),
-    Effect("Echo", Icons.Default.Favorite),
-    Effect("Effects", Icons.Default.Info),
-    Effect("Flanger", Icons.Default.Home),
-    Effect("Single Function", Icons.Default.List),
-    Effect("Slapback", Icons.Default.MoreVert),
-    Effect("Tremolo", Icons.Default.Person),
-    Effect("Vibrato", Icons.Default.Send),
-    Effect("White Chorus", Icons.Default.ThumbUp),
+    Effect("Comb Filter", icon = Icons.Default.Add),
+    Effect("Delay Line", icon = Icons.Default.AccountBox),
+    Effect("Doubling", icon = Icons.Default.Build),
+    Effect("Drive Control", icon = Icons.Default.Email),
+    Effect("Echo", icon = Icons.Default.Favorite),
+    Effect("Effects", icon = Icons.Default.Info),
+    Effect("Flanger", icon = Icons.Default.Home),
+    Effect("Single Function", icon = Icons.Default.List),
+    Effect("Slapback", icon = Icons.Default.MoreVert),
+    Effect("Tremolo", icon = Icons.Default.Person),
+    Effect("Vibrato", icon = Icons.Default.Send),
+    Effect("White Chorus", icon = Icons.Default.ThumbUp),
 )
 
 val juceEffects = listOf(
-    Effect("Delay", Icons.Default.Favorite),
-    Effect("Reverb", Icons.Default.Check),
-    Effect("Dynamics", Icons.Default.Refresh),
+    Effect("Delay", icon = Icons.Default.Favorite),
+    Effect("Reverb", icon = Icons.Default.Check),
+    Effect("Dynamics", icon = Icons.Default.Refresh),
 )
 
 val oboeRealFx: List<Effect> = NativeInterface.effectDescriptionMap.map {
     Effect(
-        it.key, Icons.Default.Add, params = it.value.paramValues.map { pd -> pd.toParam() }
+        name = it.key,
+        category = it.value.category,
+        id = it.value.id,
+        icon = Icons.Default.Add,
+        params = it.value.paramValues.map { pd -> pd.toParam() }
     )
 }

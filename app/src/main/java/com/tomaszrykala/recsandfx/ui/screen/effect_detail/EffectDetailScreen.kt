@@ -16,10 +16,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.ui.ShowSnackbar
@@ -66,7 +67,7 @@ fun EffectDetailScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Title(effect)
-        Controls(effect)
+        Controls(effect, viewModel)
         Spacer(modifier = Modifier.height(paddingXXLarge))
         RecordButton(viewModel, effectName, snackbarHostState)
         Spacer(modifier = Modifier.height(paddingXXLarge))
@@ -103,20 +104,35 @@ private fun BigText(text: String) {
 }
 
 @Composable
-private fun Controls(effect: Effect) {
-    effect.params.forEach { param ->
+private fun Controls(
+    effect: Effect, viewModel: EffectDetailViewModel
+) {
+    effect.params.forEachIndexed { index, param ->
+        var sliderPosition by rememberSaveable { mutableStateOf(param.defaultValue) }
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = param.name)
+            Text(text = param.name, modifier = Modifier.padding(end = 4.dp))
             Text(
                 text = param.defaultValue.toString(),
-                style = TextStyle(fontWeight = FontWeight.Bold)
+                style = TextStyle(fontWeight = FontWeight.Bold),
+                modifier = Modifier.padding(end = 4.dp)
             )
-            Text(text = param.minValue.toString())
-            // TODO CSQ Add Slider
+            Text(text = param.minValue.toString(), modifier = Modifier.padding(end = 4.dp))
+            Slider(
+                value = sliderPosition,
+                onValueChange = { value -> sliderPosition = value },
+                onValueChangeFinished = { viewModel.onParamChange(effect, sliderPosition, index) },
+                valueRange = object : ClosedFloatingPointRange<Float> {
+                    override fun lessThanOrEquals(a: Float, b: Float): Boolean = a <= b
+                    override val endInclusive: Float = param.maxValue
+                    override val start: Float = param.minValue
+                },
+                modifier = Modifier
+                    .weight(0.5f, false)
+                    .padding(end = 4.dp)
+            )
             Text(text = param.maxValue.toString())
         }
     }
@@ -207,7 +223,7 @@ private fun Recordings(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                
+
                 // Delete not working yet
 //                IconButton(
 //                    onClick = {
