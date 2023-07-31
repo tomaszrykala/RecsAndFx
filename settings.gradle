@@ -14,7 +14,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "RecsAndFx"
 include ':app'
-include ':feature_effects'
+include ':feature:effects_list'
+include ':feature:permissions'
 include ':core:cpp'
 include ':core:domain'
 include ':core:storage'

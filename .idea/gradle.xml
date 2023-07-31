@@ -15,7 +15,9 @@
             <option value="$PROJECT_DIR$/core/cpp" />
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/storage" />
-            <option value="$PROJECT_DIR$/feature_effects" />
+            <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/effects_list" />
+            <option value="$PROJECT_DIR$/feature/permissions" />
           </set>
         </option>
       </GradleProjectSettings>

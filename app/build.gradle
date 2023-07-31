@@ -47,7 +47,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature_effects"))
+    implementation(project(":feature:effects_list"))
+    implementation(project(":feature:permissions"))
 
     implementation(project(':core:cpp'))
     implementation(project(':core:domain'))

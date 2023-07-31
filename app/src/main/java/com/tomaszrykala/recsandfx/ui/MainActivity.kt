@@ -35,11 +35,11 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.TAG
-import com.tomaszrykala.recsandfx.feature_effects.ui.EffectsScreen
-import com.tomaszrykala.recsandfx.ui.screen.RequestPermissionsScreen
+import com.tomaszrykala.recsandfx.feature.effects_list.EffectsScreen
+import com.tomaszrykala.recsandfx.feature.permissions.RequestPermissionsScreen
+import com.tomaszrykala.recsandfx.feature.permissions.getPermissionsList
 import com.tomaszrykala.recsandfx.ui.screen.Screen
 import com.tomaszrykala.recsandfx.ui.screen.effect_detail.EffectDetailScreen
-import com.tomaszrykala.recsandfx.ui.screen.getPermissionsList
 import com.tomaszrykala.recsandfx.ui.theme.RecsAndFxTheme
 import com.tomaszrykala.recsandfx.ui.theme.paddingLarge
 
@@ -84,7 +84,6 @@ private fun RafApp(
                     IconButton(onClick = {
                         isAudioEnabled = !isAudioEnabled
                         hasAudioBeenEnabled = true
-                        // NativeInterface.enable(isAudioEnabled)
                     }) {
                         Icon(
                             painter = painterResource(
@@ -104,7 +103,10 @@ private fun RafApp(
         if (permissionsState.allPermissionsGranted) {
             ShowRafApp(snackbarHostState, contentPadding)
         } else {
-            RequestPermissionsScreen(contentPadding, permissionsState)
+            RequestPermissionsScreen(
+                contentPadding,
+                permissionsState
+            )
         }
     }
 }
