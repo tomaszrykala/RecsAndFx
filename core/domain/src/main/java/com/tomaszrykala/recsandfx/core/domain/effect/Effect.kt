@@ -1,4 +1,4 @@
-package com.tomaszrykala.recsandfx.core
+package com.tomaszrykala.recsandfx.core.domain.effect
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.tomaszrykala.recsandfx.core.datatype.EffectDescription
 import com.tomaszrykala.recsandfx.core.datatype.NativeEffect
 import com.tomaszrykala.recsandfx.core.datatype.ParamDescription
-import com.tomaszrykala.recsandfx.core.native.NativeInterface
+import com.tomaszrykala.recsandfx.core.domain.native.NativeInterface
 
 data class Effect(
     val name: String,

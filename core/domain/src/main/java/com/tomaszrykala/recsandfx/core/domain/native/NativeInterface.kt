@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tomaszrykala.recsandfx.core.native
+package com.tomaszrykala.recsandfx.core.domain.native
 
 import android.util.Log
 import com.tomaszrykala.recsandfx.core.datatype.EffectDescription

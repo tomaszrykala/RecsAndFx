@@ -1,8 +1,8 @@
-package com.tomaszrykala.recsandfx.core.native
+package com.tomaszrykala.recsandfx.core.domain.native
 
 import android.util.Log
-import com.tomaszrykala.recsandfx.core.Effect
-import com.tomaszrykala.recsandfx.core.toNativeEffect
+import com.tomaszrykala.recsandfx.core.domain.effect.Effect
+import com.tomaszrykala.recsandfx.core.domain.effect.toNativeEffect
 
 interface NativeInterfaceWrapper {
     fun startAudioRecorder()

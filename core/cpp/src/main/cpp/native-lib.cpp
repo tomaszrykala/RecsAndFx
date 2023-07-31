@@ -34,13 +34,13 @@ static DuplexEngine *enginePtr = nullptr;
 extern "C" {
 
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_createAudioEngine(
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_createAudioEngine(
         JNIEnv,
         jobject /* this */) {
     enginePtr = new DuplexEngine();
 }
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_destroyAudioEngine(
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_destroyAudioEngine(
         JNIEnv,
         jobject /* this */) {
     if (!enginePtr) return;
@@ -49,7 +49,7 @@ Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_destroyAudioEngine(
 }
 
 JNIEXPORT jobjectArray JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_getEffects(JNIEnv *env, jobject) {
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_getEffects(JNIEnv *env, jobject) {
     jclass jcl = env->FindClass("com/tomaszrykala/recsandfx/core/datatype/EffectDescription");
     jclass jparamcl = env->FindClass("com/tomaszrykala/recsandfx/core/datatype/ParamDescription");
     assert (jcl != nullptr && jparamcl != nullptr);
@@ -84,7 +84,7 @@ Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_getEffects(JNIEnv *e
 }
 
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_addDefaultEffectNative(JNIEnv *, jobject,
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_addDefaultEffectNative(JNIEnv *, jobject,
                                                                             jint jid) {
     if (!enginePtr) return;
     auto id = static_cast<int>(jid);
@@ -100,7 +100,7 @@ Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_addDefaultEffectNati
     }, enginePtr->functionList);
 }
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_removeEffectNative(JNIEnv *, jobject,
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_removeEffectNative(JNIEnv *, jobject,
                                                                         jint jind) {
     if (!enginePtr) return;
     auto ind = static_cast<size_t>(jind);
@@ -109,7 +109,7 @@ Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_removeEffectNative(J
     }, enginePtr->functionList);
 }
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_rotateEffectNative(JNIEnv *, jobject,
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_rotateEffectNative(JNIEnv *, jobject,
                                                                         jint jfrom, jint jto) {
     if (!enginePtr) return;
     auto from = static_cast<size_t>(jfrom);
@@ -121,7 +121,7 @@ Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_rotateEffectNative(J
 }
 
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_modifyEffectNative(
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_modifyEffectNative(
         JNIEnv *env, jobject, jint jid, jint jindex, jfloatArray params) {
     if (!enginePtr) return;
     int id = static_cast<int>(jid);
@@ -141,7 +141,7 @@ Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_modifyEffectNative(
     }, enginePtr->functionList);
 }
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_enableEffectNative(
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_enableEffectNative(
         JNIEnv *, jobject, jint jindex, jboolean jenable) {
     if (!enginePtr) return;
     auto ind = static_cast<size_t>(jindex);
@@ -151,7 +151,7 @@ Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_enableEffectNative(
     }, enginePtr->functionList);
 }
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_enablePassthroughNative(
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_enablePassthroughNative(
         JNIEnv *, jobject, jboolean jenable) {
     if (!enginePtr) return;
     std::visit([enable = static_cast<bool>(jenable)](auto &&args) {
@@ -161,17 +161,17 @@ Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_enablePassthroughNat
 
 // ### RECORDING
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_startAudioRecorder(
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_startAudioRecorder(
         JNIEnv *, jobject MainActivity) {
     enginePtr->startAudioRecorder();
 }
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_stopAudioRecorder(
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_stopAudioRecorder(
         JNIEnv *, jobject MainActivity) {
     enginePtr->stopAudioRecorder();
 }
 JNIEXPORT void JNICALL
-Java_com_tomaszrykala_recsandfx_core_native_NativeInterface_writeFile(JNIEnv *env, jobject thiz,
+Java_com_tomaszrykala_recsandfx_core_domain_native_NativeInterface_writeFile(JNIEnv *env, jobject thiz,
                                                                jstring filePath) {
     if (!enginePtr) return;
     const char *path;

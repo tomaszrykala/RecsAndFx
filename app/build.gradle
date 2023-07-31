@@ -51,6 +51,7 @@ dependencies {
 
     implementation(project(':core:cpp'))
     implementation(project(':core:domain'))
+    implementation(project(':core:storage'))
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')

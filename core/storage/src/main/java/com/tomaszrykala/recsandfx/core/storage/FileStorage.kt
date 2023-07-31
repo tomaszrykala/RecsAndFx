@@ -1,11 +1,10 @@
-package com.tomaszrykala.recsandfx.core
+package com.tomaszrykala.recsandfx.core.storage
 
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import java.io.File
 
-// TODO separate module
 interface FileStorage {
     fun getRecordingFilePath(effectName: String): String
     fun getAllRecordings(effectName: String): List<String>

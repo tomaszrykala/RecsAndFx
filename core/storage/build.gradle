@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.tomaszrykala.recsandfx.core.storage'
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 34
+    }
+}
+
+dependencies {
+    implementation(project(':core:cpp'))
+
+    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
+
+    testImplementation 'junit:junit:4.13.2'
+}
