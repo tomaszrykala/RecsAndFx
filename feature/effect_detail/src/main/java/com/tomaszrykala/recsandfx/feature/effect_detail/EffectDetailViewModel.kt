@@ -5,43 +5,43 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
-import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapperImpl
 import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepository
-import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepositoryImpl
 import com.tomaszrykala.recsandfx.core.storage.FileStorage
-import com.tomaszrykala.recsandfx.core.storage.FileStorageImpl
 import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayer
-import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayerImpl
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class EffectDetailViewModel(
-    private val fileStorage: FileStorage = FileStorageImpl(),
-    private val recordingsPlayer: RecordingsPlayer = RecordingsPlayerImpl(),
-    private val effectsRepository: EffectsRepository = EffectsRepositoryImpl(),
-    private val nativeInterface: NativeInterfaceWrapper = NativeInterfaceWrapperImpl(),
+    private val fileStorage: FileStorage,
+    private val recordingsPlayer: RecordingsPlayer,
+    private val effectsRepository: EffectsRepository,
+    private val nativeInterface: NativeInterfaceWrapper,
 ) : ViewModel() {
 
-    private lateinit var effect: Effect
+    private val stateFlow = MutableStateFlow<EffectDetailState>(EffectDetailState.Empty)
+    val uiStateFlow: StateFlow<EffectDetailState> = stateFlow
 
-    // TODO FLOW
-    fun getEffect(effectName: String): Effect? {
-        return effectsRepository.getAllEffects().find { it.name == effectName }?.also {
-            nativeInterface.addEffect(it)
-            effect = it
+    suspend fun getEffect(effectName: String) {
+        val effect: Effect? = effectsRepository.getAllEffects().find { it.name == effectName }
+        if (effect != null) {
+            nativeInterface.addEffect(effect)
+            val recordings: List<String> = fileStorage.getAllRecordings(effect.name)
+            stateFlow.emit(EffectDetailState.EffectDetail(effect, recordings))
+        } else {
+            stateFlow.emit(EffectDetailState.Error)
         }
     }
 
-    fun startAudioRecorder() {
+    suspend fun startAudioRecorder() {
         nativeInterface.startAudioRecorder()
     }
 
-    fun stopAudioRecorder() {
+    suspend fun stopAudioRecorder(effect: Effect) {
         nativeInterface.stopAudioRecorder()
         nativeInterface.writeFile(fileStorage.getRecordingFilePath(effect.name))
     }
 
-    fun getFiles(): List<String> = fileStorage.getAllRecordings(effect.name)
-
-    fun onSelectedRecording(context: Context, selectedRecording: String) {
+    suspend fun onSelectedRecording(context: Context, selectedRecording: String) {
         if (selectedRecording.isEmpty()) {
             Log.d(TAG, "Selected Recording: STOP.")
         } else {
@@ -51,9 +51,9 @@ class EffectDetailViewModel(
         }
     }
 
-    fun onRecordingStop() = recordingsPlayer.stop()
+    suspend fun onRecordingStop() = recordingsPlayer.stop()
 
-    fun deleteRecording(selectedRecording: String) {
+    suspend fun deleteRecording(selectedRecording: String) {
         if (fileStorage.deleteRecording(selectedRecording)) {
             Log.d(TAG, "Deleted Recording: $selectedRecording.")
         } else {
@@ -61,11 +61,17 @@ class EffectDetailViewModel(
         }
     }
 
-    fun onParamChange(value: Float, index: Int) {
+    suspend fun onParamChange(effect: Effect, value: Float, index: Int) {
         nativeInterface.updateParamsAt(effect, value, index)
     }
 
     companion object {
         private const val TAG = "EffectDetailViewModel"
     }
+}
+
+sealed class EffectDetailState {
+    object Empty : EffectDetailState()
+    object Error : EffectDetailState()
+    data class EffectDetail(val effect: Effect, val recordings: List<String>) : EffectDetailState()
 }

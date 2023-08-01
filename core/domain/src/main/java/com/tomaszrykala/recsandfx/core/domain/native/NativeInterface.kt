@@ -34,7 +34,6 @@ internal object NativeInterface {
     // Adds effect at end of effect list
     fun addEffect(effect: NativeEffect) {
         val nativeId = convertEffectToId(effect)
-        Log.d(TAG, "addEffect $nativeId.")
         addDefaultEffectNative(nativeId)
     }
 

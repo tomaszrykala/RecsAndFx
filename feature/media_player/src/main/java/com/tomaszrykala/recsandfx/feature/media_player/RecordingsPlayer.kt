@@ -10,7 +10,7 @@ interface RecordingsPlayer {
     fun stop()
 }
 
-class RecordingsPlayerImpl : RecordingsPlayer {
+internal class RecordingsPlayerImpl : RecordingsPlayer {
 
     private var mediaPlayer: MediaPlayer? = null
 

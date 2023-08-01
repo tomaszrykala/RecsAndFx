@@ -3,14 +3,13 @@ package com.tomaszrykala.recsandfx.core.domain.repository
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.effect.toParam
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
-import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapperImpl
 
 interface EffectsRepository {
-    fun getAllEffects(): List<Effect>
+    suspend fun getAllEffects(): List<Effect>
 }
 
-class EffectsRepositoryImpl(
-    private val nativeInterface: NativeInterfaceWrapper = NativeInterfaceWrapperImpl(),
+internal class EffectsRepositoryImpl(
+    private val nativeInterface: NativeInterfaceWrapper,
 ) : EffectsRepository {
 
     private val effects: List<Effect> by lazy {
@@ -24,5 +23,5 @@ class EffectsRepositoryImpl(
         }
     }
 
-    override fun getAllEffects(): List<Effect> = effects
+    override suspend fun getAllEffects(): List<Effect> = effects
 }

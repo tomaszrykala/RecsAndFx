@@ -22,10 +22,14 @@ dependencies {
     implementation(project(':core:storage'))
     implementation(project(':feature:media_player'))
 
-    implementation 'androidx.navigation:navigation-compose:2.6.0'
+    implementation "androidx.navigation:navigation-compose:$compose_navigation_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.1"
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
 
-    testImplementation 'junit:junit:4.13.2'
+    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "io.insert-koin:koin-androidx-compose:$koin_compose_version"
+
+    testImplementation "junit:junit:$junit_version"
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
 }
