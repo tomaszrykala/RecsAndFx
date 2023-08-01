@@ -13,11 +13,11 @@ class RecsAndFxViewModel(
 
     private var isAudioEnabled = false
 
-    fun onStop() {
+    suspend fun onStop() {
         nativeInterface.destroyAudioEngine()
     }
 
-    fun onStart(context: Context) {
+    suspend fun onStart(context: Context) {
         if (ContextCompat.checkSelfPermission(
                 context.applicationContext, Manifest.permission.RECORD_AUDIO
             ) == PackageManager.PERMISSION_GRANTED
@@ -27,7 +27,7 @@ class RecsAndFxViewModel(
         }
     }
 
-    fun enableAudio(audioEnabled: Boolean) {
+    suspend fun enableAudio(audioEnabled: Boolean) {
         isAudioEnabled = audioEnabled
         nativeInterface.enable(isAudioEnabled)
     }

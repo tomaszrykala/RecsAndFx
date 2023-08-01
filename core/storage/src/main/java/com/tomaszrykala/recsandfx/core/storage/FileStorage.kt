@@ -8,7 +8,7 @@ import java.io.File
 interface FileStorage {
     fun getRecordingFilePath(effectName: String): String
     fun getAllRecordings(effectName: String): List<String>
-    fun getRecordingUri(selectedRecording: String): Uri
+    suspend fun getRecordingUri(selectedRecording: String): Uri
     fun deleteRecording(recording: String): Boolean
 }
 
@@ -26,7 +26,7 @@ internal class FileStorageImpl : FileStorage {
         return files?.map { it.name }?.toList() ?: emptyList() // why not File or absolutePath?
     }
 
-    override fun getRecordingUri(selectedRecording: String): Uri {
+    override suspend fun getRecordingUri(selectedRecording: String): Uri {
         val recordingFile = getRecordingFile(selectedRecording)
         return Uri.fromFile(recordingFile)
     }

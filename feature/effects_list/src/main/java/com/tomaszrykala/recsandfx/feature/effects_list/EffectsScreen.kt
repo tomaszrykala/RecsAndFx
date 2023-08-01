@@ -21,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -44,9 +46,10 @@ fun EffectsScreen(
     contentPadding: PaddingValues = PaddingValues(),
     navigateToDetail: (effect: String) -> Unit = { },
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val state = with(viewModel) {
-        LaunchedEffect(Unit) { getEffects() }
-        effectsUiState.collectAsStateWithLifecycle()
+        coroutineScope.launch { getEffects() }
+        uiStateFlow.collectAsStateWithLifecycle()
     }
 
     when (state.value) {
@@ -56,6 +59,7 @@ fun EffectsScreen(
             snackbarHostState,
             navigateToDetail
         )
+
         EffectsScreenState.Empty -> {
             ShowSnackbar(snackbarHostState, "Loading...")
         }

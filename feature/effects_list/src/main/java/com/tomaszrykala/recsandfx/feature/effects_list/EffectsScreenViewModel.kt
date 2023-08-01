@@ -10,14 +10,11 @@ class EffectsScreenViewModel(
     private val effectsRepository: EffectsRepository
 ) : ViewModel() {
 
-    private val mutableStateFlow = MutableStateFlow<EffectsScreenState>(EffectsScreenState.Empty)
-
-    val effectsUiState: StateFlow<EffectsScreenState> = mutableStateFlow
+    private val stateFlow = MutableStateFlow<EffectsScreenState>(EffectsScreenState.Empty)
+    val uiStateFlow: StateFlow<EffectsScreenState> = stateFlow
 
     suspend fun getEffects() {
-        mutableStateFlow.emit(
-            EffectsScreenState.Effects(effectsRepository.getAllEffects())
-        )
+        stateFlow.emit(EffectsScreenState.Effects(effectsRepository.getAllEffects()))
     }
 }
 

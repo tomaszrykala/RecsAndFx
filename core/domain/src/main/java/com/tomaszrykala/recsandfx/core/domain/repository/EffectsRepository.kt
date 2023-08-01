@@ -5,7 +5,7 @@ import com.tomaszrykala.recsandfx.core.domain.effect.toParam
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
 
 interface EffectsRepository {
-    fun getAllEffects(): List<Effect>
+    suspend fun getAllEffects(): List<Effect>
 }
 
 internal class EffectsRepositoryImpl(
@@ -23,5 +23,5 @@ internal class EffectsRepositoryImpl(
         }
     }
 
-    override fun getAllEffects(): List<Effect> = effects
+    override suspend fun getAllEffects(): List<Effect> = effects
 }

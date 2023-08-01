@@ -18,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -36,6 +37,7 @@ import com.tomaszrykala.recsandfx.feature.effects_list.EffectsScreen
 import com.tomaszrykala.recsandfx.feature.permissions.RequestPermissionsScreen
 import com.tomaszrykala.recsandfx.feature.permissions.getPermissionsList
 import com.tomaszrykala.recsandfx.ui.screen.Screen
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -43,11 +45,16 @@ import org.koin.androidx.compose.koinViewModel
 fun RecsAndFxScreen(
     viewModel: RecsAndFxViewModel = koinViewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var isAudioEnabled by rememberSaveable { mutableStateOf(false) }
     var hasAudioBeenEnabled by rememberSaveable { mutableStateOf(false) }
 
-    HandlePassthroughState(snackbarHostState, isAudioEnabled, hasAudioBeenEnabled, viewModel)
+    if (isAudioEnabled) {
+        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_enabled_audio_pass_through))
+    } else if (hasAudioBeenEnabled) {
+        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_disabled_audio_pass_through))
+    }
 
     Scaffold(
         modifier = Modifier
@@ -61,6 +68,8 @@ fun RecsAndFxScreen(
                     IconButton(onClick = {
                         isAudioEnabled = !isAudioEnabled
                         hasAudioBeenEnabled = true
+                        coroutineScope.launch { viewModel.enableAudio(isAudioEnabled) }
+                        Log.d(TAG, "isAudioEnabled: $isAudioEnabled")
                     }) {
                         Icon(
                             painter = painterResource(
@@ -84,22 +93,6 @@ fun RecsAndFxScreen(
             )
         }
     }
-}
-
-@Composable
-private fun HandlePassthroughState(
-    snackbarHostState: SnackbarHostState,
-    isAudioEnabled: Boolean,
-    hasAudioBeenEnabled: Boolean,
-    viewModel: RecsAndFxViewModel
-) {
-    if (isAudioEnabled) {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_enabled_audio_pass_through))
-    } else if (hasAudioBeenEnabled) {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_disabled_audio_pass_through))
-    }
-    Log.d(TAG, "isAudioEnabled: $isAudioEnabled")
-    viewModel.enableAudio(isAudioEnabled)
 }
 
 @Composable
