@@ -38,11 +38,11 @@ static int SAMPLE_RATE = 48000;
 // delays
 #include "descrip/DoublingDescription.h"
 #include "descrip/EchoDescription.h"
+#include "descrip/SlapbackDescription.h"
 
 // choruses
 #include "descrip/FlangerDescription.h"
 #include "descrip/WhiteChorusDescription.h"
-#include "descrip/SlapbackDescription.h"
 #include "descrip/VibratoDescription.h"
 
 // distortion
@@ -60,10 +60,10 @@ constexpr std::tuple<
 
         Effect::DoublingDescription,
         Effect::EchoDescription,
+        Effect::SlapbackDescription,
 
         Effect::FlangerDescription,
         Effect::WhiteChorusDescription,
-        Effect::SlapbackDescription,
         Effect::VibratoDescription,
 
         Effect::OverdriveDescription,

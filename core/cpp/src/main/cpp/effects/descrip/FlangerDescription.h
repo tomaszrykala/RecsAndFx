@@ -27,7 +27,7 @@ public:
     }
 
     static constexpr std::string_view getCategory() {
-        return std::string_view("Delay");
+        return std::string_view("Chorus");
     }
 
     static constexpr std::array<ParamType, getNumParams()> getParams() {

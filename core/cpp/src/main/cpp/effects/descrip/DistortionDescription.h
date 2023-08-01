@@ -27,7 +27,7 @@ public:
     }
 
     static constexpr std::string_view getCategory() {
-        return std::string_view("Nonlinear");
+        return std::string_view("Distortion");
     }
 
     static constexpr std::array<ParamType, getNumParams()> getParams() {

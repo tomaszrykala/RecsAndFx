@@ -3,7 +3,6 @@ package com.tomaszrykala.recsandfx.feature.effect_detail
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.tomaszrykala.recsandfx.core.domain.R
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.effect.toParam
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
@@ -24,11 +23,10 @@ class EffectDetailViewModel(
     private val allEffects: List<Effect> by lazy {
         nativeInterface.getAllEffectsMap().map {
             Effect(
+                id = it.value.id,
                 name = it.key,
                 category = it.value.category,
-                id = it.value.id,
-                icon = R.drawable.ic_round_audiotrack_24,
-                params = it.value.paramValues.map { pd -> pd.toParam() }
+                params = it.value.paramValues.map { pd -> pd.toParam() },
             )
         }
     }

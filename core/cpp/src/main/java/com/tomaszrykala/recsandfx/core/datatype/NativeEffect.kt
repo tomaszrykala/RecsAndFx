@@ -17,7 +17,9 @@
 package com.tomaszrykala.recsandfx.core.datatype
 
 data class NativeEffect(val effectDescription: EffectDescription) {
+    val id = effectDescription.id
     val name = effectDescription.name
+    val category = effectDescription.category
     val paramValues = with(effectDescription.paramValues) {
         FloatArray(size) { this[it].defaultValue }
     }
