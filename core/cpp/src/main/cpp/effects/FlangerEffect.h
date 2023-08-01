@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright  2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifndef ANDROID_FXLAB_FLANGEREFFECT_H
+#define ANDROID_FXLAB_FLANGEREFFECT_H
 
-package com.tomaszrykala.recsandfx.core.datatype
+#include "DelayLineEffect.h"
 
-data class NativeEffect(val effectDescription: EffectDescription) {
-    val id = effectDescription.id
-    val name = effectDescription.name
-    val category = effectDescription.category
-    val paramValues = with(effectDescription.paramValues) {
-        FloatArray(size) { this[it].defaultValue }
-    }
-}
+template<class iter_type>
+class FlangerEffect : public DelayLineEffect<iter_type> {
+public:
+    // feedback should be 0.7071
+    FlangerEffect(float depth_ms, float frequency, float feedback):
+        DelayLineEffect<iter_type>(feedback, feedback, feedback, 0, depth_ms * SAMPLE_RATE / 1000,
+                SineWave {frequency, 1, SAMPLE_RATE})  { }
+};
+#endif //ANDROID_FXLAB_FLANGEREFFECT_H

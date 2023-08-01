@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifndef ANDROID_FXLAB_VIBRATROEFFECT_H
+#define ANDROID_FXLAB_VIBRATROEFFECT_H
 
-package com.tomaszrykala.recsandfx.core.datatype
-
-data class NativeEffect(val effectDescription: EffectDescription) {
-    val id = effectDescription.id
-    val name = effectDescription.name
-    val category = effectDescription.category
-    val paramValues = with(effectDescription.paramValues) {
-        FloatArray(size) { this[it].defaultValue }
-    }
-}
+#include "DelayLineEffect.h"
+template <class iter_type>
+class VibratoEffect : public DelayLineEffect<iter_type> {
+public:
+    VibratoEffect(float depth_ms, float frequency):
+        DelayLineEffect<iter_type>(0, 1, 0, 1, depth_ms * SAMPLE_RATE / 1000,
+                SineWave {frequency, 1, SAMPLE_RATE}) { }
+};
+#endif //ANDROID_FXLAB_VIBRATROEFFECT_H

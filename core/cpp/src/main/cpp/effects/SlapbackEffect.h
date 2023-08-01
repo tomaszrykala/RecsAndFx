@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package com.tomaszrykala.recsandfx.core.datatype
+#ifndef ANDROID_FXLAB_SLAPBACKEFFECT_H
+#define ANDROID_FXLAB_SLAPBACKEFFECT_H
 
-data class NativeEffect(val effectDescription: EffectDescription) {
-    val id = effectDescription.id
-    val name = effectDescription.name
-    val category = effectDescription.category
-    val paramValues = with(effectDescription.paramValues) {
-        FloatArray(size) { this[it].defaultValue }
-    }
-}
+template <class iter_type>
+class SlapbackEffect: public DelayLineEffect<iter_type> {
+public:
+    SlapbackEffect(float feedforward, float delay_ms):
+        DelayLineEffect<iter_type> {1, feedforward, 0,
+            static_cast<int>(delay_ms * SAMPLE_RATE / 1000),
+            0,
+            std::function<float()>{[](){return 0.0;}}}
+    {}
+};
+#endif //ANDROID_FXLAB_SLAPBACKEFFECT_H

@@ -1,6 +1,7 @@
 package com.tomaszrykala.recsandfx.core.domain.native
 
 import android.util.Log
+import com.tomaszrykala.recsandfx.core.datatype.EffectDescription
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.effect.toNativeEffect
 
@@ -15,38 +16,28 @@ interface NativeInterfaceWrapper {
     fun removeEffect()
     fun updateParamsAt(effect: Effect, value: Float, index: Int)
     fun writeFile(pathFile: String)
+
+    fun getAllEffectsMap(): Map<String, EffectDescription>
 }
 
 class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
 
-    override fun startAudioRecorder() {
-        NativeInterface.startAudioRecorder()
-    }
+    override fun startAudioRecorder() = NativeInterface.startAudioRecorder()
 
-    override fun stopAudioRecorder() {
-        NativeInterface.stopAudioRecorder()
-    }
+    override fun stopAudioRecorder() = NativeInterface.stopAudioRecorder()
 
-    override fun createAudioEngine() {
-        NativeInterface.createAudioEngine()
-    }
+    override fun createAudioEngine() = NativeInterface.createAudioEngine()
 
-    override fun enable(enable: Boolean) {
-        NativeInterface.enable(enable)
-    }
+    override fun enable(enable: Boolean) = NativeInterface.enable(enable)
 
-    override fun destroyAudioEngine() {
-        NativeInterface.destroyAudioEngine()
-    }
+    override fun destroyAudioEngine() = NativeInterface.destroyAudioEngine()
 
     override fun addEffect(effect: Effect) {
         // removeEffect()
         NativeInterface.addEffect(effect.toNativeEffect())
     }
 
-    override fun removeEffect() {
-        NativeInterface.removeEffectAt(0)
-    }
+    override fun removeEffect() = NativeInterface.removeEffectAt(0)
 
     override fun updateParamsAt(effect: Effect, value: Float, index: Int) {
         val nativeEffect = effect.toNativeEffect().apply { paramValues[index] = value }
@@ -57,4 +48,7 @@ class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
     override fun writeFile(pathFile: String) {
         NativeInterface.writeFile(pathFile)
     }
+
+    override fun getAllEffectsMap(): Map<String, EffectDescription> =
+        NativeInterface.effectDescriptionMap
 }

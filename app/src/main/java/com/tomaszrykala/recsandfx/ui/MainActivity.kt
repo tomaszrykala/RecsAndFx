@@ -75,7 +75,7 @@ private fun RafApp(
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .padding(paddingLarge),
+            .padding(horizontal = paddingLarge),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -134,8 +134,8 @@ private fun ShowRafApp(
     NavHost(navController = navController, startDestination = Screen.EffectsScreen.route) {
         composable(Screen.EffectsScreen.route) {
             EffectsScreen(
-                snackbarHostState,
-                contentPadding
+                snackbarHostState = snackbarHostState,
+                contentPadding = contentPadding
             ) { effect -> navController.navigate("detail/${effect}") }
         }
         composable(Screen.EffectDetailScreen.route) {

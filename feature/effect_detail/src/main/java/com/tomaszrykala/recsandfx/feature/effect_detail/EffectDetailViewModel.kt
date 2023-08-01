@@ -6,22 +6,25 @@ import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapperImpl
-import com.tomaszrykala.recsandfx.core.domain.effect.allEffects
+import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepository
+import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepositoryImpl
 import com.tomaszrykala.recsandfx.core.storage.FileStorage
 import com.tomaszrykala.recsandfx.core.storage.FileStorageImpl
 import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayer
 import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayerImpl
 
 class EffectDetailViewModel(
-    private val nativeInterface: NativeInterfaceWrapper = NativeInterfaceWrapperImpl(),
     private val fileStorage: FileStorage = FileStorageImpl(),
     private val recordingsPlayer: RecordingsPlayer = RecordingsPlayerImpl(),
+    private val effectsRepository: EffectsRepository = EffectsRepositoryImpl(),
+    private val nativeInterface: NativeInterfaceWrapper = NativeInterfaceWrapperImpl(),
 ) : ViewModel() {
 
     private lateinit var effect: Effect
 
+    // TODO FLOW
     fun getEffect(effectName: String): Effect? {
-        return allEffects.find { it.name == effectName }?.also {
+        return effectsRepository.getAllEffects().find { it.name == effectName }?.also {
             nativeInterface.addEffect(it)
             effect = it
         }
