@@ -8,7 +8,7 @@ interface EffectsRepository {
     fun getAllEffects(): List<Effect>
 }
 
-class EffectsRepositoryImpl(
+internal class EffectsRepositoryImpl(
     private val nativeInterface: NativeInterfaceWrapper,
 ) : EffectsRepository {
 

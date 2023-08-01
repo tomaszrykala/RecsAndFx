@@ -11,5 +11,5 @@ android {
 dependencies {
     implementation(project(':core:cpp'))
 
-    implementation "io.insert-koin:koin-android:3.4.2"
+    implementation "io.insert-koin:koin-android:$koin_version"
 }

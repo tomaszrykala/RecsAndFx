@@ -20,7 +20,7 @@ interface NativeInterfaceWrapper {
     fun getAllEffectsMap(): Map<String, EffectDescription>
 }
 
-class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
+internal class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
 
     override fun startAudioRecorder() = NativeInterface.startAudioRecorder()
 

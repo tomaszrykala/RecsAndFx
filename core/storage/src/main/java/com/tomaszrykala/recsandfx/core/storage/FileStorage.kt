@@ -12,7 +12,7 @@ interface FileStorage {
     fun deleteRecording(recording: String): Boolean
 }
 
-class FileStorageImpl : FileStorage {
+internal class FileStorageImpl : FileStorage {
 
     override fun getRecordingFilePath(effectName: String): String {
         val time = System.currentTimeMillis()
@@ -22,7 +22,7 @@ class FileStorageImpl : FileStorage {
 
     override fun getAllRecordings(effectName: String): List<String> {
         val files = storageDirectory().listFiles { _, name -> name.contains(effectName) }
-        Log.d(TAG, "getFiles isDirectory $files.")
+        Log.d(TAG, "getAllRecordings dir: $files.")
         return files?.map { it.name }?.toList() ?: emptyList() // why not File or absolutePath?
     }
 
