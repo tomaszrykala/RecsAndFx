@@ -33,7 +33,7 @@ internal class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
     override fun destroyAudioEngine() = NativeInterface.destroyAudioEngine()
 
     override fun addEffect(effect: Effect) {
-        // removeEffect()
+        // NativeInterface.removeEffectAt(0) // ?
         NativeInterface.addEffect(effect.toNativeEffect())
     }
 

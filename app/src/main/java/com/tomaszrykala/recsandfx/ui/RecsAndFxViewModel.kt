@@ -11,22 +11,24 @@ class RecsAndFxViewModel(
     private val nativeInterface: NativeInterfaceWrapper,
 ) : ViewModel() {
 
-    fun onPause() { // TODO This is a HACK! Do in composable, repeat on lifecycle?
+    private var isAudioEnabled = false
+
+    fun onStop() {
         nativeInterface.destroyAudioEngine()
     }
 
-    fun onResume(context: Context) { // TODO app context pass in the constructor
+    fun onStart(context: Context) {
         if (ContextCompat.checkSelfPermission(
-                context.applicationContext,
-                Manifest.permission.RECORD_AUDIO
+                context.applicationContext, Manifest.permission.RECORD_AUDIO
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             nativeInterface.createAudioEngine()
-            nativeInterface.enable(true)
+            nativeInterface.enable(isAudioEnabled)
         }
     }
 
     fun enableAudio(audioEnabled: Boolean) {
-        nativeInterface.enable(audioEnabled)
+        isAudioEnabled = audioEnabled
+        nativeInterface.enable(isAudioEnabled)
     }
 }

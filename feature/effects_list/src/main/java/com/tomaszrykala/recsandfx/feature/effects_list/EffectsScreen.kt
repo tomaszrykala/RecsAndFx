@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -43,6 +44,31 @@ fun EffectsScreen(
     contentPadding: PaddingValues = PaddingValues(),
     navigateToDetail: (effect: String) -> Unit = { },
 ) {
+    val state = with(viewModel) {
+        LaunchedEffect(Unit) { getEffects() }
+        effectsUiState.collectAsStateWithLifecycle()
+    }
+
+    when (state.value) {
+        is EffectsScreenState.Effects -> ShowEffectsList(
+            state.value as EffectsScreenState.Effects,
+            contentPadding,
+            snackbarHostState,
+            navigateToDetail
+        )
+        EffectsScreenState.Empty -> {
+            ShowSnackbar(snackbarHostState, "Loading...")
+        }
+    }
+}
+
+@Composable
+private fun ShowEffectsList(
+    effectState: EffectsScreenState.Effects,
+    contentPadding: PaddingValues,
+    snackbarHostState: SnackbarHostState,
+    navigateToDetail: (effect: String) -> Unit
+) {
     var selectedEffect by rememberSaveable { mutableStateOf("") }
 
     if (selectedEffect != "") {
@@ -50,13 +76,12 @@ fun EffectsScreen(
             snackbarHostState, stringResource(R.string.you_ve_selected_effect, selectedEffect)
         )
     }
-
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
-        items(viewModel.getEffects()) {
+        items(effectState.effects) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -102,4 +127,4 @@ fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
     }
 }
 
-val paddingMedium = 8.dp // temp
+val paddingMedium = 8.dp
