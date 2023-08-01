@@ -3,10 +3,11 @@ package com.tomaszrykala.recsandfx.feature.effect_detail
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.tomaszrykala.recsandfx.core.domain.R
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
+import com.tomaszrykala.recsandfx.core.domain.effect.toParam
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapperImpl
-import com.tomaszrykala.recsandfx.core.domain.effect.allEffects
 import com.tomaszrykala.recsandfx.core.storage.FileStorage
 import com.tomaszrykala.recsandfx.core.storage.FileStorageImpl
 import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayer
@@ -19,6 +20,18 @@ class EffectDetailViewModel(
 ) : ViewModel() {
 
     private lateinit var effect: Effect
+
+    private val allEffects: List<Effect> by lazy {
+        nativeInterface.getAllEffectsMap().map {
+            Effect(
+                name = it.key,
+                category = it.value.category,
+                id = it.value.id,
+                icon = R.drawable.ic_round_audiotrack_24,
+                params = it.value.paramValues.map { pd -> pd.toParam() }
+            )
+        }
+    }
 
     fun getEffect(effectName: String): Effect? {
         return allEffects.find { it.name == effectName }?.also {

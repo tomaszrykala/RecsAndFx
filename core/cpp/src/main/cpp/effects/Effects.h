@@ -22,13 +22,52 @@
 static int SAMPLE_RATE = 48000;
 
 // This header should include the various effect descriptions
+// general
 #include "descrip/EffectDescription.h"
+
+// no parent group
+#include "descrip/PassthroughDescription.h"
+#include "descrip/GainDescription.h"
 #include "descrip/TremoloDescription.h"
+
+// filters
+#include "descrip/AllPassDescription.h"
+#include "descrip/FIRDescription.h"
+#include "descrip/IIRDescription.h"
+
+// delays
+#include "descrip/DoublingDescription.h"
 #include "descrip/EchoDescription.h"
 
+// choruses
+#include "descrip/FlangerDescription.h"
+#include "descrip/WhiteChorusDescription.h"
+#include "descrip/SlapbackDescription.h"
+#include "descrip/VibratoDescription.h"
+
+// distortion
+#include "descrip/OverdriveDescription.h"
+#include "descrip/DistortionDescription.h"
+
 constexpr std::tuple<
+        Effect::PassthroughDescription,
+        Effect::GainDescription,
         Effect::TremoloDescription,
-        Effect::EchoDescription
+
+        Effect::AllPassDescription,
+        Effect::FIRDescription,
+        Effect::IIRDescription,
+
+        Effect::DoublingDescription,
+        Effect::EchoDescription,
+
+        Effect::FlangerDescription,
+        Effect::WhiteChorusDescription,
+        Effect::SlapbackDescription,
+        Effect::VibratoDescription,
+
+        Effect::OverdriveDescription,
+        Effect::DistortionDescription
 > EffectsTuple{};
 
 constexpr size_t numEffects = std::tuple_size<decltype(EffectsTuple)>::value;
