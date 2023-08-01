@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
-import com.tomaszrykala.recsandfx.core.domain.effect.juceEffects
+import com.tomaszrykala.recsandfx.core.domain.effect.allEffects
 
 @Preview(showBackground = true)
 @Composable
@@ -53,7 +53,7 @@ fun EffectDetailScreen(
     viewModel: EffectDetailViewModel = viewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     contentPadding: PaddingValues = PaddingValues(),
-    effectName: String = juceEffects[0].name,
+    effectName: String = allEffects[0].name,
 ) {
     val effect: Effect = viewModel.getEffect(effectName) ?: return // TODO CSQ Flow
 

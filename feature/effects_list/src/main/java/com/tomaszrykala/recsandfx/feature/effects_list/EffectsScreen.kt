@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.tomaszrykala.recsandfx.core.domain.effect.allEffects
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
@@ -72,7 +73,7 @@ fun EffectsScreen(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = it.icon, contentDescription = "",
+                        painterResource(it.icon), contentDescription = "",
                         modifier = Modifier.background(Color.Yellow)
                     )
                     Text(

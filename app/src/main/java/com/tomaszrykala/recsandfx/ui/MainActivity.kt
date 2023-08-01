@@ -36,11 +36,11 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.TAG
+import com.tomaszrykala.recsandfx.feature.effect_detail.EffectDetailScreen
 import com.tomaszrykala.recsandfx.feature.effects_list.EffectsScreen
 import com.tomaszrykala.recsandfx.feature.permissions.RequestPermissionsScreen
 import com.tomaszrykala.recsandfx.feature.permissions.getPermissionsList
 import com.tomaszrykala.recsandfx.ui.screen.Screen
-import com.tomaszrykala.recsandfx.feature.effect_detail.EffectDetailScreen
 import com.tomaszrykala.recsandfx.ui.theme.RecsAndFxTheme
 
 class MainActivity : ComponentActivity() {
@@ -87,17 +87,15 @@ private fun RafApp(
                     }) {
                         Icon(
                             painter = painterResource(
-                                if (isAudioEnabled) R.drawable.ic_baseline_audio_is_enabled_24
-                                else R.drawable.ic_baseline_audio_is_disabled_24
+                                if (isAudioEnabled) R.drawable.ic_round_hearing_enabled_24
+                                else R.drawable.ic_round_hearing_disabled_24
                             ),
-                            contentDescription = null
+                            contentDescription = "Pass-through"
                         )
                     }
                 }
             )
-        },
-        // floatingActionButton = { FloatingActionButton(onClick = { }) {} }
-
+        }
     ) { contentPadding ->
         val permissionsState = rememberMultiplePermissionsState(getPermissionsList())
         if (permissionsState.allPermissionsGranted) {
