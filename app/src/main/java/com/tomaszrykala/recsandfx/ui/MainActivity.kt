@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -28,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -42,16 +40,19 @@ import com.tomaszrykala.recsandfx.feature.permissions.RequestPermissionsScreen
 import com.tomaszrykala.recsandfx.feature.permissions.getPermissionsList
 import com.tomaszrykala.recsandfx.ui.screen.Screen
 import com.tomaszrykala.recsandfx.ui.theme.RecsAndFxTheme
+import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: RecsAndFxViewModel by viewModels()
+    private val viewModel: RecsAndFxViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { RecsAndFxTheme { RafApp(viewModel) } }
+        setContent { RecsAndFxTheme { RecsAndFxScreen(viewModel) } }
     }
 
+    // https://developer.android.com/jetpack/compose/state#use-other-types-of-state-in-jetpack-compose
     override fun onPause() = super.onPause().also {
         viewModel.onPause()
     }
@@ -63,8 +64,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
-private fun RafApp(
-    viewModel: RecsAndFxViewModel = viewModel()
+private fun RecsAndFxScreen(
+    viewModel: RecsAndFxViewModel = koinViewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     var isAudioEnabled by rememberSaveable { mutableStateOf(false) }

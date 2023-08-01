@@ -43,13 +43,13 @@ import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
+import org.koin.androidx.compose.koinViewModel
 
 @Preview(showBackground = true)
 @Composable
 fun EffectDetailScreen(
-    viewModel: EffectDetailViewModel = viewModel(),
+    viewModel: EffectDetailViewModel = koinViewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     contentPadding: PaddingValues = PaddingValues(),
     effectName: String = "Delay",

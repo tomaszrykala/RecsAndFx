@@ -3,10 +3,9 @@ package com.tomaszrykala.recsandfx.feature.effects_list
 import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepository
-import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepositoryImpl
 
 class EffectsScreenViewModel(
-    private val effectsRepository: EffectsRepository = EffectsRepositoryImpl()
+    private val effectsRepository: EffectsRepository
 ) : ViewModel() {
 
     // TODO FLOW

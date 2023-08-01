@@ -6,10 +6,9 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
-import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapperImpl
 
 class RecsAndFxViewModel(
-    private val nativeInterface: NativeInterfaceWrapper = NativeInterfaceWrapperImpl()
+    private val nativeInterface: NativeInterfaceWrapper,
 ) : ViewModel() {
 
     fun onPause() { // TODO This is a HACK! Do in composable, repeat on lifecycle?

@@ -5,19 +5,15 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
-import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapperImpl
 import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepository
-import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepositoryImpl
 import com.tomaszrykala.recsandfx.core.storage.FileStorage
-import com.tomaszrykala.recsandfx.core.storage.FileStorageImpl
 import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayer
-import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayerImpl
 
 class EffectDetailViewModel(
-    private val fileStorage: FileStorage = FileStorageImpl(),
-    private val recordingsPlayer: RecordingsPlayer = RecordingsPlayerImpl(),
-    private val effectsRepository: EffectsRepository = EffectsRepositoryImpl(),
-    private val nativeInterface: NativeInterfaceWrapper = NativeInterfaceWrapperImpl(),
+    private val fileStorage: FileStorage,
+    private val recordingsPlayer: RecordingsPlayer,
+    private val effectsRepository: EffectsRepository,
+    private val nativeInterface: NativeInterfaceWrapper,
 ) : ViewModel() {
 
     private lateinit var effect: Effect
