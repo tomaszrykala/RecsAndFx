@@ -15,13 +15,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { RecsAndFxTheme { RecsAndFxScreen(viewModel) } }
+        lifecycleScope.launch { viewModel.onCreated(this@MainActivity) }
     }
 
-    override fun onStart() = super.onStart().also {
-        lifecycleScope.launch { viewModel.onStart(this@MainActivity) }
-    }
-
-    override fun onStop() = super.onStop().also {
-        lifecycleScope.launch { viewModel.onStop() }
+    override fun onDestroy() = super.onDestroy().also {
+        lifecycleScope.launch { viewModel.onDestroyed() }
     }
 }

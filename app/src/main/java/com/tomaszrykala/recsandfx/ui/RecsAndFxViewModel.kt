@@ -17,7 +17,7 @@ class RecsAndFxViewModel(
 
     private var isAudioEnabled = false
 
-    suspend fun onStart(context: Context) {
+    suspend fun onCreated(context: Context) {
         withContext(defaultDispatcher) {
             if (ContextCompat.checkSelfPermission(
                     context.applicationContext, Manifest.permission.RECORD_AUDIO
@@ -29,7 +29,7 @@ class RecsAndFxViewModel(
         }
     }
 
-    suspend fun onStop() {
+    suspend fun onDestroyed() {
         withContext(defaultDispatcher) {
             nativeInterface.destroyAudioEngine()
         }
