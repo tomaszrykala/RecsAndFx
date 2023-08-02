@@ -177,7 +177,7 @@ private fun RecordButton(
                     viewModel.stopAudioRecorder(effect)
                     isRecording = false
                 } else {
-                    viewModel.startAudioRecorder(effect)
+                    viewModel.startAudioRecorder()
                     hasRecordingStarted = true
                     isRecording = true
                 }

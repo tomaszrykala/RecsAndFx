@@ -24,18 +24,14 @@ class EffectDetailViewModel(
     suspend fun observeEffect(effectName: String) {
         val effect: Effect? = effectsRepository.getAllEffects().find { it.name == effectName }
         if (effect != null) {
+            nativeInterface.addEffect(effect)
             emitEffectState(effect)
         } else {
             stateFlow.emit(EffectDetailState.Error)
         }
     }
 
-    suspend fun startAudioRecorder(effect: Effect) {
-        with(nativeInterface) {
-            addEffect(effect)
-            startAudioRecorder()
-        }
-    }
+    suspend fun startAudioRecorder() = nativeInterface.startAudioRecorder()
 
     suspend fun stopAudioRecorder(effect: Effect) {
         with(nativeInterface) {
@@ -71,9 +67,8 @@ class EffectDetailViewModel(
         }
     }
 
-    suspend fun onParamChange(effect: Effect, value: Float, index: Int) {
+    suspend fun onParamChange(effect: Effect, value: Float, index: Int) =
         nativeInterface.updateParamsAt(effect, value, index)
-    }
 
     companion object {
         private const val TAG = "EffectDetailViewModel"
