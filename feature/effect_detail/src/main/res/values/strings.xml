@@ -2,5 +2,5 @@
     <string name="playing_recording">Playing %s.</string>
     <string name="deleted_recording">Deleted %s.</string>
     <string name="you_re_recording">You\'re recording!</string>
-    <string name="you_ve_stopped_recording">You\'ve stopped recording!</string>
+    <string name="recording_stopped">Recording stopped.</string>
 </resources>

@@ -49,7 +49,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.pow
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 @Preview(showBackground = true)
 @Composable
@@ -61,7 +60,7 @@ fun EffectDetailScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val state = with(viewModel) {
-        coroutineScope.launch { getEffect(effectName) }
+        coroutineScope.launch { observeEffect(effectName) }
         uiStateFlow.collectAsStateWithLifecycle()
     }
 
@@ -168,8 +167,8 @@ private fun RecordButton(
     if (isRecording) {
         ShowSnackbar(snackbarHostState, stringResource(R.string.you_re_recording))
     } else if (hasRecordingStarted) {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_stopped_recording))
-    } // TODO after the recording the list doesn't update
+        ShowSnackbar(snackbarHostState, stringResource(R.string.recording_stopped))
+    }
 
     IconButton(
         onClick = {
@@ -178,7 +177,7 @@ private fun RecordButton(
                     viewModel.stopAudioRecorder(effect)
                     isRecording = false
                 } else {
-                    viewModel.startAudioRecorder()
+                    viewModel.startAudioRecorder(effect)
                     hasRecordingStarted = true
                     isRecording = true
                 }

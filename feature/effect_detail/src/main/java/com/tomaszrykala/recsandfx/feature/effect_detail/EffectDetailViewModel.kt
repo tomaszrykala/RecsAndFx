@@ -21,24 +21,34 @@ class EffectDetailViewModel(
     private val stateFlow = MutableStateFlow<EffectDetailState>(EffectDetailState.Empty)
     val uiStateFlow: StateFlow<EffectDetailState> = stateFlow
 
-    suspend fun getEffect(effectName: String) {
+    suspend fun observeEffect(effectName: String) {
         val effect: Effect? = effectsRepository.getAllEffects().find { it.name == effectName }
         if (effect != null) {
-            nativeInterface.addEffect(effect)
-            val recordings: List<String> = fileStorage.getAllRecordings(effect.name)
-            stateFlow.emit(EffectDetailState.EffectDetail(effect, recordings))
+            emitEffectState(effect)
         } else {
             stateFlow.emit(EffectDetailState.Error)
         }
     }
 
-    suspend fun startAudioRecorder() {
-        nativeInterface.startAudioRecorder()
+    suspend fun startAudioRecorder(effect: Effect) {
+        with(nativeInterface) {
+            addEffect(effect)
+            startAudioRecorder()
+        }
     }
 
     suspend fun stopAudioRecorder(effect: Effect) {
-        nativeInterface.stopAudioRecorder()
-        nativeInterface.writeFile(fileStorage.getRecordingFilePath(effect.name))
+        with(nativeInterface) {
+            removeEffect()
+            stopAudioRecorder()
+            writeFile(fileStorage.getRecordingFilePath(effect.name))
+        }
+        emitEffectState(effect)
+    }
+
+    private suspend fun emitEffectState(effect: Effect) {
+        val recordings: List<String> = fileStorage.getAllRecordings(effect.name)
+        stateFlow.emit(EffectDetailState.EffectDetail(effect, recordings))
     }
 
     suspend fun onSelectedRecording(context: Context, selectedRecording: String) {
