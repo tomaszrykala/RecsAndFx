@@ -7,9 +7,9 @@ import java.io.File
 
 interface FileStorage {
     fun getRecordingFilePath(effectName: String): String
-    fun getAllRecordings(effectName: String): List<String>
+    suspend fun getAllRecordings(effectName: String): List<String>
     suspend fun getRecordingUri(selectedRecording: String): Uri
-    fun deleteRecording(recording: String): Boolean
+    suspend fun deleteRecording(recording: String): Boolean
 }
 
 internal class FileStorageImpl : FileStorage {
@@ -20,7 +20,7 @@ internal class FileStorageImpl : FileStorage {
         return getRecordingFile(filePath).path
     }
 
-    override fun getAllRecordings(effectName: String): List<String> {
+    override suspend fun getAllRecordings(effectName: String): List<String> {
         val files = storageDirectory().listFiles { _, name -> name.contains(effectName) }
         Log.d(TAG, "getAllRecordings dir: $files.")
         return files?.map { it.name }?.toList() ?: emptyList() // why not File or absolutePath?
@@ -31,7 +31,7 @@ internal class FileStorageImpl : FileStorage {
         return Uri.fromFile(recordingFile)
     }
 
-    override fun deleteRecording(recording: String): Boolean {
+    override suspend fun deleteRecording(recording: String): Boolean {
         val recordingFile = getRecordingFile(recording)
         return recordingFile.delete() // This will not work as we need scoped storage.
     }
