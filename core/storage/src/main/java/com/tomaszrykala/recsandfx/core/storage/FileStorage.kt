@@ -6,7 +6,7 @@ import android.util.Log
 import java.io.File
 
 interface FileStorage {
-    fun getRecordingFilePath(effectName: String): String
+    suspend fun getRecordingFilePath(effectName: String): String
     suspend fun getAllRecordings(effectName: String): List<String>
     suspend fun getRecordingUri(selectedRecording: String): Uri
     suspend fun deleteRecording(recording: String): Boolean
@@ -14,7 +14,7 @@ interface FileStorage {
 
 internal class FileStorageImpl : FileStorage {
 
-    override fun getRecordingFilePath(effectName: String): String {
+    override suspend fun getRecordingFilePath(effectName: String): String {
         val time = System.currentTimeMillis()
         val filePath = FILE_PREFIX + "${effectName}_$time" + FILE_EXTENSION
         return getRecordingFile(filePath).path

@@ -11,14 +11,14 @@ import kotlinx.coroutines.withContext
 
 class EffectsScreenViewModel(
     private val effectsRepository: EffectsRepository,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
     private val stateFlow = MutableStateFlow<EffectsScreenState>(EffectsScreenState.Empty)
     val uiStateFlow: StateFlow<EffectsScreenState> = stateFlow
 
     suspend fun observeEffects() {
-        val effects = withContext(ioDispatcher) { effectsRepository.getAllEffects() }
+        val effects = withContext(defaultDispatcher) { effectsRepository.getAllEffects() }
         stateFlow.emit(EffectsScreenState.Effects(effects))
     }
 }
