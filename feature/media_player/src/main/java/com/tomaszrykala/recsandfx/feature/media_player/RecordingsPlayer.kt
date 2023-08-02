@@ -6,15 +6,15 @@ import android.net.Uri
 import android.util.Log
 
 interface RecordingsPlayer {
-    fun play(context: Context, uri: Uri)
-    fun stop()
+    suspend fun play(context: Context, uri: Uri)
+    suspend fun stop()
 }
 
 internal class RecordingsPlayerImpl : RecordingsPlayer {
 
     private var mediaPlayer: MediaPlayer? = null
 
-    override fun play(context: Context, uri: Uri) {
+    override suspend fun play(context: Context, uri: Uri) {
         mediaPlayer = MediaPlayer().apply {
             setDataSource(context, uri)
             setOnPreparedListener {
@@ -29,7 +29,7 @@ internal class RecordingsPlayerImpl : RecordingsPlayer {
         }
     }
 
-    override fun stop() {
+    override suspend fun stop() {
         mediaPlayer?.let {
             it.stop()
             it.release()

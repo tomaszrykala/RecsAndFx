@@ -6,29 +6,39 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class RecsAndFxViewModel(
     private val nativeInterface: NativeInterfaceWrapper,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
     private var isAudioEnabled = false
 
-    suspend fun onStop() {
-        nativeInterface.destroyAudioEngine()
+    suspend fun onCreated(context: Context) {
+        withContext(defaultDispatcher) {
+            if (ContextCompat.checkSelfPermission(
+                    context.applicationContext, Manifest.permission.RECORD_AUDIO
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                nativeInterface.createAudioEngine()
+                nativeInterface.enable(isAudioEnabled)
+            }
+        }
     }
 
-    suspend fun onStart(context: Context) {
-        if (ContextCompat.checkSelfPermission(
-                context.applicationContext, Manifest.permission.RECORD_AUDIO
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            nativeInterface.createAudioEngine()
-            nativeInterface.enable(isAudioEnabled)
+    suspend fun onDestroyed() {
+        withContext(defaultDispatcher) {
+            nativeInterface.destroyAudioEngine()
         }
     }
 
     suspend fun enableAudio(audioEnabled: Boolean) {
-        isAudioEnabled = audioEnabled
-        nativeInterface.enable(isAudioEnabled)
+        withContext(defaultDispatcher) {
+            isAudioEnabled = audioEnabled
+            nativeInterface.enable(isAudioEnabled)
+        }
     }
 }
