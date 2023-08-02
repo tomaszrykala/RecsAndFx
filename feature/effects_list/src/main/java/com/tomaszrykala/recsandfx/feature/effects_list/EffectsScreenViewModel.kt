@@ -13,7 +13,7 @@ class EffectsScreenViewModel(
     private val stateFlow = MutableStateFlow<EffectsScreenState>(EffectsScreenState.Empty)
     val uiStateFlow: StateFlow<EffectsScreenState> = stateFlow
 
-    suspend fun getEffects() {
+    suspend fun observeEffects() {
         stateFlow.emit(EffectsScreenState.Effects(effectsRepository.getAllEffects()))
     }
 }

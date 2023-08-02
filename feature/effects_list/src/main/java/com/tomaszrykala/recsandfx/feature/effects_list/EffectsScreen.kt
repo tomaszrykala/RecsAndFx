@@ -48,7 +48,7 @@ fun EffectsScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val state = with(viewModel) {
-        coroutineScope.launch { getEffects() }
+        coroutineScope.launch { observeEffects() }
         uiStateFlow.collectAsStateWithLifecycle()
     }
 
