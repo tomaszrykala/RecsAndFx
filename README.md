@@ -1,35 +1,57 @@
 RecsAndFx
 ==========
 
-An app demonstrating various DSP Audio Effects, by applying them to source audio, eg. a connected microphone and stores the recordings on the device.
+App demonstrating various DSP Audio Effects, by applying them to source audio, eg. a connected microphone and storing the recordings on the device for further playback.
 
-Acknowledgments
+Usage
 ---------------
 
-The implementation borrows heavily from the following open-source projects:
-- Google Oboe - for the C++ implementations of DSP Audio Effects
-- Oboe FX Recorder - for the idea of saving the results to disk
-- File Saver (?)
+The app consists of the List of all Effects available.
+
+<img src="/readme/app_effects_list.png" width="40%" />
+
+Upon selection the **Effect** may offer various controls for modulating its characteristics.
+The **Record** button arms the device into recording mode, in which it captures the sound coming from the default source - eg. microphone and applies the Effect.
+When using the device's built-in microphone, it's important to enable '**Pass-through**' by clicking the Icon in the AppBar, while ensuring that the output volume is as low as possible without introducing harsh feedback.
+
+<img src="/readme/app_effect_detail.png" width="40%" />
 
 Implementation
 --------------
 
 The app is also a sandbox of latest Android development practices and it incorporates:
-- UI, State Management and Navigation using Jetpack Compose and related libraries
-- Dependency Injection using Koin
-- App Components modularisation by feature 
-- ??...
+- UI, State Management and Navigation using [Jetpack Compose](https://developer.android.com/jetpack/compose) and related libraries
+- Dependency Injection using [Koin](https://insert-koin.io/)
+- [App Modularisation](https://developer.android.com/topic/modularization) by feature
+- ??... (TODO)
 
-// TODO
+Acknowledgments
+---------------
+
+The implementation borrows heavily from the following open-source projects:
+- [Google Oboe](https://github.com/google/oboe) - for the C++ implementations of DSP Audio Effects
+- [oboe_fx_recorder](https://github.com/HeroSony/oboe_fx_recorder) - for the app idea and documentation
+- [Oboe Recorder](https://github.com/sheraz-nadeem/oboe_recorder_sample) - for the recording capability
+
+Pre-build
+---------
+Link Oboe path directory in CmakeLists.txt
+```
+set (OBOE_DIR <path_to_oboe>)
+```
+
+Add [libsndfile](https://github.com/libsndfile/libsndfile) library
+```
+set(LIB_SND_FILE_DIR D:\\Android\\libsndfile)
+add_subdirectory(${LIB_SND_FILE_DIR} ./sndfile)
+include_directories(${LIB_SND_FILE_DIR}/src)
+```
+
+Build and deploy.
 
 Contributions
 -------------
-... are encouraged and appreciated.
-
-Credits
--------
-Open-source projects which formed the basis of this project:
-- ...
+Encouraged and appreciated.
 
 # License
 
