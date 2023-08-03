@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -26,7 +27,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -76,6 +76,10 @@ private fun ShowEffectsList(
 ) {
     var selectedEffect by rememberSaveable { mutableStateOf("") }
 
+    // Have a different colour for each category? Tint the effect's detail page with the colour?
+    val itemSelectedColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+    val itemUnSelectedColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.6f)
+
     if (selectedEffect != "") {
         ShowSnackbar(
             snackbarHostState, stringResource(R.string.you_ve_selected_effect, selectedEffect)
@@ -92,42 +96,50 @@ private fun ShowEffectsList(
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
-        items(effectState.effects) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = if (selectedEffect == it.name) Color.DarkGray else Color.Green,
-                        shape = RoundedCornerShape(size = 4.dp)
-                    )
-                    .clickable {
-                        selectedEffect = it.name
-                        navigateToDetail.invoke(it.name)
-                    }
-                    .padding(all = paddingMedium)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painterResource(it.icon), contentDescription = "",
-                        modifier = Modifier.background(Color.Yellow)
-                    )
-                    Text(
-                        text = it.name,
-                        modifier = Modifier.padding(start = paddingMedium),
-                        style = TextStyle(
-                            fontSize = TextUnit(
-                                value = 24.0F,
-                                type = TextUnitType.Sp
-                            )
+        effectState.effects.forEach { (category, effects) ->
+            item { EffectRow(text = category.displayName) }
+            items(effects) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = if (selectedEffect == it.name) itemSelectedColor else itemUnSelectedColor,
+                            shape = RoundedCornerShape(size = 4.dp)
                         )
-                    )
+                        .clickable {
+                            selectedEffect = it.name
+                            navigateToDetail.invoke(it.name)
+                        }
+                        .padding(all = paddingMedium)
+                ) {
+                    EffectRow(it.icon, it.name)
+                    Text(text = it.info, modifier = Modifier.padding(top = paddingMedium))
                 }
-                Text(
-                    text = it.info,
-                    modifier = Modifier.padding(top = paddingMedium)
-                )
             }
         }
+    }
+}
+
+@Composable
+private fun EffectRow(icon: Int? = null, text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        icon?.let {
+            Icon(
+                painterResource(it),
+                contentDescription = "Effect icon.",
+                modifier = Modifier.background(Color.Yellow)
+            )
+        }
+        Text(
+            text = text,
+            modifier = Modifier.padding(start = paddingMedium),
+            style = TextStyle(
+                fontSize = TextUnit(
+                    value = 24.0F,
+                    type = TextUnitType.Sp
+                )
+            )
+        )
     }
 }
 

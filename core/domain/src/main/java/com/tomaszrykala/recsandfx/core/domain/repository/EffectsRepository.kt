@@ -1,5 +1,6 @@
 package com.tomaszrykala.recsandfx.core.domain.repository
 
+import com.tomaszrykala.recsandfx.core.domain.effect.Category
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.effect.toParam
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
@@ -17,7 +18,7 @@ internal class EffectsRepositoryImpl(
             Effect(
                 id = it.value.id,
                 name = it.key,
-                category = it.value.category,
+                category = it.value.category.toCategory(),
                 params = it.value.paramValues.map { pd -> pd.toParam() },
             )
         }
@@ -25,3 +26,6 @@ internal class EffectsRepositoryImpl(
 
     override suspend fun getAllEffects(): List<Effect> = effects
 }
+
+private fun String.toCategory(): Category =
+    Category.values().find { it.name == this } ?: Category.None

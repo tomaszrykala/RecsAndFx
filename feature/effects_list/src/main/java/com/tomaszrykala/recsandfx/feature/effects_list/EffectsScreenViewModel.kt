@@ -1,6 +1,7 @@
 package com.tomaszrykala.recsandfx.feature.effects_list
 
 import androidx.lifecycle.ViewModel
+import com.tomaszrykala.recsandfx.core.domain.effect.Category
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,12 +19,17 @@ class EffectsScreenViewModel(
     val uiStateFlow: StateFlow<EffectsScreenState> = stateFlow
 
     suspend fun observeEffects() {
-        val effects = withContext(defaultDispatcher) { effectsRepository.getAllEffects() }
+        val effects: Map<Category, List<Effect>> = withContext(defaultDispatcher) {
+            effectsRepository.getAllEffects().groupBy(
+                keySelector = { it.category },
+                valueTransform = { it },
+            )
+        }
         stateFlow.emit(EffectsScreenState.Effects(effects))
     }
 }
 
 sealed class EffectsScreenState {
     object Empty : EffectsScreenState()
-    data class Effects(val effects: List<Effect>) : EffectsScreenState()
+    data class Effects(val effects: Map<Category, List<Effect>>) : EffectsScreenState()
 }
