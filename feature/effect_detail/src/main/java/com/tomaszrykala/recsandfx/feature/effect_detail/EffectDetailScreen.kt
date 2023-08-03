@@ -81,6 +81,9 @@ fun EffectDetailScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Title(effect)
+                Spacer(modifier = Modifier.height(paddingMedium))
+                Text(text = effect.shortDescription)
+                Spacer(modifier = Modifier.height(paddingXLarge))
                 Controls(effect, viewModel)
                 Spacer(modifier = Modifier.height(paddingXLarge))
                 RecordButton(effect, viewModel, snackbarHostState)

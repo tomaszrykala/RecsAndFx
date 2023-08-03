@@ -113,7 +113,7 @@ private fun ShowEffectsList(
                         .padding(all = paddingMedium)
                 ) {
                     EffectRow(it.icon, it.name)
-                    Text(text = it.info, modifier = Modifier.padding(top = paddingMedium))
+                    Text(text = it.shortDescription, modifier = Modifier.padding(top = paddingMedium))
                 }
             }
         }
