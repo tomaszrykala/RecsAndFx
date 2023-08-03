@@ -27,7 +27,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -41,8 +40,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Preview(showBackground = true)
-fun EffectsScreen(
-    viewModel: EffectsScreenViewModel = koinViewModel(),
+fun EffectsListScreen(
+    viewModel: EffectsListViewModel = koinViewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     contentPadding: PaddingValues = PaddingValues(),
     navigateToDetail: (effect: String) -> Unit = { },
@@ -54,22 +53,22 @@ fun EffectsScreen(
     }
 
     when (state.value) {
-        is EffectsScreenUiState.Effects -> ShowEffectsList(
-            state.value as EffectsScreenUiState.Effects,
+        is EffectsListUiState.EffectsList -> ShowEffectsList(
+            state.value as EffectsListUiState.EffectsList,
             contentPadding,
             snackbarHostState,
             navigateToDetail
         )
 
-        EffectsScreenUiState.Empty -> {
-            ShowSnackbar(snackbarHostState, "Loading...")
+        EffectsListUiState.Empty -> {
+            ShowSnackbar(snackbarHostState, stringResource(R.string.effects_loading))
         }
     }
 }
 
 @Composable
 private fun ShowEffectsList(
-    effectState: EffectsScreenUiState.Effects,
+    effectState: EffectsListUiState.EffectsList,
     contentPadding: PaddingValues,
     snackbarHostState: SnackbarHostState,
     navigateToDetail: (effect: String) -> Unit
@@ -97,14 +96,15 @@ private fun ShowEffectsList(
         verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
         effectState.effects.forEach { (category, effects) ->
-            item { EffectRow(text = category.displayName) }
+
+            item { EffectRow(text = stringResource(category.fxName)) }
             items(effects) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
                             color = if (selectedEffect == it.name) itemSelectedColor else itemUnSelectedColor,
-                            shape = RoundedCornerShape(size = 4.dp)
+                            shape = RoundedCornerShape(size = paddingSmall)
                         )
                         .clickable {
                             selectedEffect = it.name
@@ -112,8 +112,8 @@ private fun ShowEffectsList(
                         }
                         .padding(all = paddingMedium)
                 ) {
-                    EffectRow(it.icon, it.name)
-                    Text(text = it.shortDescription, modifier = Modifier.padding(top = paddingMedium))
+                    EffectRow(it.category.fxIcon, it.name)
+                    Text(modifier = Modifier.padding(top = paddingMedium), text = stringResource(it.description))
                 }
             }
         }
@@ -123,22 +123,11 @@ private fun ShowEffectsList(
 @Composable
 private fun EffectRow(icon: Int? = null, text: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        icon?.let {
-            Icon(
-                painterResource(it),
-                contentDescription = "Effect icon.",
-                modifier = Modifier.background(Color.Yellow)
-            )
-        }
+        icon?.let { Icon(painterResource(it), stringResource(R.string.effect_icon)) }
         Text(
             text = text,
             modifier = Modifier.padding(start = paddingMedium),
-            style = TextStyle(
-                fontSize = TextUnit(
-                    value = 24.0F,
-                    type = TextUnitType.Sp
-                )
-            )
+            style = TextStyle(fontSize = TextUnit(value = 24.0f, type = TextUnitType.Sp))
         )
     }
 }
@@ -151,3 +140,4 @@ fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
 }
 
 val paddingMedium = 8.dp
+val paddingSmall = 4.dp

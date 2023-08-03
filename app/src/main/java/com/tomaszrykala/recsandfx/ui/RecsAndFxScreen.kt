@@ -31,7 +31,7 @@ import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.feature.effect_detail.EffectDetailScreen
-import com.tomaszrykala.recsandfx.feature.effects_list.EffectsScreen
+import com.tomaszrykala.recsandfx.feature.effects_list.EffectsListScreen
 import com.tomaszrykala.recsandfx.feature.permissions.RequestPermissionsScreen
 import com.tomaszrykala.recsandfx.ui.screen.Screen
 
@@ -56,11 +56,13 @@ fun RecsAndFxScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.background,
-                    actionIconContentColor = MaterialTheme.colorScheme.background,
-                ),
+                colors = with(MaterialTheme.colorScheme) {
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = primary,
+                        titleContentColor = background,
+                        actionIconContentColor = background,
+                    )
+                },
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     IconButton(onClick = {
@@ -69,11 +71,11 @@ fun RecsAndFxScreen(
                         onEnableAudioClick.invoke(isAudioEnabled)
                     }) {
                         Icon(
-                            painter = painterResource(
+                            painterResource(
                                 if (isAudioEnabled) R.drawable.ic_round_hearing_enabled_24
                                 else R.drawable.ic_round_hearing_disabled_24
                             ),
-                            contentDescription = "Pass-through"
+                            stringResource(R.string.pass_through)
                         )
                     }
                 }
@@ -96,7 +98,7 @@ private fun ShowRafApp(
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.EffectsScreen.route) {
         composable(Screen.EffectsScreen.route) {
-            EffectsScreen(
+            EffectsListScreen(
                 snackbarHostState = snackbarHostState,
                 contentPadding = contentPadding
             ) { effect -> navController.navigate("detail/${effect}") }

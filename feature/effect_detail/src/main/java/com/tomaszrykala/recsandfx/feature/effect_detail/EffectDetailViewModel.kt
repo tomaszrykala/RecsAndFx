@@ -9,7 +9,6 @@ import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepository
 import com.tomaszrykala.recsandfx.core.storage.FileStorage
 import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayer
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
@@ -19,8 +18,8 @@ class EffectDetailViewModel(
     private val recordingsPlayer: RecordingsPlayer,
     private val effectsRepository: EffectsRepository,
     private val nativeInterface: NativeInterfaceWrapper,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val ioDispatcher: CoroutineDispatcher,
+    private val defaultDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private lateinit var effect: Effect
@@ -42,8 +41,7 @@ class EffectDetailViewModel(
         }
     }
 
-    suspend fun startAudioRecorder() =
-        withContext(defaultDispatcher) { nativeInterface.startAudioRecorder() }
+    suspend fun startAudioRecorder() = withContext(defaultDispatcher) { nativeInterface.startAudioRecorder() }
 
     suspend fun stopAudioRecorder() {
         withContext(defaultDispatcher) {

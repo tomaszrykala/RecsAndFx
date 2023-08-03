@@ -31,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -82,25 +83,29 @@ fun EffectDetailScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Title(effect.name)
-                Spacer(modifier = Modifier.height(paddingMedium))
-                Text(effect.shortDescription)
-                Spacer(modifier = Modifier.height(paddingXLarge))
+                Text(modifier = Modifier.padding(top = paddingMedium), text = stringResource(effect.description))
+                XLargeSpacer()
                 Controls(effect, viewModel)
-                Spacer(modifier = Modifier.height(paddingXLarge))
+                XLargeSpacer()
                 RecordButton(viewModel, snackbarHostState)
-                Spacer(modifier = Modifier.height(paddingXLarge))
+                XLargeSpacer()
 
                 if (recordings.isEmpty()) {
-                    Title("Press the 'Record' button to record yourself and discover the effect!")
+                    Title(stringResource(R.string.empty_recordings_state_prompt))
                 } else {
                     Recordings(viewModel, snackbarHostState, recordings)
                 }
             }
         }
 
-        EffectDetailUiState.Empty -> ShowSnackbar(snackbarHostState, "Loading...")
-        EffectDetailUiState.Error -> Title("Error: Couldn't load the effect! Try again please.")
+        EffectDetailUiState.Empty -> ShowSnackbar(snackbarHostState, stringResource(R.string.recordings_loading))
+        EffectDetailUiState.Error -> Title(stringResource(R.string.recordings_load_error))
     }
+}
+
+@Composable
+private fun XLargeSpacer() {
+    Spacer(modifier = Modifier.height(paddingXLarge))
 }
 
 @Composable
@@ -111,15 +116,15 @@ private fun Title(text: String) {
             .fillMaxWidth(),
         text = text,
         style = TextStyle(
-            fontSize = TextUnit(
-                value = 24.0F,
-                type = TextUnitType.Sp,
-            ),
+            fontSize = spTextUnit(24.0f),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
     )
 }
+
+@Composable
+fun spTextUnit(size: Float) = TextUnit(value = size, type = TextUnitType.Sp)
 
 @Composable
 private fun Controls(
@@ -133,13 +138,21 @@ private fun Controls(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = param.name, modifier = Modifier.padding(end = 4.dp))
+            Text(
+                text = param.name,
+                modifier = Modifier.padding(end = paddingSmall),
+                style = TextStyle(fontSize = spTextUnit(18.0f))
+            )
             Text(
                 text = sliderPosition.roundToTwoDecimals().toString(),
-                style = TextStyle(fontWeight = FontWeight.Bold),
-                modifier = Modifier.padding(end = 4.dp)
+                modifier = Modifier.padding(end = paddingSmall),
+                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = spTextUnit(18.0f))
             )
-            Text(text = param.minValue.toString(), modifier = Modifier.padding(end = 4.dp))
+            Text(
+                text = param.minValue.toString(), modifier = Modifier
+                    .alpha(0.6f)
+                    .padding(end = paddingSmall)
+            )
             Slider(
                 value = sliderPosition,
                 onValueChange = { value -> sliderPosition = value },
@@ -151,11 +164,9 @@ private fun Controls(
                     override val endInclusive: Float = param.maxValue
                     override val start: Float = param.minValue
                 },
-                modifier = Modifier
-                    .weight(0.5f, false)
-                    .padding(end = 4.dp)
+                modifier = Modifier.weight(0.5f, false).padding(end = paddingSmall),
             )
-            Text(text = param.maxValue.toString())
+            Text(text = param.maxValue.toString(), modifier = Modifier.alpha(0.6f))
         }
     }
 }
@@ -195,7 +206,7 @@ private fun RecordButton(
             )
             .padding(paddingLarge)
     ) {
-        Icon(painterResource(R.drawable.ic_round_mic_24), contentDescription = "Start recording.")
+        Icon(painterResource(R.drawable.ic_round_mic_24), stringResource(R.string.start_recording))
     }
 }
 
@@ -217,40 +228,43 @@ private fun Recordings(
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val itemUnSelectedColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
 
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(paddingSmall),
     ) {
         items(recordings) { recording ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(if (selectedRecording == recording) Color.Yellow else Color.White)
-                    .padding(paddingMedium),
+                    .background(
+                        color = if (selectedRecording == recording) Color.Yellow else itemUnSelectedColor,
+                        shape = RoundedCornerShape(size = paddingSmall)
+                    )
+                    .clickable {
+                        selectedRecording = if (selectedRecording == recording) "" else recording
+                        coroutineScope.launch {
+                            viewModel.onSelectedRecording(context, selectedRecording)
+                        }
+                    },
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    modifier = Modifier
-                        .clickable {
-                            selectedRecording = if (selectedRecording == recording) "" else recording
-                            coroutineScope.launch {
-                                viewModel.onSelectedRecording(context, selectedRecording)
-                            }
-                        },
                     text = recording,
-                    style = TextStyle(fontWeight = FontWeight.Bold),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
+                    style = TextStyle(fontWeight = FontWeight.Bold),
+                    modifier = Modifier.padding(start = paddingMedium)
                 )
-
-                // Delete not working yet
                 IconButton(
                     onClick = {
                         deletedRecording = recording
                         coroutineScope.launch { viewModel.deleteRecording(recording) }
-                    }) {
-                    Icon(painterResource(R.drawable.ic_round_delete_24), contentDescription = "")
+                    }
+                ) {
+                    Icon(painterResource(R.drawable.ic_round_delete_24), stringResource(R.string.delete_button))
                 }
             }
         }
@@ -267,6 +281,7 @@ fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
 val paddingXLarge = 32.dp
 val paddingLarge = 16.dp
 val paddingMedium = 8.dp
+val paddingSmall = 4.dp
 
 fun Float.roundToTwoDecimals(): Double {
     val factor = 10.0.pow(2.toDouble())

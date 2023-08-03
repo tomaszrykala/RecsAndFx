@@ -1,3 +1,5 @@
 <resources>
     <string name="you_ve_selected_effect">You\'ve selected %s.</string>
+    <string name="effect_icon">Effect icon.</string>
+    <string name="effects_loading">Loading…</string>
 </resources>
