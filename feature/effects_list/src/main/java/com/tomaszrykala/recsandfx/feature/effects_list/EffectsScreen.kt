@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -53,14 +54,14 @@ fun EffectsScreen(
     }
 
     when (state.value) {
-        is EffectsScreenState.Effects -> ShowEffectsList(
-            state.value as EffectsScreenState.Effects,
+        is EffectsScreenUiState.Effects -> ShowEffectsList(
+            state.value as EffectsScreenUiState.Effects,
             contentPadding,
             snackbarHostState,
             navigateToDetail
         )
 
-        EffectsScreenState.Empty -> {
+        EffectsScreenUiState.Empty -> {
             ShowSnackbar(snackbarHostState, "Loading...")
         }
     }
@@ -68,12 +69,16 @@ fun EffectsScreen(
 
 @Composable
 private fun ShowEffectsList(
-    effectState: EffectsScreenState.Effects,
+    effectState: EffectsScreenUiState.Effects,
     contentPadding: PaddingValues,
     snackbarHostState: SnackbarHostState,
     navigateToDetail: (effect: String) -> Unit
 ) {
     var selectedEffect by rememberSaveable { mutableStateOf("") }
+
+    // Have a different colour for each category? Tint the effect's detail page with the colour?
+    val itemSelectedColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+    val itemUnSelectedColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.6f)
 
     if (selectedEffect != "") {
         ShowSnackbar(
@@ -81,46 +86,60 @@ private fun ShowEffectsList(
         )
     }
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                top = paddingMedium,
+                start = paddingMedium,
+                end = paddingMedium
+            ),
         contentPadding = contentPadding,
         verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
-        items(effectState.effects) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = if (selectedEffect == it.name) Color.DarkGray else Color.Green,
-                        shape = RoundedCornerShape(size = 4.dp)
-                    )
-                    .clickable {
-                        selectedEffect = it.name
-                        navigateToDetail.invoke(it.name)
-                    }
-                    .padding(all = paddingMedium)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painterResource(it.icon), contentDescription = "",
-                        modifier = Modifier.background(Color.Yellow)
-                    )
-                    Text(
-                        text = it.name,
-                        modifier = Modifier.padding(start = paddingMedium),
-                        style = TextStyle(
-                            fontSize = TextUnit(
-                                value = 24.0F,
-                                type = TextUnitType.Sp
-                            )
+        effectState.effects.forEach { (category, effects) ->
+            item { EffectRow(text = category.displayName) }
+            items(effects) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = if (selectedEffect == it.name) itemSelectedColor else itemUnSelectedColor,
+                            shape = RoundedCornerShape(size = 4.dp)
                         )
-                    )
+                        .clickable {
+                            selectedEffect = it.name
+                            navigateToDetail.invoke(it.name)
+                        }
+                        .padding(all = paddingMedium)
+                ) {
+                    EffectRow(it.icon, it.name)
+                    Text(text = it.shortDescription, modifier = Modifier.padding(top = paddingMedium))
                 }
-                Text(
-                    text = it.info,
-                    modifier = Modifier.padding(top = paddingMedium)
-                )
             }
         }
+    }
+}
+
+@Composable
+private fun EffectRow(icon: Int? = null, text: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        icon?.let {
+            Icon(
+                painterResource(it),
+                contentDescription = "Effect icon.",
+                modifier = Modifier.background(Color.Yellow)
+            )
+        }
+        Text(
+            text = text,
+            modifier = Modifier.padding(start = paddingMedium),
+            style = TextStyle(
+                fontSize = TextUnit(
+                    value = 24.0F,
+                    type = TextUnitType.Sp
+                )
+            )
+        )
     }
 }
 

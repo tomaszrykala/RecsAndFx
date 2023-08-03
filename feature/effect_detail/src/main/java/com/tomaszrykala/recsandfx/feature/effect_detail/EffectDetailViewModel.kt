@@ -23,19 +23,21 @@ class EffectDetailViewModel(
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
-    private val stateFlow = MutableStateFlow<EffectDetailState>(EffectDetailState.Empty)
-    val uiStateFlow: StateFlow<EffectDetailState> = stateFlow
+    private lateinit var effect: Effect
+    private val stateFlow = MutableStateFlow<EffectDetailUiState>(EffectDetailUiState.Empty)
+    val uiStateFlow: StateFlow<EffectDetailUiState> = stateFlow
 
     suspend fun observeEffect(effectName: String) {
         withContext(defaultDispatcher) {
-            val effect: Effect? = effectsRepository.getAllEffects().find { it.name == effectName }
-            if (effect != null) {
-                nativeInterface.addEffect(effect)
-                emitEffectState(effect, withContext(ioDispatcher) {
-                    fileStorage.getAllRecordings(effect.name)
+            val currentEffect: Effect? = effectsRepository.getAllEffects().find { it.name == effectName }
+            if (currentEffect != null) {
+                effect = currentEffect
+                nativeInterface.addEffect(currentEffect)
+                emitEffectState(withContext(ioDispatcher) {
+                    fileStorage.getAllRecordings(currentEffect.name)
                 })
             } else {
-                stateFlow.emit(EffectDetailState.Error)
+                stateFlow.emit(EffectDetailUiState.Error)
             }
         }
     }
@@ -43,22 +45,21 @@ class EffectDetailViewModel(
     suspend fun startAudioRecorder() =
         withContext(defaultDispatcher) { nativeInterface.startAudioRecorder() }
 
-    suspend fun stopAudioRecorder(effect: Effect) {
+    suspend fun stopAudioRecorder() {
         withContext(defaultDispatcher) {
             with(nativeInterface) {
                 removeEffect()
                 stopAudioRecorder()
-                val recordings = withContext(ioDispatcher) {
+                emitEffectState(withContext(ioDispatcher) {
                     writeFile(fileStorage.getRecordingFilePath(effect.name))
                     fileStorage.getAllRecordings(effect.name)
-                }
-                emitEffectState(effect, recordings)
+                })
             }
         }
     }
 
-    private suspend fun emitEffectState(effect: Effect, recordings: List<String>) {
-        stateFlow.emit(EffectDetailState.EffectDetail(effect, recordings))
+    private suspend fun emitEffectState(recordings: List<String>) {
+        stateFlow.emit(EffectDetailUiState.EffectDetail(effect, recordings))
     }
 
     suspend fun onSelectedRecording(context: Context, selectedRecording: String) {
@@ -74,21 +75,16 @@ class EffectDetailViewModel(
     suspend fun deleteRecording(selectedRecording: String) {
         if (withContext(ioDispatcher) { fileStorage.deleteRecording(selectedRecording) }) {
             Log.d(TAG, "Deleted Recording: $selectedRecording.")
+            emitEffectState(withContext(ioDispatcher) { fileStorage.getAllRecordings(effect.name) })
         } else {
             Log.d(TAG, "Failed to delete Recording: $selectedRecording.")
         }
     }
 
-    suspend fun onParamChange(effect: Effect, value: Float, index: Int) =
+    suspend fun onParamChange(value: Float, index: Int) =
         withContext(defaultDispatcher) { nativeInterface.updateParamsAt(effect, value, index) }
 
     companion object {
         private const val TAG = "EffectDetailViewModel"
     }
-}
-
-sealed class EffectDetailState {
-    object Empty : EffectDetailState()
-    object Error : EffectDetailState()
-    data class EffectDetail(val effect: Effect, val recordings: List<String>) : EffectDetailState()
 }

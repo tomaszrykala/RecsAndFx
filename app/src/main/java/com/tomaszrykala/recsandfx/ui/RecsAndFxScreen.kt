@@ -1,51 +1,46 @@
 package com.tomaszrykala.recsandfx.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.R
-import com.tomaszrykala.recsandfx.TAG
 import com.tomaszrykala.recsandfx.feature.effect_detail.EffectDetailScreen
 import com.tomaszrykala.recsandfx.feature.effects_list.EffectsScreen
 import com.tomaszrykala.recsandfx.feature.permissions.RequestPermissionsScreen
-import com.tomaszrykala.recsandfx.feature.permissions.getPermissionsList
 import com.tomaszrykala.recsandfx.ui.screen.Screen
-import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 fun RecsAndFxScreen(
-    viewModel: RecsAndFxViewModel = koinViewModel()
+    permissionsState: MultiplePermissionsState = rememberMultiplePermissionsState(emptyList()),
+    onEnableAudioClick: (enable: Boolean) -> Unit = {},
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var isAudioEnabled by rememberSaveable { mutableStateOf(false) }
     var hasAudioBeenEnabled by rememberSaveable { mutableStateOf(false) }
@@ -57,19 +52,21 @@ fun RecsAndFxScreen(
     }
 
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = paddingLarge),
+        modifier = Modifier.fillMaxWidth(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.background,
+                    actionIconContentColor = MaterialTheme.colorScheme.background,
+                ),
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     IconButton(onClick = {
-                        isAudioEnabled = !isAudioEnabled
                         hasAudioBeenEnabled = true
-                        coroutineScope.launch { viewModel.enableAudio(isAudioEnabled) }
-                        Log.d(TAG, "isAudioEnabled: $isAudioEnabled")
+                        isAudioEnabled = !isAudioEnabled
+                        onEnableAudioClick.invoke(isAudioEnabled)
                     }) {
                         Icon(
                             painter = painterResource(
@@ -83,14 +80,10 @@ fun RecsAndFxScreen(
             )
         }
     ) { contentPadding ->
-        val permissionsState = rememberMultiplePermissionsState(getPermissionsList())
         if (permissionsState.allPermissionsGranted) {
             ShowRafApp(snackbarHostState, contentPadding)
         } else {
-            RequestPermissionsScreen(
-                contentPadding,
-                permissionsState
-            )
+            RequestPermissionsScreen(contentPadding, permissionsState)
         }
     }
 }
@@ -124,5 +117,3 @@ fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
         snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
     }
 }
-
-val paddingLarge = 16.dp

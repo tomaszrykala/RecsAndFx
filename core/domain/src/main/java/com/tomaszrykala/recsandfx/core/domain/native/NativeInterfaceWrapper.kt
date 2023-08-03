@@ -8,9 +8,9 @@ import com.tomaszrykala.recsandfx.core.domain.effect.toNativeEffect
 interface NativeInterfaceWrapper {
     suspend fun startAudioRecorder()
     suspend fun stopAudioRecorder()
-    suspend fun createAudioEngine()
-    suspend fun enable(enable: Boolean)
-    suspend fun destroyAudioEngine()
+    fun createAudioEngine()
+    fun enable(enable: Boolean)
+    fun destroyAudioEngine()
 
     suspend fun addEffect(effect: Effect)
     suspend fun removeEffect()
@@ -26,11 +26,11 @@ internal class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
 
     override suspend fun stopAudioRecorder() = NativeInterface.stopAudioRecorder()
 
-    override suspend fun createAudioEngine() = NativeInterface.createAudioEngine()
+    override fun createAudioEngine() = NativeInterface.createAudioEngine()
 
-    override suspend fun enable(enable: Boolean) = NativeInterface.enable(enable)
+    override fun enable(enable: Boolean) = NativeInterface.enable(enable)
 
-    override suspend fun destroyAudioEngine() = NativeInterface.destroyAudioEngine()
+    override fun destroyAudioEngine() = NativeInterface.destroyAudioEngine()
 
     override suspend fun addEffect(effect: Effect) {
         // NativeInterface.removeEffectAt(0) // ?

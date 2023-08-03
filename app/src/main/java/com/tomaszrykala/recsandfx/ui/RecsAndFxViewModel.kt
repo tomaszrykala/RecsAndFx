@@ -3,42 +3,43 @@ package com.tomaszrykala.recsandfx.ui
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class RecsAndFxViewModel(
-    private val nativeInterface: NativeInterfaceWrapper,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val nativeInterface: NativeInterfaceWrapper
 ) : ViewModel() {
 
     private var isAudioEnabled = false
 
-    suspend fun onCreated(context: Context) {
-        withContext(defaultDispatcher) {
-            if (ContextCompat.checkSelfPermission(
-                    context.applicationContext, Manifest.permission.RECORD_AUDIO
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                nativeInterface.createAudioEngine()
-                nativeInterface.enable(isAudioEnabled)
-            }
-        }
-    }
-
-    suspend fun onDestroyed() {
-        withContext(defaultDispatcher) {
-            nativeInterface.destroyAudioEngine()
-        }
-    }
-
-    suspend fun enableAudio(audioEnabled: Boolean) {
-        withContext(defaultDispatcher) {
-            isAudioEnabled = audioEnabled
+    fun onCreated(context: Context) {
+        val recordAudioPermission =
+            ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
+        if (recordAudioPermission == PackageManager.PERMISSION_GRANTED) {
+            nativeInterface.createAudioEngine()
             nativeInterface.enable(isAudioEnabled)
+        }
+    }
+
+    fun onDestroyed() {
+        nativeInterface.destroyAudioEngine()
+    }
+
+    fun enableAudio(audioEnabled: Boolean) {
+        isAudioEnabled = audioEnabled
+        nativeInterface.enable(isAudioEnabled)
+    }
+
+    fun getPermissions(): List<String> = mutableListOf(
+        Manifest.permission.RECORD_AUDIO,
+    ).apply {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            add(Manifest.permission.READ_MEDIA_AUDIO)
+        } else {
+            add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
     }
 }

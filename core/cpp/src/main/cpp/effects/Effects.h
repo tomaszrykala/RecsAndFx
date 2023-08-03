@@ -50,24 +50,24 @@ static int SAMPLE_RATE = 48000;
 #include "descrip/DistortionDescription.h"
 
 constexpr std::tuple<
-        Effect::PassthroughDescription,
-        Effect::GainDescription,
-        Effect::TremoloDescription,
+        Effect::EchoDescription,
+        Effect::DoublingDescription,
+        Effect::SlapbackDescription,
+
+        Effect::FlangerDescription,
+        Effect::VibratoDescription,
+        Effect::WhiteChorusDescription,
+
+        Effect::OverdriveDescription,
+        Effect::DistortionDescription,
 
         Effect::AllPassDescription,
         Effect::FIRDescription,
         Effect::IIRDescription,
 
-        Effect::DoublingDescription,
-        Effect::EchoDescription,
-        Effect::SlapbackDescription,
-
-        Effect::FlangerDescription,
-        Effect::WhiteChorusDescription,
-        Effect::VibratoDescription,
-
-        Effect::OverdriveDescription,
-        Effect::DistortionDescription
+        Effect::GainDescription,
+        Effect::TremoloDescription,
+        Effect::PassthroughDescription
 > EffectsTuple{};
 
 constexpr size_t numEffects = std::tuple_size<decltype(EffectsTuple)>::value;

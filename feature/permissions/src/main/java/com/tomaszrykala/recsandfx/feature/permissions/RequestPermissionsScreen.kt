@@ -1,7 +1,5 @@
 package com.tomaszrykala.recsandfx.feature.permissions
 
-import android.Manifest
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -17,12 +15,12 @@ import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
-// TODO Not all permissions have to be requested at launch. Can be delayed to the FxDetail screen.
+// Not all permissions have to be requested at launch. Can be delayed to the FxDetail screen.
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun RequestPermissionsScreen(
     contentPadding: PaddingValues = PaddingValues(),
-    permissionsState: MultiplePermissionsState = rememberMultiplePermissionsState(getPermissionsList())
+    permissionsState: MultiplePermissionsState = rememberMultiplePermissionsState(emptyList())
 ) {
     Column(
         modifier = Modifier.padding(contentPadding)
@@ -69,15 +67,4 @@ private fun getTextToShowGivenPermissions(
         }
     )
     return textToShow.toString()
-}
-
-fun getPermissionsList(): List<String> = mutableListOf(
-    Manifest.permission.RECORD_AUDIO,
-).apply {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        add(Manifest.permission.READ_MEDIA_AUDIO)
-    } else {
-        add(Manifest.permission.READ_EXTERNAL_STORAGE)
-        add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    }
 }

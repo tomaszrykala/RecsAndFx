@@ -1,6 +1,7 @@
 package com.tomaszrykala.recsandfx.feature.effects_list
 
 import androidx.lifecycle.ViewModel
+import com.tomaszrykala.recsandfx.core.domain.effect.EffectCategory
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,16 +15,16 @@ class EffectsScreenViewModel(
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
-    private val stateFlow = MutableStateFlow<EffectsScreenState>(EffectsScreenState.Empty)
-    val uiStateFlow: StateFlow<EffectsScreenState> = stateFlow
+    private val stateFlow = MutableStateFlow<EffectsScreenUiState>(EffectsScreenUiState.Empty)
+    val uiStateFlow: StateFlow<EffectsScreenUiState> = stateFlow
 
     suspend fun observeEffects() {
-        val effects = withContext(defaultDispatcher) { effectsRepository.getAllEffects() }
-        stateFlow.emit(EffectsScreenState.Effects(effects))
+        val effects: Map<EffectCategory, List<Effect>> = withContext(defaultDispatcher) {
+            effectsRepository.getAllEffects().groupBy(
+                keySelector = { it.category },
+                valueTransform = { it },
+            )
+        }
+        stateFlow.emit(EffectsScreenUiState.Effects(effects))
     }
-}
-
-sealed class EffectsScreenState {
-    object Empty : EffectsScreenState()
-    data class Effects(val effects: List<Effect>) : EffectsScreenState()
 }
