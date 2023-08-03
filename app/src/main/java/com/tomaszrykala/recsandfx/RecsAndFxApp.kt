@@ -32,5 +32,3 @@ class RecsAndFxApp : Application() {
         }
     }
 }
-
-const val TAG = "RecsAndFxApp"

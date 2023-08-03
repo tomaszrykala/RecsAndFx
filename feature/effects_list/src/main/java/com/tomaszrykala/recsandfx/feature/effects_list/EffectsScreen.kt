@@ -62,7 +62,7 @@ fun EffectsScreen(
         )
 
         EffectsScreenUiState.Empty -> {
-            ShowSnackbar(snackbarHostState, "Loading...")
+            ShowSnackbar(snackbarHostState, stringResource(R.string.effects_loading))
         }
     }
 }
@@ -104,7 +104,7 @@ private fun ShowEffectsList(
                         .fillMaxWidth()
                         .background(
                             color = if (selectedEffect == it.name) itemSelectedColor else itemUnSelectedColor,
-                            shape = RoundedCornerShape(size = 4.dp)
+                            shape = RoundedCornerShape(size = paddingSmall)
                         )
                         .clickable {
                             selectedEffect = it.name
@@ -126,7 +126,7 @@ private fun EffectRow(icon: Int? = null, text: String) {
         icon?.let {
             Icon(
                 painterResource(it),
-                contentDescription = "Effect icon.",
+                contentDescription = stringResource(R.string.effect_icon),
                 modifier = Modifier.background(Color.Yellow)
             )
         }
@@ -151,3 +151,4 @@ fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
 }
 
 val paddingMedium = 8.dp
+val paddingSmall = 4.dp

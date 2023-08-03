@@ -69,11 +69,11 @@ fun RecsAndFxScreen(
                         onEnableAudioClick.invoke(isAudioEnabled)
                     }) {
                         Icon(
-                            painter = painterResource(
+                            painterResource(
                                 if (isAudioEnabled) R.drawable.ic_round_hearing_enabled_24
                                 else R.drawable.ic_round_hearing_disabled_24
                             ),
-                            contentDescription = "Pass-through"
+                            stringResource(R.string.pass_through)
                         )
                     }
                 }
