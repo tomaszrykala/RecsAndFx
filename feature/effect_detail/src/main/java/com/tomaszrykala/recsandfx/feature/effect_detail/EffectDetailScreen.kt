@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -63,27 +62,34 @@ fun EffectDetailScreen(
         coroutineScope.launch { observeEffect(effectName) }
         uiStateFlow.collectAsStateWithLifecycle()
     }
+    val paddingValues = PaddingValues(
+        top = contentPadding.calculateTopPadding() + paddingMedium,
+        bottom = contentPadding.calculateBottomPadding(),
+        start = paddingMedium,
+        end = paddingMedium
+    )
 
     when (state.value) {
         is EffectDetailState.EffectDetail -> {
-            val detailState = state.value as EffectDetailState.EffectDetail
+            val (effect, recordings) = state.value as EffectDetailState.EffectDetail
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(color = MaterialTheme.colorScheme.background)
-                    .padding(contentPadding),
+                    .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Title(detailState.effect)
-                Controls(detailState.effect, viewModel)
-                Spacer(modifier = Modifier.height(paddingXXLarge))
-                RecordButton(detailState.effect, viewModel, snackbarHostState)
-                Spacer(modifier = Modifier.height(paddingXXLarge))
+                Title(effect)
+                Controls(effect, viewModel)
+                Spacer(modifier = Modifier.height(paddingXLarge))
+                RecordButton(effect, viewModel, snackbarHostState)
+                Spacer(modifier = Modifier.height(paddingXLarge))
 
-                if (detailState.recordings.isEmpty()) {
+                if (recordings.isEmpty()) {
                     BigText("Record yourself to discover the effect!")
                 } else {
-                    Recordings(contentPadding, viewModel, snackbarHostState, detailState.recordings)
+                    Recordings(viewModel, snackbarHostState, recordings)
                 }
             }
         }
@@ -190,13 +196,12 @@ private fun RecordButton(
             )
             .padding(paddingLarge)
     ) {
-        Icon(imageVector = Icons.Default.AddCircle, contentDescription = "")
+        Icon(painterResource(R.drawable.ic_round_mic_24), contentDescription = "Start recording.")
     }
 }
 
 @Composable
 private fun Recordings(
-    contentPadding: PaddingValues,
     viewModel: EffectDetailViewModel,
     snackbarHostState: SnackbarHostState,
     recordings: List<String>
@@ -217,8 +222,7 @@ private fun Recordings(
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = contentPadding,
+        modifier = Modifier.fillMaxWidth(),
     ) {
         items(recordings) { recording ->
             Row(
@@ -263,7 +267,7 @@ fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
     }
 }
 
-val paddingXXLarge = 64.dp
+val paddingXLarge = 32.dp
 val paddingLarge = 16.dp
 val paddingMedium = 8.dp
 
