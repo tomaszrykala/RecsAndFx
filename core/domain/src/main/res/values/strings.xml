@@ -15,4 +15,9 @@
     <string name="effect_desc_tremolo">Rhythmic modulation of the input amplitude, creating a pulsating or trembling sound.</string>
     <string name="effect_desc_passthrough">No modulation. Just recording.</string>
     <string name="effect_desc_no_info">No info / info missing.</string>
+    <string name="effect_category_delays">Delays</string>
+    <string name="effect_category_choruses">Choruses</string>
+    <string name="effect_category_distortions">Distortions</string>
+    <string name="effect_category_comb_filters">Comb Filters</string>
+    <string name="effect_category_no_category">no category</string>
 </resources>

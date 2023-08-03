@@ -24,14 +24,13 @@ internal class EffectsRepositoryImpl(
                 name = it.key,
                 params = it.value.paramValues.map { pd -> pd.toParam() },
                 category = it.value.category.toCategory(),
-                description = mapShortDescription(it.key),
-                icon = R.drawable.ic_round_audiotrack_24,
+                description = getDescription(it.key)
             )
         }
     }
 
     @StringRes
-    private fun mapShortDescription(name: String): Int {
+    private fun getDescription(name: String): Int {
         return when (name) {
             "Echo" -> R.string.effect_desc_echo
             "Doubling" -> R.string.effect_desc_doubling

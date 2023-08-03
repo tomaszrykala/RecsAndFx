@@ -6,6 +6,11 @@ plugins {
 android {
     namespace 'com.tomaszrykala.recsandfx.core.domain'
     compileSdk 34
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 34
+    }
 }
 
 dependencies {

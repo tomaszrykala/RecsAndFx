@@ -31,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -115,15 +116,15 @@ private fun Title(text: String) {
             .fillMaxWidth(),
         text = text,
         style = TextStyle(
-            fontSize = TextUnit(
-                value = 24.0F,
-                type = TextUnitType.Sp,
-            ),
+            fontSize = spTextUnit(24.0f),
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
     )
 }
+
+@Composable
+fun spTextUnit(size: Float) = TextUnit(value = size, type = TextUnitType.Sp)
 
 @Composable
 private fun Controls(
@@ -137,13 +138,21 @@ private fun Controls(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = param.name, modifier = Modifier.padding(end = paddingSmall))
+            Text(
+                text = param.name,
+                modifier = Modifier.padding(end = paddingSmall),
+                style = TextStyle(fontSize = spTextUnit(18.0f))
+            )
             Text(
                 text = sliderPosition.roundToTwoDecimals().toString(),
-                style = TextStyle(fontWeight = FontWeight.Bold),
-                modifier = Modifier.padding(end = paddingSmall)
+                modifier = Modifier.padding(end = paddingSmall),
+                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = spTextUnit(18.0f))
             )
-            Text(text = param.minValue.toString(), modifier = Modifier.padding(end = paddingSmall))
+            Text(
+                text = param.minValue.toString(), modifier = Modifier
+                    .alpha(0.6f)
+                    .padding(end = paddingSmall)
+            )
             Slider(
                 value = sliderPosition,
                 onValueChange = { value -> sliderPosition = value },
@@ -155,11 +164,9 @@ private fun Controls(
                     override val endInclusive: Float = param.maxValue
                     override val start: Float = param.minValue
                 },
-                modifier = Modifier
-                    .weight(0.5f, false)
-                    .padding(end = paddingSmall)
+                modifier = Modifier.weight(0.5f, false).padding(end = paddingSmall),
             )
-            Text(text = param.maxValue.toString())
+            Text(text = param.maxValue.toString(), modifier = Modifier.alpha(0.6f))
         }
     }
 }

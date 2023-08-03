@@ -27,7 +27,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -97,7 +96,8 @@ private fun ShowEffectsList(
         verticalArrangement = Arrangement.spacedBy(paddingMedium),
     ) {
         effectState.effects.forEach { (category, effects) ->
-            item { EffectRow(text = category.displayName) }
+
+            item { EffectRow(text = stringResource(category.fxName)) }
             items(effects) {
                 Column(
                     modifier = Modifier
@@ -112,7 +112,7 @@ private fun ShowEffectsList(
                         }
                         .padding(all = paddingMedium)
                 ) {
-                    EffectRow(it.icon, it.name)
+                    EffectRow(it.category.fxIcon, it.name)
                     Text(modifier = Modifier.padding(top = paddingMedium), text = stringResource(it.description))
                 }
             }
@@ -123,22 +123,11 @@ private fun ShowEffectsList(
 @Composable
 private fun EffectRow(icon: Int? = null, text: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        icon?.let {
-            Icon(
-                painterResource(it),
-                contentDescription = stringResource(R.string.effect_icon),
-                modifier = Modifier.background(Color.Yellow)
-            )
-        }
+        icon?.let { Icon(painterResource(it), stringResource(R.string.effect_icon)) }
         Text(
             text = text,
             modifier = Modifier.padding(start = paddingMedium),
-            style = TextStyle(
-                fontSize = TextUnit(
-                    value = 24.0F,
-                    type = TextUnitType.Sp
-                )
-            )
+            style = TextStyle(fontSize = TextUnit(value = 24.0f, type = TextUnitType.Sp))
         )
     }
 }
