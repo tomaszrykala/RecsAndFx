@@ -54,14 +54,14 @@ fun EffectsScreen(
     }
 
     when (state.value) {
-        is EffectsScreenState.Effects -> ShowEffectsList(
-            state.value as EffectsScreenState.Effects,
+        is EffectsScreenUiState.Effects -> ShowEffectsList(
+            state.value as EffectsScreenUiState.Effects,
             contentPadding,
             snackbarHostState,
             navigateToDetail
         )
 
-        EffectsScreenState.Empty -> {
+        EffectsScreenUiState.Empty -> {
             ShowSnackbar(snackbarHostState, "Loading...")
         }
     }
@@ -69,7 +69,7 @@ fun EffectsScreen(
 
 @Composable
 private fun ShowEffectsList(
-    effectState: EffectsScreenState.Effects,
+    effectState: EffectsScreenUiState.Effects,
     contentPadding: PaddingValues,
     snackbarHostState: SnackbarHostState,
     navigateToDetail: (effect: String) -> Unit

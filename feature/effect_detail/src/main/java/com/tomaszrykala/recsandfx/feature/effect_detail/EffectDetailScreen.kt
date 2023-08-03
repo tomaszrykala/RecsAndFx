@@ -37,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -70,8 +71,8 @@ fun EffectDetailScreen(
     )
 
     when (state.value) {
-        is EffectDetailState.EffectDetail -> {
-            val (effect, recordings) = state.value as EffectDetailState.EffectDetail
+        is EffectDetailUiState.EffectDetail -> {
+            val (effect, recordings) = state.value as EffectDetailUiState.EffectDetail
 
             Column(
                 modifier = Modifier
@@ -80,35 +81,30 @@ fun EffectDetailScreen(
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Title(effect)
+                Title(effect.name)
                 Spacer(modifier = Modifier.height(paddingMedium))
-                Text(text = effect.shortDescription)
+                Text(effect.shortDescription)
                 Spacer(modifier = Modifier.height(paddingXLarge))
                 Controls(effect, viewModel)
                 Spacer(modifier = Modifier.height(paddingXLarge))
-                RecordButton(effect, viewModel, snackbarHostState)
+                RecordButton(viewModel, snackbarHostState)
                 Spacer(modifier = Modifier.height(paddingXLarge))
 
                 if (recordings.isEmpty()) {
-                    BigText("Record yourself to discover the effect!")
+                    Title("Press the 'Record' button to record yourself and discover the effect!")
                 } else {
                     Recordings(viewModel, snackbarHostState, recordings)
                 }
             }
         }
 
-        EffectDetailState.Empty -> ShowSnackbar(snackbarHostState, "Loading...")
-        EffectDetailState.Error -> BigText("Error: Couldn't load the effect! Try again please.")
+        EffectDetailUiState.Empty -> ShowSnackbar(snackbarHostState, "Loading...")
+        EffectDetailUiState.Error -> Title("Error: Couldn't load the effect! Try again please.")
     }
 }
 
 @Composable
-private fun Title(effect: Effect) {
-    BigText(effect.name)
-}
-
-@Composable
-private fun BigText(text: String) {
+private fun Title(text: String) {
     Text(
         modifier = Modifier
             .padding(bottom = paddingMedium)
@@ -119,7 +115,8 @@ private fun BigText(text: String) {
                 value = 24.0F,
                 type = TextUnitType.Sp,
             ),
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center
         )
     )
 }
@@ -147,7 +144,7 @@ private fun Controls(
                 value = sliderPosition,
                 onValueChange = { value -> sliderPosition = value },
                 onValueChangeFinished = {
-                    coroutineScope.launch { viewModel.onParamChange(effect, sliderPosition, index) }
+                    coroutineScope.launch { viewModel.onParamChange(sliderPosition, index) }
                 },
                 valueRange = object : ClosedFloatingPointRange<Float> {
                     override fun lessThanOrEquals(a: Float, b: Float): Boolean = a <= b
@@ -165,7 +162,6 @@ private fun Controls(
 
 @Composable
 private fun RecordButton(
-    effect: Effect,
     viewModel: EffectDetailViewModel,
     snackbarHostState: SnackbarHostState
 ) {
@@ -183,7 +179,7 @@ private fun RecordButton(
         onClick = {
             coroutineScope.launch {
                 if (isRecording) {
-                    viewModel.stopAudioRecorder(effect)
+                    viewModel.stopAudioRecorder()
                     isRecording = false
                 } else {
                     viewModel.startAudioRecorder()
@@ -209,17 +205,15 @@ private fun Recordings(
     snackbarHostState: SnackbarHostState,
     recordings: List<String>
 ) {
-    var selected by remember { mutableStateOf("") }
+    var selectedRecording by remember { mutableStateOf("") }
+    var deletedRecording by remember { mutableStateOf("") }
 
-    if (selected != "") {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.playing_recording, selected))
+    if (selectedRecording != "") {
+        ShowSnackbar(snackbarHostState, stringResource(R.string.playing_recording, selectedRecording))
     }
-//    var deletedRecording by remember { mutableStateOf("") }
-//    if (deletedRecording != "") {
-//        ShowSnackbar(
-//            snackbarHostState, stringResource(R.string.deleted_recording, deletedRecording)
-//        )
-//    }
+    if (deletedRecording != "") {
+        ShowSnackbar(snackbarHostState, stringResource(R.string.deleted_recording, deletedRecording))
+    }
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -231,7 +225,7 @@ private fun Recordings(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(if (selected == recording) Color.Yellow else Color.White)
+                    .background(if (selectedRecording == recording) Color.Yellow else Color.White)
                     .padding(paddingMedium),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -239,9 +233,9 @@ private fun Recordings(
                 Text(
                     modifier = Modifier
                         .clickable {
-                            selected = if (selected == recording) "" else recording
+                            selectedRecording = if (selectedRecording == recording) "" else recording
                             coroutineScope.launch {
-                                viewModel.onSelectedRecording(context, selected)
+                                viewModel.onSelectedRecording(context, selectedRecording)
                             }
                         },
                     text = recording,
@@ -251,13 +245,13 @@ private fun Recordings(
                 )
 
                 // Delete not working yet
-//                IconButton(
-//                    onClick = {
-//                        deletedRecording = recording
-//                        viewModel.deleteRecording(recording)
-//                    }) {
-//                    Icon(imageVector = Icons.Default.Delete, contentDescription = "")
-//                }
+                IconButton(
+                    onClick = {
+                        deletedRecording = recording
+                        coroutineScope.launch { viewModel.deleteRecording(recording) }
+                    }) {
+                    Icon(painterResource(R.drawable.ic_round_delete_24), contentDescription = "")
+                }
             }
         }
     }

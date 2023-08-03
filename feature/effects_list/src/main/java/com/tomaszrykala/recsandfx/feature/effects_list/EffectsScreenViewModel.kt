@@ -15,8 +15,8 @@ class EffectsScreenViewModel(
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
 
-    private val stateFlow = MutableStateFlow<EffectsScreenState>(EffectsScreenState.Empty)
-    val uiStateFlow: StateFlow<EffectsScreenState> = stateFlow
+    private val stateFlow = MutableStateFlow<EffectsScreenUiState>(EffectsScreenUiState.Empty)
+    val uiStateFlow: StateFlow<EffectsScreenUiState> = stateFlow
 
     suspend fun observeEffects() {
         val effects: Map<EffectCategory, List<Effect>> = withContext(defaultDispatcher) {
@@ -25,11 +25,6 @@ class EffectsScreenViewModel(
                 valueTransform = { it },
             )
         }
-        stateFlow.emit(EffectsScreenState.Effects(effects))
+        stateFlow.emit(EffectsScreenUiState.Effects(effects))
     }
-}
-
-sealed class EffectsScreenState {
-    object Empty : EffectsScreenState()
-    data class Effects(val effects: Map<EffectCategory, List<Effect>>) : EffectsScreenState()
 }
