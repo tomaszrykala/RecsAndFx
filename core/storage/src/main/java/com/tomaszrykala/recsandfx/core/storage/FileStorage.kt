@@ -33,12 +33,11 @@ internal class FileStorageImpl : FileStorage {
 
     override suspend fun deleteRecording(recording: String): Boolean {
         val recordingFile = getRecordingFile(recording)
-        return recordingFile.delete() // This will not work as we need scoped storage.
+        return recordingFile.delete() // This _might_ not work without scoped storage or MediaStore.
     }
 
     private fun getRecordingFile(fileName: String) = File(storageDirectory(), fileName)
 
-    // TODO Replace with MediaStore.Audio, to enable deleting.
     private fun storageDirectory(): File =
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
 

@@ -50,10 +50,10 @@ class EffectDetailViewModel(
             with(nativeInterface) {
                 removeEffect()
                 stopAudioRecorder()
-                withContext(ioDispatcher) {
+                emitEffectState(withContext(ioDispatcher) {
                     writeFile(fileStorage.getRecordingFilePath(effect.name))
-                    emitEffectState(fileStorage.getAllRecordings(effect.name))
-                }
+                    fileStorage.getAllRecordings(effect.name)
+                })
             }
         }
     }
@@ -73,13 +73,11 @@ class EffectDetailViewModel(
     suspend fun onRecordingStop() = withContext(defaultDispatcher) { recordingsPlayer.stop() }
 
     suspend fun deleteRecording(selectedRecording: String) {
-        withContext(ioDispatcher) {
-            if (fileStorage.deleteRecording(selectedRecording)) {
-                Log.d(TAG, "Deleted Recording: $selectedRecording.")
-                emitEffectState(fileStorage.getAllRecordings(effect.name))
-            } else {
-                Log.d(TAG, "Failed to delete Recording: $selectedRecording.")
-            }
+        if (withContext(ioDispatcher) { fileStorage.deleteRecording(selectedRecording) }) {
+            Log.d(TAG, "Deleted Recording: $selectedRecording.")
+            emitEffectState(withContext(ioDispatcher) { fileStorage.getAllRecordings(effect.name) })
+        } else {
+            Log.d(TAG, "Failed to delete Recording: $selectedRecording.")
         }
     }
 
