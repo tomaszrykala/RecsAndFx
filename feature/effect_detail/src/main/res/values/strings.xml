@@ -5,7 +5,7 @@
     <string name="recording_stopped">Recording stopped.</string>
     <string name="empty_recordings_state_prompt">Press the \'Record\' button to record yourself and discover the effect!</string>
     <string name="recordings_load_error">Error: Couldn\'t load the effect! Try again please.</string>
-    <string name="recordings_loading">Loading...</string>
+    <string name="recordings_loading">Loading…</string>
     <string name="start_recording">Start recording.</string>
     <string name="delete_button">Delete button.</string>
 </resources>

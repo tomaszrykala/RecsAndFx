@@ -41,8 +41,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 @Preview(showBackground = true)
-fun EffectsScreen(
-    viewModel: EffectsScreenViewModel = koinViewModel(),
+fun EffectsListScreen(
+    viewModel: EffectsListViewModel = koinViewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     contentPadding: PaddingValues = PaddingValues(),
     navigateToDetail: (effect: String) -> Unit = { },
@@ -54,14 +54,14 @@ fun EffectsScreen(
     }
 
     when (state.value) {
-        is EffectsScreenUiState.Effects -> ShowEffectsList(
-            state.value as EffectsScreenUiState.Effects,
+        is EffectsListUiState.EffectsList -> ShowEffectsList(
+            state.value as EffectsListUiState.EffectsList,
             contentPadding,
             snackbarHostState,
             navigateToDetail
         )
 
-        EffectsScreenUiState.Empty -> {
+        EffectsListUiState.Empty -> {
             ShowSnackbar(snackbarHostState, stringResource(R.string.effects_loading))
         }
     }
@@ -69,7 +69,7 @@ fun EffectsScreen(
 
 @Composable
 private fun ShowEffectsList(
-    effectState: EffectsScreenUiState.Effects,
+    effectState: EffectsListUiState.EffectsList,
     contentPadding: PaddingValues,
     snackbarHostState: SnackbarHostState,
     navigateToDetail: (effect: String) -> Unit
@@ -113,7 +113,7 @@ private fun ShowEffectsList(
                         .padding(all = paddingMedium)
                 ) {
                     EffectRow(it.icon, it.name)
-                    Text(text = it.shortDescription, modifier = Modifier.padding(top = paddingMedium))
+                    Text(modifier = Modifier.padding(top = paddingMedium), text = stringResource(it.description))
                 }
             }
         }

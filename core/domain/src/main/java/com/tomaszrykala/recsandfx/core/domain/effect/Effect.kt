@@ -1,6 +1,7 @@
 package com.tomaszrykala.recsandfx.core.domain.effect
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.tomaszrykala.recsandfx.core.datatype.EffectDescription
 import com.tomaszrykala.recsandfx.core.datatype.NativeEffect
 
@@ -9,7 +10,7 @@ data class Effect(
     val name: String,
     val params: List<Param>,
     val category: EffectCategory,
-    val shortDescription: String,
+    @StringRes val description: Int,
     @DrawableRes val icon: Int,
 )
 

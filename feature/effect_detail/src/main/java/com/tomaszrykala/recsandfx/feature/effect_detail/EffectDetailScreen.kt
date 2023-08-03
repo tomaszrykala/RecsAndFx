@@ -82,7 +82,7 @@ fun EffectDetailScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Title(effect.name)
-                Text(modifier = Modifier.padding(top = paddingMedium), text = effect.shortDescription)
+                Text(modifier = Modifier.padding(top = paddingMedium), text = stringResource(effect.description))
                 XLargeSpacer()
                 Controls(effect, viewModel)
                 XLargeSpacer()

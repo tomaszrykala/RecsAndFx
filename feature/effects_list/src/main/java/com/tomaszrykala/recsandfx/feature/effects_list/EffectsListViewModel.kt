@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
 
-class EffectsScreenViewModel(
+class EffectsListViewModel(
     private val effectsRepository: EffectsRepository,
     private val dispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
-    private val stateFlow = MutableStateFlow<EffectsScreenUiState>(EffectsScreenUiState.Empty)
-    val uiStateFlow: StateFlow<EffectsScreenUiState> = stateFlow
+    private val stateFlow = MutableStateFlow<EffectsListUiState>(EffectsListUiState.Empty)
+    val uiStateFlow: StateFlow<EffectsListUiState> = stateFlow
 
     suspend fun observeEffects() {
         val effects: Map<EffectCategory, List<Effect>> = withContext(dispatcher) {
@@ -24,6 +24,6 @@ class EffectsScreenViewModel(
                 valueTransform = { it },
             )
         }
-        stateFlow.emit(EffectsScreenUiState.Effects(effects))
+        stateFlow.emit(EffectsListUiState.EffectsList(effects))
     }
 }
