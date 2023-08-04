@@ -125,5 +125,5 @@ private fun EffectRow(icon: Int? = null, text: String) {
     }
 }
 
-val paddingMedium = 8.dp
-val paddingSmall = 4.dp
+private val paddingMedium = 8.dp
+private val paddingSmall = 4.dp

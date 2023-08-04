@@ -76,8 +76,8 @@ private fun PassthroughButton(
     val coroutineScope = rememberCoroutineScope()
     var isAudioEnabled by rememberSaveable { mutableStateOf(false) }
     var hasAudioBeenEnabled by rememberSaveable { mutableStateOf(false) }
-    val enabledPassthrough = stringResource(R.string.you_ve_enabled_audio_pass_through)
-    val disabledPassthrough = stringResource(R.string.you_ve_disabled_audio_pass_through)
+    val enabledPassthroughMsg = stringResource(R.string.you_ve_enabled_audio_pass_through)
+    val disabledPassthroughMsg = stringResource(R.string.you_ve_disabled_audio_pass_through)
 
     IconButton(onClick = {
         hasAudioBeenEnabled = true
@@ -85,9 +85,9 @@ private fun PassthroughButton(
         onEnableAudioClick.invoke(isAudioEnabled)
         coroutineScope.launch {
             if (isAudioEnabled) {
-                snackbarHostState.showSnackbar(enabledPassthrough)
+                snackbarHostState.showSnackbar(enabledPassthroughMsg)
             } else if (hasAudioBeenEnabled) {
-                snackbarHostState.showSnackbar(disabledPassthrough)
+                snackbarHostState.showSnackbar(disabledPassthroughMsg)
             }
         }
     }) {
