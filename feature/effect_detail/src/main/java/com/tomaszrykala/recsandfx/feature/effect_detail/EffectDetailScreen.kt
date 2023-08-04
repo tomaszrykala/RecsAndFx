@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -87,7 +86,11 @@ fun EffectDetailScreen(
                 XLargeSpacer()
                 Controls(effect, viewModel)
                 XLargeSpacer()
-                RecordButton(viewModel, snackbarHostState)
+                RecordButton(
+                    snackbarHostState = snackbarHostState,
+                    onRecordingStop = { viewModel.stopAudioRecorder() },
+                    onRecordingStart = { viewModel.startAudioRecorder() },
+                )
                 XLargeSpacer()
 
                 if (recordings.isEmpty()) {
@@ -164,7 +167,9 @@ private fun Controls(
                     override val endInclusive: Float = param.maxValue
                     override val start: Float = param.minValue
                 },
-                modifier = Modifier.weight(0.5f, false).padding(end = paddingSmall),
+                modifier = Modifier
+                    .weight(0.5f, false)
+                    .padding(end = paddingSmall),
             )
             Text(text = param.maxValue.toString(), modifier = Modifier.alpha(0.6f))
         }
@@ -173,29 +178,31 @@ private fun Controls(
 
 @Composable
 private fun RecordButton(
-    viewModel: EffectDetailViewModel,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    onRecordingStop: suspend () -> Unit,
+    onRecordingStart: suspend () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     var isRecording by rememberSaveable { mutableStateOf(false) }
     var hasRecordingStarted by rememberSaveable { mutableStateOf(false) }
-
-    if (isRecording) {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.you_re_recording))
-    } else if (hasRecordingStarted) {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.recording_stopped))
-    }
+    val recordingStarted = stringResource(R.string.you_re_recording)
+    val recordingStopped = stringResource(R.string.recording_stopped)
 
     IconButton(
         onClick = {
             coroutineScope.launch {
                 if (isRecording) {
-                    viewModel.stopAudioRecorder()
+                    onRecordingStop.invoke()
                     isRecording = false
                 } else {
-                    viewModel.startAudioRecorder()
+                    onRecordingStart.invoke()
                     hasRecordingStarted = true
                     isRecording = true
+                }
+                if (isRecording) {
+                    snackbarHostState.showSnackbar(recordingStarted)
+                } else if (hasRecordingStarted) {
+                    snackbarHostState.showSnackbar(recordingStopped)
                 }
             }
         },
@@ -219,6 +226,7 @@ private fun Recordings(
     var selectedRecording by remember { mutableStateOf("") }
     var deletedRecording by remember { mutableStateOf("") }
 
+    // TODO
     if (selectedRecording != "") {
         ShowSnackbar(snackbarHostState, stringResource(R.string.playing_recording, selectedRecording))
     }
@@ -273,9 +281,7 @@ private fun Recordings(
 
 @Composable
 fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
-    LaunchedEffect(message) {
-        snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
-    }
+    LaunchedEffect(message) { snackbarHostState.showSnackbar(message) }
 }
 
 val paddingXLarge = 32.dp
