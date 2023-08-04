@@ -7,17 +7,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -34,6 +33,7 @@ import com.tomaszrykala.recsandfx.feature.effect_detail.EffectDetailScreen
 import com.tomaszrykala.recsandfx.feature.effects_list.EffectsListScreen
 import com.tomaszrykala.recsandfx.feature.permissions.RequestPermissionsScreen
 import com.tomaszrykala.recsandfx.ui.screen.Screen
+import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
@@ -42,14 +42,6 @@ fun RecsAndFxScreen(
     onEnableAudioClick: (enable: Boolean) -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    var isAudioEnabled by rememberSaveable { mutableStateOf(false) }
-    var hasAudioBeenEnabled by rememberSaveable { mutableStateOf(false) }
-
-    if (isAudioEnabled) {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_enabled_audio_pass_through))
-    } else if (hasAudioBeenEnabled) {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.you_ve_disabled_audio_pass_through))
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
@@ -64,21 +56,7 @@ fun RecsAndFxScreen(
                     )
                 },
                 title = { Text(stringResource(R.string.app_name)) },
-                actions = {
-                    IconButton(onClick = {
-                        hasAudioBeenEnabled = true
-                        isAudioEnabled = !isAudioEnabled
-                        onEnableAudioClick.invoke(isAudioEnabled)
-                    }) {
-                        Icon(
-                            painterResource(
-                                if (isAudioEnabled) R.drawable.ic_round_hearing_enabled_24
-                                else R.drawable.ic_round_hearing_disabled_24
-                            ),
-                            stringResource(R.string.pass_through)
-                        )
-                    }
-                }
+                actions = { PassthroughButton(onEnableAudioClick, snackbarHostState) }
             )
         }
     ) { contentPadding ->
@@ -87,6 +65,39 @@ fun RecsAndFxScreen(
         } else {
             RequestPermissionsScreen(contentPadding, permissionsState)
         }
+    }
+}
+
+@Composable
+private fun PassthroughButton(
+    onEnableAudioClick: (enable: Boolean) -> Unit,
+    snackbarHostState: SnackbarHostState
+) {
+    val coroutineScope = rememberCoroutineScope()
+    var isAudioEnabled by rememberSaveable { mutableStateOf(false) }
+    var hasAudioBeenEnabled by rememberSaveable { mutableStateOf(false) }
+    val enabledPassthroughMsg = stringResource(R.string.you_ve_enabled_audio_pass_through)
+    val disabledPassthroughMsg = stringResource(R.string.you_ve_disabled_audio_pass_through)
+
+    IconButton(onClick = {
+        hasAudioBeenEnabled = true
+        isAudioEnabled = !isAudioEnabled
+        onEnableAudioClick.invoke(isAudioEnabled)
+        coroutineScope.launch {
+            if (isAudioEnabled) {
+                snackbarHostState.showSnackbar(enabledPassthroughMsg)
+            } else if (hasAudioBeenEnabled) {
+                snackbarHostState.showSnackbar(disabledPassthroughMsg)
+            }
+        }
+    }) {
+        Icon(
+            painterResource(
+                if (isAudioEnabled) R.drawable.ic_round_hearing_enabled_24
+                else R.drawable.ic_round_hearing_disabled_24
+            ),
+            stringResource(R.string.pass_through)
+        )
     }
 }
 
@@ -110,12 +121,5 @@ private fun ShowRafApp(
                 effectName = it.arguments?.getString("effect") ?: "EMPTY"
             )
         }
-    }
-}
-
-@Composable
-fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
-    LaunchedEffect(message) {
-        snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
     }
 }

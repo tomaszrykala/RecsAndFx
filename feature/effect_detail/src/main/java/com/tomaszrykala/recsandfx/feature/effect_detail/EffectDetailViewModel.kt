@@ -61,11 +61,8 @@ class EffectDetailViewModel(
     }
 
     suspend fun onSelectedRecording(context: Context, selectedRecording: String) {
-        if (selectedRecording.isNotEmpty()) {
-            Log.d(TAG, "Selected Recording: $selectedRecording.")
-            val uri = withContext(ioDispatcher) { fileStorage.getRecordingUri(selectedRecording) }
-            withContext(defaultDispatcher) { recordingsPlayer.play(context, uri) }
-        }
+        val uri = withContext(ioDispatcher) { fileStorage.getRecordingUri(selectedRecording) }
+        withContext(defaultDispatcher) { recordingsPlayer.play(context, uri) }
     }
 
     suspend fun onRecordingStop() = withContext(defaultDispatcher) { recordingsPlayer.stop() }

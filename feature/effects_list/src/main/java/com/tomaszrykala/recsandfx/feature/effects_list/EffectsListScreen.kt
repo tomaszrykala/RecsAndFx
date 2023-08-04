@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,12 +55,12 @@ fun EffectsListScreen(
         is EffectsListUiState.EffectsList -> ShowEffectsList(
             state.value as EffectsListUiState.EffectsList,
             contentPadding,
-            snackbarHostState,
             navigateToDetail
         )
 
         EffectsListUiState.Empty -> {
-            ShowSnackbar(snackbarHostState, stringResource(R.string.effects_loading))
+            val message = stringResource(R.string.effects_loading)
+            LaunchedEffect(Unit) { snackbarHostState.showSnackbar(message) }
         }
     }
 }
@@ -70,7 +69,6 @@ fun EffectsListScreen(
 private fun ShowEffectsList(
     effectState: EffectsListUiState.EffectsList,
     contentPadding: PaddingValues,
-    snackbarHostState: SnackbarHostState,
     navigateToDetail: (effect: String) -> Unit
 ) {
     var selectedEffect by rememberSaveable { mutableStateOf("") }
@@ -79,11 +77,6 @@ private fun ShowEffectsList(
     val itemSelectedColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
     val itemUnSelectedColor = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.6f)
 
-    if (selectedEffect != "") {
-        ShowSnackbar(
-            snackbarHostState, stringResource(R.string.you_ve_selected_effect, selectedEffect)
-        )
-    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -132,12 +125,5 @@ private fun EffectRow(icon: Int? = null, text: String) {
     }
 }
 
-@Composable
-fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
-    LaunchedEffect(message) {
-        snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
-    }
-}
-
-val paddingMedium = 8.dp
-val paddingSmall = 4.dp
+private val paddingMedium = 8.dp
+private val paddingSmall = 4.dp

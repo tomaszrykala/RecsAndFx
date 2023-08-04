@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -87,7 +86,11 @@ fun EffectDetailScreen(
                 XLargeSpacer()
                 Controls(effect, viewModel)
                 XLargeSpacer()
-                RecordButton(viewModel, snackbarHostState)
+                RecordButton(
+                    snackbarHostState = snackbarHostState,
+                    onRecordingStop = { viewModel.stopAudioRecorder() },
+                    onRecordingStart = { viewModel.startAudioRecorder() },
+                )
                 XLargeSpacer()
 
                 if (recordings.isEmpty()) {
@@ -98,7 +101,11 @@ fun EffectDetailScreen(
             }
         }
 
-        EffectDetailUiState.Empty -> ShowSnackbar(snackbarHostState, stringResource(R.string.recordings_loading))
+        EffectDetailUiState.Empty -> {
+            val message = stringResource(R.string.recordings_loading)
+            LaunchedEffect(message) { snackbarHostState.showSnackbar(message) }
+        }
+
         EffectDetailUiState.Error -> Title(stringResource(R.string.recordings_load_error))
     }
 }
@@ -164,7 +171,9 @@ private fun Controls(
                     override val endInclusive: Float = param.maxValue
                     override val start: Float = param.minValue
                 },
-                modifier = Modifier.weight(0.5f, false).padding(end = paddingSmall),
+                modifier = Modifier
+                    .weight(0.5f, false)
+                    .padding(end = paddingSmall),
             )
             Text(text = param.maxValue.toString(), modifier = Modifier.alpha(0.6f))
         }
@@ -173,29 +182,31 @@ private fun Controls(
 
 @Composable
 private fun RecordButton(
-    viewModel: EffectDetailViewModel,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    onRecordingStop: suspend () -> Unit,
+    onRecordingStart: suspend () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     var isRecording by rememberSaveable { mutableStateOf(false) }
     var hasRecordingStarted by rememberSaveable { mutableStateOf(false) }
-
-    if (isRecording) {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.you_re_recording))
-    } else if (hasRecordingStarted) {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.recording_stopped))
-    }
+    val recordingStarted = stringResource(R.string.you_re_recording)
+    val recordingStopped = stringResource(R.string.recording_stopped)
 
     IconButton(
         onClick = {
             coroutineScope.launch {
                 if (isRecording) {
-                    viewModel.stopAudioRecorder()
+                    onRecordingStop.invoke()
                     isRecording = false
                 } else {
-                    viewModel.startAudioRecorder()
+                    onRecordingStart.invoke()
                     hasRecordingStarted = true
                     isRecording = true
+                }
+                if (isRecording) {
+                    snackbarHostState.showSnackbar(recordingStarted)
+                } else if (hasRecordingStarted) {
+                    snackbarHostState.showSnackbar(recordingStopped)
                 }
             }
         },
@@ -216,15 +227,10 @@ private fun Recordings(
     snackbarHostState: SnackbarHostState,
     recordings: List<String>
 ) {
-    var selectedRecording by remember { mutableStateOf("") }
+    var selectedRecording: String? by remember { mutableStateOf(null) }
     var deletedRecording by remember { mutableStateOf("") }
-
-    if (selectedRecording != "") {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.playing_recording, selectedRecording))
-    }
-    if (deletedRecording != "") {
-        ShowSnackbar(snackbarHostState, stringResource(R.string.deleted_recording, deletedRecording))
-    }
+    val selectedRecordingMsg = stringResource(R.string.playing_recording)
+    val deletedRecordingMsg = stringResource(R.string.deleted_recording)
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -243,9 +249,12 @@ private fun Recordings(
                         shape = RoundedCornerShape(size = paddingSmall)
                     )
                     .clickable {
-                        selectedRecording = if (selectedRecording == recording) "" else recording
+                        selectedRecording = if (selectedRecording == recording) null else recording
                         coroutineScope.launch {
-                            viewModel.onSelectedRecording(context, selectedRecording)
+                            selectedRecording?.let {
+                                viewModel.onSelectedRecording(context, it)
+                                snackbarHostState.showSnackbar(selectedRecordingMsg.format(it))
+                            } ?: snackbarHostState.currentSnackbarData?.dismiss()
                         }
                     },
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -261,7 +270,10 @@ private fun Recordings(
                 IconButton(
                     onClick = {
                         deletedRecording = recording
-                        coroutineScope.launch { viewModel.deleteRecording(recording) }
+                        coroutineScope.launch {
+                            viewModel.deleteRecording(recording)
+                            snackbarHostState.showSnackbar(deletedRecordingMsg.format(recording))
+                        }
                     }
                 ) {
                     Icon(painterResource(R.drawable.ic_round_delete_24), stringResource(R.string.delete_button))
@@ -271,19 +283,12 @@ private fun Recordings(
     }
 }
 
-@Composable
-fun ShowSnackbar(snackbarHostState: SnackbarHostState, message: String) {
-    LaunchedEffect(message) {
-        snackbarHostState.showSnackbar(message, duration = SnackbarDuration.Short)
-    }
-}
+private val paddingXLarge = 32.dp
+private val paddingLarge = 16.dp
+private val paddingMedium = 8.dp
+private val paddingSmall = 4.dp
 
-val paddingXLarge = 32.dp
-val paddingLarge = 16.dp
-val paddingMedium = 8.dp
-val paddingSmall = 4.dp
-
-fun Float.roundToTwoDecimals(): Double {
+private fun Float.roundToTwoDecimals(): Double {
     val factor = 10.0.pow(2.toDouble())
     return (this * factor).roundToInt() / factor
 }
