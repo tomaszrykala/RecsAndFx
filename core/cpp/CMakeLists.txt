@@ -52,7 +52,7 @@ find_library( # Sets the name of the path variable.
 ### INCLUDE OBOE LIBRARY ###
 
 # Set the path to the Oboe library directory
-set (OBOE_DIR /Users/trykala/dev/android/git/opensource/oboe)
+set (OBOE_DIR <path_to_oboe>)
 
 # Add the Oboe library as a subproject. Since Oboe is an out-of-tree source library we must also
 # specify a binary directory
@@ -67,7 +67,7 @@ include_directories(
 ### END OBOE INCLUDE SECTION ###
 
 ### ADD LIBSNDFILE LIBRARY
-set(LIB_SND_FILE_DIR /Users/trykala/dev/android/git/opensource/libsndfile)
+set(LIB_SND_FILE_DIR <path_to_libsndfile>)
 add_subdirectory(${LIB_SND_FILE_DIR} ./sndfile)
 include_directories(${LIB_SND_FILE_DIR}/src)
 
