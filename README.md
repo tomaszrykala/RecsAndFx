@@ -42,7 +42,7 @@ set (OBOE_DIR <path_to_oboe>)
 
 Add [libsndfile](https://github.com/libsndfile/libsndfile) library
 ```
-set(LIB_SND_FILE_DIR <path_to_libsndfile>
+set(LIB_SND_FILE_DIR <path_to_libsndfile>)
 add_subdirectory(${LIB_SND_FILE_DIR} ./sndfile)
 include_directories(${LIB_SND_FILE_DIR}/src)
 ```
