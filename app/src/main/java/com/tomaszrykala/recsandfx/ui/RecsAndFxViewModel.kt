@@ -1,23 +1,19 @@
 package com.tomaszrykala.recsandfx.ui
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
+import com.tomaszrykala.recsandfx.feature.permissions.PermissionsWrapper
 
 class RecsAndFxViewModel(
-    private val nativeInterface: NativeInterfaceWrapper
+    private val nativeInterface: NativeInterfaceWrapper,
+    private val permissionsWrapper: PermissionsWrapper,
 ) : ViewModel() {
 
     private var isAudioEnabled = false
 
     fun onCreated(context: Context) {
-        val recordAudioPermission =
-            ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
-        if (recordAudioPermission == PackageManager.PERMISSION_GRANTED) {
+        if (permissionsWrapper.isRecordingAudioGranted(context)) {
             nativeInterface.createAudioEngine()
             nativeInterface.enable(isAudioEnabled)
         }
@@ -32,14 +28,5 @@ class RecsAndFxViewModel(
         nativeInterface.enable(isAudioEnabled)
     }
 
-    fun getPermissions(): List<String> = mutableListOf(
-        Manifest.permission.RECORD_AUDIO,
-    ).apply {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            add(Manifest.permission.READ_MEDIA_AUDIO)
-        } else {
-            add(Manifest.permission.READ_EXTERNAL_STORAGE)
-            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-    }
+    fun getPermissions(): List<String> = permissionsWrapper.getAllPermissions()
 }

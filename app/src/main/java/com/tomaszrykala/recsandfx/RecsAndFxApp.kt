@@ -7,6 +7,7 @@ import com.tomaszrykala.recsandfx.di.appModule
 import com.tomaszrykala.recsandfx.feature.effect_detail.di.effectDetailModule
 import com.tomaszrykala.recsandfx.feature.effects_list.di.effectsListModule
 import com.tomaszrykala.recsandfx.feature.media_player.di.mediaPlayerModule
+import com.tomaszrykala.recsandfx.feature.permissions.di.permissionsModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
@@ -27,6 +28,7 @@ class RecsAndFxApp : Application() {
                 effectsListModule,
                 effectDetailModule,
                 mediaPlayerModule,
+                permissionsModule,
                 storageModule
             )
         }
