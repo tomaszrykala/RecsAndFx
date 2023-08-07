@@ -1,4 +1,4 @@
-package com.tomaszrykala.recsandfx.ui
+package com.tomaszrykala.recsandfx
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
