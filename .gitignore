@@ -1,15 +1,30 @@
-*.iml
+# Gradle cache
 .gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+
+# IDEA/Android Studio project files
+*.iml
+.idea/*
+!.idea/copyright
+# Keep the code styles.
+!/.idea/codeStyles
+/.idea/codeStyles/*
+!/.idea/codeStyles/Project.xml
+!/.idea/codeStyles/codeStyleConfig.xml
+
+# Local configuration file (sdk path, etc)
 local.properties
+
+# Windows thumbnail db
+.DS_Store
+
+# generated files
+/build
+
+# Android Studio captures folder
+/captures
+
+# C++
+.cxx
+
+# CMake files
+/core/cpp/CMakeLists.txt
