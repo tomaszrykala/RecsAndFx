@@ -106,7 +106,9 @@ fun EffectDetailScreen(
             LaunchedEffect(message) { snackbarHostState.showSnackbar(message) }
         }
 
-        EffectDetailUiState.Error -> Title(stringResource(R.string.recordings_load_error))
+        is EffectDetailUiState.Error -> {
+            Title(stringResource((state.value as EffectDetailUiState.Error).errorResId))
+        }
     }
 }
 

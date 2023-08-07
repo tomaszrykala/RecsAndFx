@@ -1,7 +1,6 @@
 package com.tomaszrykala.recsandfx.feature.effect_detail
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
@@ -36,7 +35,7 @@ class EffectDetailViewModel(
                     fileStorage.getAllRecordings(currentEffect.name)
                 })
             } else {
-                stateFlow.emit(EffectDetailUiState.Error)
+                stateFlow.emit(EffectDetailUiState.Error(R.string.recordings_load_error))
             }
         }
     }
@@ -69,17 +68,12 @@ class EffectDetailViewModel(
 
     suspend fun deleteRecording(selectedRecording: String) {
         if (withContext(ioDispatcher) { fileStorage.deleteRecording(selectedRecording) }) {
-            Log.d(TAG, "Deleted Recording: $selectedRecording.")
             emitEffectState(withContext(ioDispatcher) { fileStorage.getAllRecordings(effect.name) })
         } else {
-            Log.d(TAG, "Failed to delete Recording: $selectedRecording.")
+            stateFlow.emit(EffectDetailUiState.Error(R.string.recordings_delete_error))
         }
     }
 
     suspend fun onParamChange(value: Float, index: Int) =
         withContext(defaultDispatcher) { nativeInterface.updateParamsAt(effect, value, index) }
-
-    companion object {
-        private const val TAG = "EffectDetailViewModel"
-    }
 }

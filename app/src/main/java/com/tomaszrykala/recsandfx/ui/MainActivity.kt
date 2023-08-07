@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.tomaszrykala.recsandfx.RecsAndFxViewModel
 import com.tomaszrykala.recsandfx.ui.theme.RecsAndFxTheme
 import org.koin.android.ext.android.inject
 
