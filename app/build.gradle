@@ -53,10 +53,6 @@ dependencies {
     implementation(project(':core:domain'))
     implementation(project(':core:storage'))
 
-    implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlin_bom_version")
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.2'
-    implementation platform("androidx.compose:compose-bom:$compose_bom_version")
     implementation "androidx.navigation:navigation-compose:$compose_navigation_version"
     implementation 'androidx.compose.ui:ui'
     implementation 'androidx.compose.ui:ui-graphics'
