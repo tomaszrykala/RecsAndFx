@@ -31,5 +31,6 @@ dependencies {
     implementation "io.insert-koin:koin-androidx-compose:$koin_compose_version"
 
     testImplementation "junit:junit:$junit_version"
+    testImplementation "io.mockk:mockk:$mockk_version"
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
 }
