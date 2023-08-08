@@ -8,7 +8,7 @@ import org.koin.dsl.module
 
 val domainModule = module {
 
-    single<NativeInterfaceWrapper> { NativeInterfaceWrapperImpl() }
+    factory<NativeInterfaceWrapper> { NativeInterfaceWrapperImpl() }
 
-    factory<EffectsRepository> { EffectsRepositoryImpl(get()) }
+    single<EffectsRepository> { EffectsRepositoryImpl(get()) }
 }

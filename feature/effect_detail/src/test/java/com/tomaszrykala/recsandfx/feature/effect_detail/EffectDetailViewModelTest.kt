@@ -10,6 +10,7 @@ import com.tomaszrykala.recsandfx.core.storage.FileStorage
 import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayer
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -49,6 +50,7 @@ class EffectDetailViewModelTest {
         val (_, allRecordings, effect) = setUpEffect()
 
         coVerify { mockNativeInterface.addEffect(effect) }
+        coVerify(exactly = 0) { mockNativeInterface.removeEffect() }
         val listUiState = sut.uiStateFlow.value
         assertTrue(listUiState is EffectDetailUiState.EffectDetail)
         with(listUiState as EffectDetailUiState.EffectDetail) {
@@ -58,10 +60,21 @@ class EffectDetailViewModelTest {
     }
 
     @Test
-    fun `GIVEN no Effect is matched WHEN observeEffect THEN emit an Error`() = runTest {
-        coEvery { mockEffectsRepository.getAllEffects() } returns emptyList()
+    fun `GIVEN cached present WHEN observeEffect THEN clear cached effect before setting new one`() = runTest {
+        val (_, _, effect) = setUpEffect(hasCached = true)
 
-        sut.observeEffect("none")
+        coVerifyOrder {
+            mockNativeInterface.removeEffect()
+            mockNativeInterface.addEffect(effect)
+        }
+    }
+
+    @Test
+    fun `GIVEN no Effect is matched WHEN observeEffect THEN emit an Error`() = runTest {
+        val effectName = "none"
+        coEvery { mockEffectsRepository.getEffect(effectName) } returns Pair(null, false)
+
+        sut.observeEffect(effectName)
 
         val listUiState = sut.uiStateFlow.value
         assertTrue(listUiState is EffectDetailUiState.Error)
@@ -86,7 +99,6 @@ class EffectDetailViewModelTest {
         sut.stopAudioRecorder()
 
         with(mockNativeInterface) {
-            coVerify { removeEffect() }
             coVerify { stopAudioRecorder() }
             coVerify { writeFile(filePath) }
         }
@@ -156,11 +168,11 @@ class EffectDetailViewModelTest {
         coVerify { mockNativeInterface.updateParamsAt(effect, value, index) }
     }
 
-    private suspend fun setUpEffect(): Triple<String, List<String>, Effect> {
+    private suspend fun setUpEffect(hasCached: Boolean = false): Triple<String, List<String>, Effect> {
         val effectName = "Delay"
         val allRecordings = listOf("Recording 1", "Recording 2")
         val effect = Effect(1, effectName, emptyList(), EffectCategory.Delay, -1)
-        coEvery { mockEffectsRepository.getAllEffects() } returns listOf(effect)
+        coEvery { mockEffectsRepository.getEffect(effectName) } returns Pair(effect, hasCached)
         coEvery { mockFileStorage.getAllRecordings(effectName) } returns allRecordings
 
         sut.observeEffect(effectName)
