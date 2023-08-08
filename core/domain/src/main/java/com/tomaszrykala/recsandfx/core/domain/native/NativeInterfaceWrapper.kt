@@ -37,9 +37,7 @@ internal class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
         NativeInterface.enableEffectAt(true, 0)
     }
 
-    override suspend fun removeEffect() {
-        NativeInterface.removeEffectAt(0)
-    }
+    override suspend fun removeEffect() = NativeInterface.removeEffectAt(0)
 
     override suspend fun updateParamsAt(effect: Effect, value: Float, index: Int) {
         val nativeEffect = effect.toNativeEffect().apply { paramValues[index] = value }

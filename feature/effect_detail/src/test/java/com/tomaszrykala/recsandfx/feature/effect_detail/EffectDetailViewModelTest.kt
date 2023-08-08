@@ -5,6 +5,7 @@ import android.net.Uri
 import com.tomaszrykala.recsandfx.core.domain.effect.Effect
 import com.tomaszrykala.recsandfx.core.domain.effect.EffectCategory
 import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
+import com.tomaszrykala.recsandfx.core.domain.repository.EffectResult
 import com.tomaszrykala.recsandfx.core.domain.repository.EffectsRepository
 import com.tomaszrykala.recsandfx.core.storage.FileStorage
 import com.tomaszrykala.recsandfx.feature.media_player.RecordingsPlayer
@@ -72,7 +73,7 @@ class EffectDetailViewModelTest {
     @Test
     fun `GIVEN no Effect is matched WHEN observeEffect THEN emit an Error`() = runTest {
         val effectName = "none"
-        coEvery { mockEffectsRepository.getEffect(effectName) } returns Pair(null, false)
+        coEvery { mockEffectsRepository.getEffect(effectName) } returns EffectResult(null, false)
 
         sut.observeEffect(effectName)
 
@@ -172,7 +173,7 @@ class EffectDetailViewModelTest {
         val effectName = "Delay"
         val allRecordings = listOf("Recording 1", "Recording 2")
         val effect = Effect(1, effectName, emptyList(), EffectCategory.Delay, -1)
-        coEvery { mockEffectsRepository.getEffect(effectName) } returns Pair(effect, hasCached)
+        coEvery { mockEffectsRepository.getEffect(effectName) } returns EffectResult(effect, hasCached)
         coEvery { mockFileStorage.getAllRecordings(effectName) } returns allRecordings
 
         sut.observeEffect(effectName)
