@@ -9,13 +9,25 @@ import com.tomaszrykala.recsandfx.core.domain.native.NativeInterfaceWrapper
 
 interface EffectsRepository {
     suspend fun getAllEffects(): List<Effect>
+    suspend fun getEffect(effectName: String): EffectResult
 }
+
+data class EffectResult(val effect: Effect?, val hasCached: Boolean)
 
 internal class EffectsRepositoryImpl(
     private val nativeInterface: NativeInterfaceWrapper,
 ) : EffectsRepository {
 
+    private var cachedEffect: Effect? = null
+
     override suspend fun getAllEffects(): List<Effect> = effects
+
+    override suspend fun getEffect(effectName: String): EffectResult {
+        val effect: Effect? = getAllEffects().find { it.name == effectName }
+        val hasCached = cachedEffect != null
+        cachedEffect = effect
+        return EffectResult(effect, hasCached)
+    }
 
     private val effects: List<Effect> by lazy {
         nativeInterface.getAllEffectsMap().map {

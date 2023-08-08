@@ -25,33 +25,33 @@ class EffectDetailViewModel(
     private val stateFlow = MutableStateFlow<EffectDetailUiState>(EffectDetailUiState.Empty)
     val uiStateFlow: StateFlow<EffectDetailUiState> = stateFlow
 
-    suspend fun observeEffect(effectName: String) {
-        withContext(defaultDispatcher) {
-            val currentEffect: Effect? = effectsRepository.getAllEffects().find { it.name == effectName }
-            if (currentEffect != null) {
-                effect = currentEffect
-                nativeInterface.addEffect(currentEffect)
-                emitEffectState(withContext(ioDispatcher) {
-                    fileStorage.getAllRecordings(currentEffect.name)
-                })
-            } else {
-                stateFlow.emit(EffectDetailUiState.Error(R.string.recordings_load_error))
-            }
+    suspend fun observeEffect(effectName: String) = withContext(defaultDispatcher) {
+        val (currentEffect, hasCachedEffect) = effectsRepository.getEffect(effectName)
+        if (hasCachedEffect) {
+            nativeInterface.removeEffect()
+        }
+        if (currentEffect != null) {
+            effect = currentEffect
+            nativeInterface.addEffect(effect)
+            emitEffectState(withContext(ioDispatcher) {
+                fileStorage.getAllRecordings(currentEffect.name)
+            })
+        } else {
+            stateFlow.emit(EffectDetailUiState.Error(R.string.recordings_load_error))
         }
     }
 
-    suspend fun startAudioRecorder() = withContext(defaultDispatcher) { nativeInterface.startAudioRecorder() }
+    suspend fun startAudioRecorder() = withContext(defaultDispatcher) {
+        nativeInterface.startAudioRecorder()
+    }
 
-    suspend fun stopAudioRecorder() {
-        withContext(defaultDispatcher) {
-            with(nativeInterface) {
-                removeEffect()
-                stopAudioRecorder()
-                emitEffectState(withContext(ioDispatcher) {
-                    writeFile(fileStorage.getRecordingFilePath(effect.name))
-                    fileStorage.getAllRecordings(effect.name)
-                })
-            }
+    suspend fun stopAudioRecorder() = withContext(defaultDispatcher) {
+        with(nativeInterface) {
+            stopAudioRecorder()
+            emitEffectState(withContext(ioDispatcher) {
+                writeFile(fileStorage.getRecordingFilePath(effect.name))
+                fileStorage.getAllRecordings(effect.name)
+            })
         }
     }
 

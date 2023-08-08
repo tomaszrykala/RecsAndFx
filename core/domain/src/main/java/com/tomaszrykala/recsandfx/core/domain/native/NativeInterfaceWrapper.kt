@@ -33,8 +33,8 @@ internal class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
     override fun destroyAudioEngine() = NativeInterface.destroyAudioEngine()
 
     override suspend fun addEffect(effect: Effect) {
-        // NativeInterface.removeEffectAt(0) // ?
         NativeInterface.addEffect(effect.toNativeEffect())
+        NativeInterface.enableEffectAt(true, 0)
     }
 
     override suspend fun removeEffect() = NativeInterface.removeEffectAt(0)
@@ -42,13 +42,10 @@ internal class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
     override suspend fun updateParamsAt(effect: Effect, value: Float, index: Int) {
         val nativeEffect = effect.toNativeEffect().apply { paramValues[index] = value }
         Log.d(TAG, "nativeEffect update ${nativeEffect.paramValues[index]}.")
-        NativeInterface.updateParamsAt(nativeEffect, 0) // index?
+        NativeInterface.updateParamsAt(nativeEffect, 0)
     }
 
-    override suspend fun writeFile(pathFile: String) {
-        NativeInterface.writeFile(pathFile)
-    }
+    override suspend fun writeFile(pathFile: String) = NativeInterface.writeFile(pathFile)
 
-    override fun getAllEffectsMap(): Map<String, EffectDescription> =
-        NativeInterface.effectDescriptionMap
+    override fun getAllEffectsMap(): Map<String, EffectDescription> = NativeInterface.effectDescriptionMap
 }
