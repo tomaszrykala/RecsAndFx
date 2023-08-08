@@ -37,6 +37,11 @@ internal object NativeInterface {
         addDefaultEffectNative(nativeId)
     }
 
+    // Enables effect at index
+    fun enableEffectAt(turnOn: Boolean, index: Int) {
+        enableEffectNative(index, turnOn)
+    }
+
     // Removes effect at index
     fun removeEffectAt(index: Int) {
         removeEffectNative(index)
@@ -47,12 +52,6 @@ internal object NativeInterface {
         val nativeId = convertEffectToId(effect)
         Log.d(TAG, "updateParamsAt $nativeId.")
         modifyEffectNative(nativeId, index, effect.paramValues)
-    }
-
-    // Rotates existing effect from index to another
-    fun rotateEffectAt(from: Int, to: Int) {
-        Log.d(TAG, String.format("Effect was rotated from %d to %d", from, to))
-        rotateEffectNative(from, to)
     }
 
     fun enable(enable: Boolean) {

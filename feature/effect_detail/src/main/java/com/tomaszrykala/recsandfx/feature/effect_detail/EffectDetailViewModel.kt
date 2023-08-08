@@ -22,6 +22,7 @@ class EffectDetailViewModel(
 ) : ViewModel() {
 
     private lateinit var effect: Effect
+//    private var effectPreviouslyRemoved = false
     private val stateFlow = MutableStateFlow<EffectDetailUiState>(EffectDetailUiState.Empty)
     val uiStateFlow: StateFlow<EffectDetailUiState> = stateFlow
 
@@ -30,7 +31,7 @@ class EffectDetailViewModel(
             val currentEffect: Effect? = effectsRepository.getAllEffects().find { it.name == effectName }
             if (currentEffect != null) {
                 effect = currentEffect
-                nativeInterface.addEffect(currentEffect)
+                nativeInterface.addEffect(effect)
                 emitEffectState(withContext(ioDispatcher) {
                     fileStorage.getAllRecordings(currentEffect.name)
                 })
@@ -40,13 +41,20 @@ class EffectDetailViewModel(
         }
     }
 
-    suspend fun startAudioRecorder() = withContext(defaultDispatcher) { nativeInterface.startAudioRecorder() }
+    suspend fun startAudioRecorder() = withContext(defaultDispatcher) {
+//        if (effectPreviouslyRemoved) {
+//            nativeInterface.addEffect(effect)
+//            effectPreviouslyRemoved = false
+//        }
+        nativeInterface.startAudioRecorder()
+    }
 
     suspend fun stopAudioRecorder() {
         withContext(defaultDispatcher) {
             with(nativeInterface) {
-                removeEffect()
+//                removeEffect()
                 stopAudioRecorder()
+//                effectPreviouslyRemoved = true
                 emitEffectState(withContext(ioDispatcher) {
                     writeFile(fileStorage.getRecordingFilePath(effect.name))
                     fileStorage.getAllRecordings(effect.name)

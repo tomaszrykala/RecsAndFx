@@ -22,6 +22,8 @@ interface NativeInterfaceWrapper {
 
 internal class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
 
+    private var hasEffect = false
+
     override suspend fun startAudioRecorder() = NativeInterface.startAudioRecorder()
 
     override suspend fun stopAudioRecorder() = NativeInterface.stopAudioRecorder()
@@ -33,22 +35,26 @@ internal class NativeInterfaceWrapperImpl : NativeInterfaceWrapper {
     override fun destroyAudioEngine() = NativeInterface.destroyAudioEngine()
 
     override suspend fun addEffect(effect: Effect) {
-        // NativeInterface.removeEffectAt(0) // ?
+        if (hasEffect) removeEffect()
         NativeInterface.addEffect(effect.toNativeEffect())
+        NativeInterface.enableEffectAt(true, 0)
+        hasEffect = true
     }
 
-    override suspend fun removeEffect() = NativeInterface.removeEffectAt(0)
+    override suspend fun removeEffect() {
+        NativeInterface.enableEffectAt(false, 0)
+        NativeInterface.removeEffectAt(0)
+    }
 
     override suspend fun updateParamsAt(effect: Effect, value: Float, index: Int) {
-        val nativeEffect = effect.toNativeEffect().apply { paramValues[index] = value }
-        Log.d(TAG, "nativeEffect update ${nativeEffect.paramValues[index]}.")
-        NativeInterface.updateParamsAt(nativeEffect, 0) // index?
+        if (hasEffect) {
+            val nativeEffect = effect.toNativeEffect().apply { paramValues[index] = value }
+            Log.d(TAG, "nativeEffect update ${nativeEffect.paramValues[index]}.")
+            NativeInterface.updateParamsAt(nativeEffect, 0)
+        }
     }
 
-    override suspend fun writeFile(pathFile: String) {
-        NativeInterface.writeFile(pathFile)
-    }
+    override suspend fun writeFile(pathFile: String) = NativeInterface.writeFile(pathFile)
 
-    override fun getAllEffectsMap(): Map<String, EffectDescription> =
-        NativeInterface.effectDescriptionMap
+    override fun getAllEffectsMap(): Map<String, EffectDescription> = NativeInterface.effectDescriptionMap
 }
