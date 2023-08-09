@@ -2,7 +2,6 @@ package com.tomaszrykala.recsandfx.core.storage
 
 import android.net.Uri
 import android.os.Environment
-import android.util.Log
 import java.io.File
 
 interface FileStorage {
@@ -22,7 +21,6 @@ internal class FileStorageImpl : FileStorage {
 
     override suspend fun getAllRecordings(effectName: String): List<String> {
         val files = storageDirectory().listFiles { _, name -> name.contains(effectName) }
-        Log.d(TAG, "getAllRecordings dir: $files.")
         return files?.map { it.name }?.toList() ?: emptyList() // why not File or absolutePath?
     }
 
@@ -44,6 +42,5 @@ internal class FileStorageImpl : FileStorage {
     private companion object {
         const val FILE_PREFIX = "RecsAndFx_recording_"
         const val FILE_EXTENSION = ".wav"
-        const val TAG = "FileStorage"
     }
 }

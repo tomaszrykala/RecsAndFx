@@ -1,5 +1,6 @@
 package com.tomaszrykala.recsandfx.ui
 
+import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -13,21 +14,26 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.R
 import com.tomaszrykala.recsandfx.feature.effect_detail.EffectDetailScreen
 import com.tomaszrykala.recsandfx.feature.effects_list.EffectsListScreen
@@ -38,11 +44,15 @@ import kotlinx.coroutines.launch
 @Composable
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 fun RecsAndFxScreen(
-    permissionsState: MultiplePermissionsState = rememberMultiplePermissionsState(emptyList()),
-    onEnableAudioClick: (enable: Boolean) -> Unit = {},
+    permissionsState: MultiplePermissionsState,
+    lifecycleOwner: LifecycleOwner,
+    onCreateAction: (c: Context) -> Unit,
+    onDestroyAction: () -> Unit,
+    onEnableAudioClick: (enable: Boolean) -> Unit,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    OnLifecycleCallbackActions(onCreateAction, onDestroyAction, lifecycleOwner)
 
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -56,7 +66,7 @@ fun RecsAndFxScreen(
                     )
                 },
                 title = { Text(stringResource(R.string.app_name)) },
-                actions = { PassthroughButton(onEnableAudioClick, snackbarHostState) }
+                actions = { PassthroughButton(snackbarHostState, onEnableAudioClick) }
             )
         }
     ) { contentPadding ->
@@ -69,9 +79,32 @@ fun RecsAndFxScreen(
 }
 
 @Composable
+private fun OnLifecycleCallbackActions(
+    onCreateAction: (c: Context) -> Unit,
+    onDestroyAction: () -> Unit,
+    lifecycleOwner: LifecycleOwner
+) {
+    val currentOnCreate by rememberUpdatedState(onCreateAction)
+    val currentOnDestroy by rememberUpdatedState(onDestroyAction)
+    val context = LocalContext.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_CREATE) {
+                currentOnCreate(context)
+            } else if (event == Lifecycle.Event.ON_DESTROY) {
+                currentOnDestroy()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+}
+
+@Composable
 private fun PassthroughButton(
-    onEnableAudioClick: (enable: Boolean) -> Unit,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    onEnableAudioClick: (enable: Boolean) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     var isAudioEnabled by rememberSaveable { mutableStateOf(false) }
@@ -82,7 +115,7 @@ private fun PassthroughButton(
     IconButton(onClick = {
         hasAudioBeenEnabled = true
         isAudioEnabled = !isAudioEnabled
-        onEnableAudioClick.invoke(isAudioEnabled)
+        onEnableAudioClick(isAudioEnabled)
         coroutineScope.launch {
             if (isAudioEnabled) {
                 snackbarHostState.showSnackbar(enabledPassthroughMsg)

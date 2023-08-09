@@ -19,13 +19,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             RecsAndFxTheme {
                 val permissionsState = rememberMultiplePermissionsState(viewModel.getPermissions())
-                RecsAndFxScreen(permissionsState) { isEnabled: Boolean ->
+                RecsAndFxScreen(
+                    permissionsState,
+                    lifecycleOwner = this,
+                    onCreateAction = { viewModel.onCreated(this) },
+                    onDestroyAction = { viewModel.onDestroyed() },
+                ) { isEnabled: Boolean ->
                     viewModel.enableAudio(isEnabled)
                 }
             }
         }
-        viewModel.onCreated(this@MainActivity)
     }
-
-    override fun onDestroy() = super.onDestroy().also { viewModel.onDestroyed() }
 }
