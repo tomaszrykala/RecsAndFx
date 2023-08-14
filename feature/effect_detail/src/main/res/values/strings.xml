@@ -6,6 +6,7 @@
     <string name="empty_recordings_state_prompt">Press the \'Record\' button to record yourself and discover the Effect!</string>
     <string name="recordings_load_error">Error: Couldn\'t load the Effect! Try again please.</string>
     <string name="recordings_delete_error">Error: Couldn\'t delete the Recording! Try again please.</string>
+    <string name="screen_too_small_error">Sorry, your screen is too small to display content.</string>
     <string name="recordings_loading">Loading…</string>
     <string name="start_recording">Start recording.</string>
     <string name="delete_button">Delete button.</string>

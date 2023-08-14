@@ -101,7 +101,7 @@ private fun ShowEffectsList(
                         )
                         .clickable {
                             selectedEffect = it.name
-                            navigateToDetail.invoke(it.name)
+                            navigateToDetail(it.name)
                         }
                         .padding(all = paddingMedium)
                 ) {

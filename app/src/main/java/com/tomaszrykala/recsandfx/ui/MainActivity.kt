@@ -3,6 +3,8 @@ package com.tomaszrykala.recsandfx.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.tomaszrykala.recsandfx.RecsAndFxViewModel
@@ -13,19 +15,23 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: RecsAndFxViewModel by inject()
 
-    @OptIn(ExperimentalPermissionsApi::class)
+    @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+            val windowSizeClass = calculateWindowSizeClass(this)
+            val permissionsState = rememberMultiplePermissionsState(viewModel.getPermissions())
+
             RecsAndFxTheme {
-                val permissionsState = rememberMultiplePermissionsState(viewModel.getPermissions())
-                RecsAndFxScreen(permissionsState) { isEnabled: Boolean ->
-                    viewModel.enableAudio(isEnabled)
-                }
+                RecsAndFxScreen(
+                    windowSizeClass,
+                    permissionsState,
+                    lifecycleOwner = this,
+                    onCreateAction = { viewModel.onCreated(this) },
+                    onDestroyAction = { viewModel.onDestroyed() },
+                ) { isEnabled: Boolean -> viewModel.enableAudio(isEnabled) }
             }
         }
-        viewModel.onCreated(this@MainActivity)
     }
-
-    override fun onDestroy() = super.onDestroy().also { viewModel.onDestroyed() }
 }
