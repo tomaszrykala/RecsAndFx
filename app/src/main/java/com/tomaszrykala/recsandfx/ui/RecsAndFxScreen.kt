@@ -13,6 +13,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -44,6 +45,7 @@ import kotlinx.coroutines.launch
 @Composable
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 fun RecsAndFxScreen(
+    windowSizeClass: WindowSizeClass,
     permissionsState: MultiplePermissionsState,
     lifecycleOwner: LifecycleOwner,
     onCreateAction: (c: Context) -> Unit,
@@ -71,7 +73,7 @@ fun RecsAndFxScreen(
         }
     ) { contentPadding ->
         if (permissionsState.allPermissionsGranted) {
-            ShowRafApp(snackbarHostState, contentPadding)
+            ShowRafApp(contentPadding, windowSizeClass, snackbarHostState)
         } else {
             RequestPermissionsScreen(contentPadding, permissionsState)
         }
@@ -136,8 +138,9 @@ private fun PassthroughButton(
 
 @Composable
 private fun ShowRafApp(
-    snackbarHostState: SnackbarHostState,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
+    windowSizeClass: WindowSizeClass,
+    snackbarHostState: SnackbarHostState
 ) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.EffectsScreen.route) {
@@ -150,6 +153,7 @@ private fun ShowRafApp(
         composable(Screen.EffectDetailScreen.route) {
             EffectDetailScreen(
                 snackbarHostState = snackbarHostState,
+                windowSizeClass = windowSizeClass,
                 contentPadding = contentPadding,
                 effectName = it.arguments?.getString("effect") ?: "EMPTY"
             )
