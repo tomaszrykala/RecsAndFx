@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -180,8 +181,15 @@ private fun ControlsSection(
     onRecordingStop: suspend () -> Unit,
     isPortrait: Boolean
 ) {
-    Title(effect.name)
-    Text(modifier = Modifier.padding(top = paddingMedium), text = stringResource(effect.description))
+    Text(
+        modifier = Modifier.padding(top = paddingMedium),
+        text = stringResource(effect.description),
+        style = TextStyle(
+            fontSize = spTextUnit(18.0f),
+            textAlign = TextAlign.Center,
+            fontStyle = FontStyle.Italic
+        )
+    )
     ContentSpacer(isPortrait)
     Controls(effect, slidersState, onSliderChange)
     ContentSpacer(isPortrait)

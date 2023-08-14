@@ -16,6 +16,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +56,9 @@ fun RecsAndFxScreen(
     OnLifecycleCallbackActions(onCreateAction, onDestroyAction, lifecycleOwner)
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val appName: String = stringResource(R.string.app_name)
+    val topBarTitle = rememberSaveable { mutableStateOf(appName) }
+
     Scaffold(
         modifier = Modifier.fillMaxWidth(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -67,13 +71,13 @@ fun RecsAndFxScreen(
                         actionIconContentColor = background,
                     )
                 },
-                title = { Text(stringResource(R.string.app_name)) },
+                title = { Text(topBarTitle.value) },
                 actions = { PassthroughButton(snackbarHostState, onEnableAudioClick) }
             )
         }
     ) { contentPadding ->
         if (permissionsState.allPermissionsGranted) {
-            ShowRafApp(contentPadding, windowSizeClass, snackbarHostState)
+            ShowRafApp(contentPadding, windowSizeClass, snackbarHostState, topBarTitle)
         } else {
             RequestPermissionsScreen(contentPadding, permissionsState)
         }
@@ -140,22 +144,27 @@ private fun PassthroughButton(
 private fun ShowRafApp(
     contentPadding: PaddingValues,
     windowSizeClass: WindowSizeClass,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    topBarTitle: MutableState<String>
 ) {
+    val appName: String = stringResource(R.string.app_name)
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.EffectsScreen.route) {
         composable(Screen.EffectsScreen.route) {
+            topBarTitle.value = appName
             EffectsListScreen(
                 snackbarHostState = snackbarHostState,
                 contentPadding = contentPadding
             ) { effect -> navController.navigate("detail/${effect}") }
         }
         composable(Screen.EffectDetailScreen.route) {
+            val effectName = it.arguments?.getString("effect") ?: "EMPTY"
+            topBarTitle.value = "$appName > $effectName"
             EffectDetailScreen(
                 snackbarHostState = snackbarHostState,
                 windowSizeClass = windowSizeClass,
                 contentPadding = contentPadding,
-                effectName = it.arguments?.getString("effect") ?: "EMPTY"
+                effectName = effectName
             )
         }
     }
