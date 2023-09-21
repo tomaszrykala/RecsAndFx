@@ -14,7 +14,7 @@ android {
 
 dependencies {
     implementation(project(Deps.coreCpp))
-    implementation("io.insert-koin:koin-android:3.4.2")
+    implementation(Deps.koinAndroid)
 
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(Deps.junit)
 }

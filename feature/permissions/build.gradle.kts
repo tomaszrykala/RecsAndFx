@@ -19,8 +19,8 @@ dependencies {
     implementation(platform(Deps.composeBom))
     implementation(Deps.composeMaterial3)
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("com.google.accompanist:accompanist-permissions:0.30.1")
+    implementation(Deps.androidCoreKtx)
+    implementation(Deps.accompanistPermissions)
 
-    implementation("io.insert-koin:koin-android:3.4.2")
+    implementation(Deps.koinAndroid)
 }

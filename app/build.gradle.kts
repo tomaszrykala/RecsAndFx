@@ -59,17 +59,17 @@ dependencies {
     implementation(Deps.composeUiGraphics)
     debugImplementation(Deps.composeUiTooling)
     debugImplementation(Deps.composeUiTestManifest)
-    debugImplementation(Deps.composeUiWindowSizeClass)
+    implementation(Deps.composeUiWindowSizeClass)
 
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("androidx.navigation:navigation-compose:2.7.3")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation(Deps.activityCompose)
+    implementation(Deps.navigationCompose)
+    implementation(Deps.lifecycleRuntimeCompose)
 
-    implementation("com.google.accompanist:accompanist-permissions:0.30.1")
+    implementation(Deps.accompanistPermissions)
 
-    implementation("io.insert-koin:koin-android:3.4.2")
-    implementation("io.insert-koin:koin-androidx-compose:3.4.3")
+    implementation(Deps.koinAndroid)
+    implementation(Deps.koinCompose)
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation(Deps.junit)
+    testImplementation(Deps.mockk)
 }

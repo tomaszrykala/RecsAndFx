@@ -13,5 +13,5 @@ android {
 }
 
 dependencies {
-    implementation("io.insert-koin:koin-android:3.4.2")
+    implementation(Deps.koinAndroid)
 }

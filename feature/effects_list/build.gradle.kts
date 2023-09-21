@@ -24,15 +24,15 @@ dependencies {
     implementation(Deps.composePreview)
     implementation(Deps.composeMaterial3)
 
-    implementation("androidx.navigation:navigation-compose:2.7.3")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
+    implementation(Deps.navigationCompose)
+    implementation(Deps.lifecycleRuntimeCompose)
 
-    implementation("io.insert-koin:koin-android:3.4.2")
-    implementation("io.insert-koin:koin-androidx-compose:3.4.3")
+    implementation(Deps.koinAndroid)
+    implementation(Deps.koinCompose)
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("io.mockk:mockk:1.13.5")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation(Deps.junit)
+    testImplementation(Deps.mockk)
+    testImplementation(Deps.coroutinesTest)
 
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(Deps.composeJunit)
 }
