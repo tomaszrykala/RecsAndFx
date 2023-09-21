@@ -5,20 +5,25 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 rootProject.name = "RecsAndFx"
 
-include ':app'
-include ':feature:effect_detail'
-include ':feature:effects_list'
-include ':feature:media_player'
-include ':feature:permissions'
-include ':core:cpp'
-include ':core:domain'
-include ':core:storage'
+include(
+    "app",
+    "feature:effect_detail",
+    "feature:effects_list",
+    "feature:media_player",
+    "feature:permissions",
+    "core:cpp",
+    "core:domain",
+    "core:storage",
+)
