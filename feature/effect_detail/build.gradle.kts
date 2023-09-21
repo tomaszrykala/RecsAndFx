@@ -17,15 +17,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:cpp"))
-    implementation(project(":core:domain"))
-    implementation(project(":core:storage"))
-    implementation(project(":feature:media_player"))
+    implementation(project(Deps.coreCpp))
+    implementation(project(Deps.coreDomain))
+    implementation(project(Deps.coreStorage))
+    implementation(project(Deps.featureMediaPlayer))
 
-    implementation(platform("androidx.compose:compose-bom:2023.06.01"))
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material3:material3-window-size-class")
+    implementation(platform(Deps.composeBom))
+    implementation(Deps.composePreview)
+    implementation(Deps.composeMaterial3)
+    debugImplementation(Deps.composeUiWindowSizeClass)
 
     implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
