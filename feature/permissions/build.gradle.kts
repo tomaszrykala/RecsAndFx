@@ -16,11 +16,11 @@ android {
 }
 
 dependencies {
-    // implementation(platform("androidx.compose:compose-bom:1.8.0"))
     // implementation platform("org.jetbrains.kotlin:kotlin-bom:$kotlin_bom_version")
-
+    implementation(platform("androidx.compose:compose-bom:2023.06.01"))
     implementation("com.google.accompanist:accompanist-permissions:0.30.1")
-    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.material3:material3")
     implementation("androidx.core:core-ktx:1.12.0")
+
     implementation("io.insert-koin:koin-android:3.4.2")
 }
